@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('contracts', function (Blueprint $table) {
-            $table->id();
+            $table->uuid()->primary();
             $table->foreignId('contract_type_id')->references('id')->on('contract_types')->onDelete('cascade');
             $table->foreignId('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
             $table->date('expiry_date');

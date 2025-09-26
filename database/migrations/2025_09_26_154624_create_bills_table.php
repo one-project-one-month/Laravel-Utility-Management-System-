@@ -13,18 +13,17 @@ return new class extends Migration
     {
         Schema::create('bills', function (Blueprint $table) {
             $table->id();
-            // $table->foreignId('room_id')->references('id')->on('room')->onDelete('cascade');
             $table->uuid('room_id');
             $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
-            $table->integer('rental_fee');
-            $table->integer('electricity_fee');
-            $table->integer('water_fee');
-            $table->integer('fine_fee')->nullable();
-            $table->integer('service_fee');
-            $table->integer('ground_fee');
-            $table->integer('car_parking_fee')->nullable();
-            $table->integer('wifi_fee')->nullable();
-            $table->integer('total_amount');
+            $table->decimal('rental_fee',20,2);
+            $table->decimal('electricity_fee',20,2);
+            $table->decimal('water_fee',20,2);
+            $table->decimal('fine_fee',20,2)->nullable();
+            $table->decimal('service_fee',20,2);
+            $table->decimal('ground_fee',20,2);
+            $table->decimal('car_parking_fee',20,2)->nullable();
+            $table->decimal('wifi_fee',20,2)->nullable();
+            $table->decimal('total_amount',20,2);
             $table->date('due_date');
             $table->timestamps();
         });

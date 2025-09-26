@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role',['Admin','Staff','Tenant']);
-            $table->foreignId('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
+            $table->foreignId('tenant_id')->nullable()->references('id')->on('tenants')->onDelete('cascade')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

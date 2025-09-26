@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -15,17 +16,14 @@ return new class extends Migration
             $table->id();
             $table->uuid('room_id');
             $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
-            // $table->text('name')->nullable();  //Check
-            // $table->text('nrc')->nullable();  //Check
-            // $table->text('email'); //Check
-            // $table->text('phone_no'); //Check
-            // $table->text('emergency_no'); //Check
             $table->timestamps();
-
-
-            // DB::statement('ALTER TABLE posts ALTER COLUMN tags TYPE text[] USING tags::text[];');
-            // DB::statement('ALTER TABLE posts ALTER COLUMN tags TYPE text[] USING tags::text[];');
         });
+        // Text Array
+        DB::statement('ALTER TABLE tenants ADD COLUMN names text[]');
+        DB::statement('ALTER TABLE tenants ADD COLUMN nrcs text[]');
+        DB::statement('ALTER TABLE tenants ADD COLUMN emails text[]');
+        DB::statement('ALTER TABLE tenants ADD COLUMN phone_nos text[]');
+        DB::statement('ALTER TABLE tenants ADD COLUMN emergency_nos text[]');
     }
 
     /**

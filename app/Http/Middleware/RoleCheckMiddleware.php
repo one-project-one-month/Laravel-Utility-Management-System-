@@ -18,7 +18,7 @@ class RoleCheckMiddleware
     {
         $user = Auth::user();
 
-        if( $user &&  $user->role === $role)
+        if( $user &&  $user->role == $role)
         {
             return $next($request);
         }

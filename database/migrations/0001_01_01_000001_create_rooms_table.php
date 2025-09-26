@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('dimension');
             $table->integer('no_of_bed_room');
             $table->enum('status',['Avaliable','Rentend','Purchased','In Maintance']);
-            $table->integer('selling_price');  // Check data Type
+            $table->decimal('selling_price', 20, 2);
             $table->integer('max_no_of_people');
             $table->string('description')->nullable();
             $table->timestamps();
