@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\Auth\AuthController;
 
 Route::post('/v1/auth/login',[AuthController::class,'login']);
 
+Route::prefix('v1')->group(function() {
+
 Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
 
 });
@@ -14,3 +16,4 @@ Route::middleware(['auth:sanctum',"Role.check:Tenant"])->group(function() {
 
 });
 
+});
