@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('contracts', function (Blueprint $table) {
-            $table->uuid()->primary();
-            $table->foreignId('contract_type_id')->references('id')->on('contract_types')->onDelete('cascade');
+            $table->uuid('id')->primary();
+            $table->foreignId('contract_type_id')->nullable()->references('id')->on('contract_types')->onDelete('cascade');
+            $table->uuid('room_id');
+            $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
             $table->foreignId('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
             $table->date('expiry_date');
             $table->timestamps();
