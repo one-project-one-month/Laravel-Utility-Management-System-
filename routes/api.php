@@ -10,7 +10,7 @@ Route::post('/v1/auth/login',[AuthController::class,'login']);
 Route::prefix('v1')->group(function() {
 
 Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
-    // Users
+    // Users Route
     Route::post('/users',[UserController::class,'create']);
     Route::get('/users', [UserController::class,'index']);
 
