@@ -19,7 +19,7 @@ class UserController extends Controller
     use ApiResponse, HasApiTokens, HasFactory, Notifiable;
 
     //user create
-    public function store(Request $request)
+    public function create(Request $request)
     {
         //validation
         $validator = Validator::make($request->all(),[
@@ -43,11 +43,7 @@ class UserController extends Controller
                 'tenant_id' => $request->tenant_id,
             ]);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'User created successfully',
-                'content' => new UserResource($user)
-            ], 201);
+            return $this->successResponse('User created successfully', new UserResource($user), 201);
 
         } catch (\Exception $e) {
             return $this->errorResponse('User creation failed: ' . $e->getMessage(), 500);
@@ -56,12 +52,8 @@ class UserController extends Controller
 
     //index users
     public function index(){
-        $users = User::all();
+        $users = User::paginate(10);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Users retrieved successfully',
-            'content' => UserResource::collection($users)
-        ], 200);
+        return $this->successResponse('Users retrieved successfully', UserResource::collection($users), 200);
     }
 }
