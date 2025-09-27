@@ -3,10 +3,12 @@
 namespace Database\Seeders;
 
 
-use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Database\Seeders\RoomSeeder;
+use Database\Seeders\UserSeeder;
+use Database\Seeders\TenantSeeder;
+use Database\Seeders\ContractSeeder;
 use Database\Seeders\ContractTypeSeeder;
 use Database\Seeders\CustomerServiceSeeder;
 
@@ -20,9 +22,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RoomSeeder::class,
+            TenantSeeder::class,
             UserSeeder::class,
             CustomerServiceSeeder::class,
-            ContractTypeSeeder::class
+            ContractTypeSeeder::class,
+            ContractSeeder::class
         ]);
     }
 }
