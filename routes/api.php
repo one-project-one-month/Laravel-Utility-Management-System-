@@ -18,6 +18,7 @@ Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
     
     // Contract Types
     Route::get('/contract-types', [ContractTypeController::class, 'index']);
+    Route::get('/contract-types/{id}', [ContractTypeController::class, 'show']);
     
 });
 
