@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Resources\Api\ContractTypeResource;
 use App\Models\ContractType;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ContractTypeController extends Controller
 {
@@ -44,6 +46,34 @@ class ContractTypeController extends Controller
         // return the resource
         return $this->successResponse(
             'Contract type retrieved successfully',
+            new ContractTypeResource($contractType),
+            200
+        );
+    }
+
+    /**
+     * Create a new contract type.
+     */
+    public function store(Request $request)
+    {
+        // validate request
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'max:255'],
+            'duration' => ['required', 'integer'],
+            'price' => ['required', 'decimal:0,2']
+        ]);
+
+        // return error if the validation fails 
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), 422);
+        }
+
+        // create new contract type
+        $contractType = ContractType::create($validator->validated());
+
+        // return the resource
+        return $this->successResponse(
+            'A new Contract Type created successfully',
             new ContractTypeResource($contractType),
             200
         );
