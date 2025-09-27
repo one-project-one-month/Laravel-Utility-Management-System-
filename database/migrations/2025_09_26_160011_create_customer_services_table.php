@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('customer_services', function (Blueprint $table) {
             $table->id();
-            $table->uuid('room_id');
+            $table->uuid('room_id')->nullable();
             $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
             $table->enum('category',['Complain','Maintenance','Other']);
             $table->text('description');
