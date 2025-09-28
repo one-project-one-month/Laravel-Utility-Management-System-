@@ -40,7 +40,7 @@ class UserController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role' => $request->role,
-                'tenant_id' => $request->tenant_id,
+                'tenant_id' => $request->tenantId,
             ]);
 
             return $this->successResponse('User created successfully', new UserResource($user), 201);
@@ -65,22 +65,33 @@ class UserController extends Controller
                 'message' => 'User not found'
             ], 404);
         }
+
         
         //validation
-        $validator = $request->validate([
+        $validator = Validator::make($request->all(),[
             'userName' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users'.$id,
-            'password' => 'required|min:6|regex:/[0-9]/|regex:/[a-zA-Z]/',
+            'email' => 'required|string|email|max:255|unique:users,email,'.$id,
+            'password' => 'nullable|min:6|regex:/[0-9]/|regex:/[a-zA-Z]/',
             'role' => 'required|in:Admin,Tenant,Staff',
         ]);
 
-        //update user
-        if(isset($validated['name'])) $user->name = $validated['name'];
-        if(isset($validated['email'])) $user->name = $validated['email'];
-        if(isset($validated['password'])) $user->name = $validated['password'];
-        if(isset($validated['role'])) $user->name = $validated['role'];
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), 422);
+        };
 
-        $user->save();
+        //update user
+        $userData = [
+            'user_name' => $request->userName,
+            'email' => $request->email,
+            'role' => $request->role,
+            'tenant_id' => $request->tenantId,
+        ];
+
+        if(isset($request->password)) {
+            $userData['password'] = Hash::make($request->password);
+        }
+        
+        $user->update($userData);
 
         return response()->json([
             'message' => 'User Updated Successfully',
