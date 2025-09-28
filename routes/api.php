@@ -13,7 +13,6 @@ Route::prefix('v1')->group(function() {
 Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
 
     // Users Route
-
     Route::post('/users',[UserController::class,'create']);
     Route::get('/users', [UserController::class,'index']);
     
