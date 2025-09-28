@@ -15,7 +15,7 @@ class RoomSeeder extends Seeder
      */
     public function run(): void
     {
-        $status = ['Avaliable','Rentend','Purchased','In Maintance'];
+        $status = ['Available','Rented','Purchased','In Maintenance'];
         for($i = 1; $i <= 10; $i++) {
             Room::create([
                 'id' => (String) Str::uuid(),

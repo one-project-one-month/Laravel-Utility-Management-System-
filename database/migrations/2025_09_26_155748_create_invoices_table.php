@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('bill_id')->references('id')->on('bills')->onDelete('cascade');
-            $table->enum('status',['Pending,Paid,Overdue']);
+            $table->enum('status',['Pending','Paid','Overdue']);
             $table->timestamps();
         });
     }
