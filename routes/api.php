@@ -36,8 +36,7 @@ Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
     //Receipt
      Route::get('/receipts', [ReceiptController::class, 'index']);
      Route::post('/receipts',[ReceiptController::class,'create']);
-
-
+     Route::get('/receipts/{id}', [ReceiptController::class, 'show']);
 });
 
 Route::middleware(['auth:sanctum',"Role.check:Tenant"])->group(function() {
