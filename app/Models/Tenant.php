@@ -9,7 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 class Tenant extends Model
 {
     protected $fillable = [
-
+        'room_id',
+        'names',
+        'emails',
+        'nrcs',
+        'phone_nos',
+        'emergency_nos',
     ];
 
     public function user() {
