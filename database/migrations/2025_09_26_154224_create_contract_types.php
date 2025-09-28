@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('price',20,2); //Check DataType
             $table->timestamps();
         });
-        DB::statement('ALTER TABLE tenants ADD COLUMN facilities text[]');
+        DB::statement('ALTER TABLE contract_types ADD COLUMN facilities text[]');
     }
 
     /**

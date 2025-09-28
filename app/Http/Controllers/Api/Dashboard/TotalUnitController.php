@@ -8,37 +8,34 @@ use App\Models\TotalUnit;
 
 class TotalUnitController extends Controller
 {
-    // (index) localhost:8000/api/v1/total-units
+    // index
     public function index(){
-        // return response()->json(TotalUnit::with('bill')->get());
-        return response()->json(TotalUnit::all());
+        return response()->json(TotalUnit::with('bill')->get());
     }
     
-    // (create) localhost:8000/api/v1/total-units
+    // create
     public function store(Request $request) {
         $data = $request->validate([
             'billId' => 'required|exists:bills,id',
             'electricityUnits' => 'required|integer',
             'waterUnits' => 'required|integer',
-            'createdAt' => 'required|date'
         ]);
 
         $unit = TotalUnit::create([
             'bill_id' => $data['billId'],
             'electricity_units' => $data['electricityUnits'],
             'water_units' => $data['waterUnits'],
-            'created_at' => $data['createdAt']
         ]);
 
         return response()->json($unit, 201);
     }
 
-    // (show) localhost:8000/api/v1/total-units/{id}
+    // (show) 
     public function show($id) {
         return response()->json(TotalUnit::with('bill')->findOrFail($id));
     }
 
-    // (update) localhost:8000/api/v1/total-units/{id}
+    // (update)
     public function update(Request $request, $id) {
         $unit = TotalUnit::findOrFail($id);
 
