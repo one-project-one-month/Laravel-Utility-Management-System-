@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -16,23 +17,42 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = [
+
+        $admins = [
             [
-                "user_name" => "Admin",
-                "email" => "admin@gmail.com",
+                "user_name" => "John Doe",
+                "email" => "johndoe@gmail.com",
                 "password" => Hash::make("Ks82787294"),
                 'role' => "Admin"
             ],
             [
-                "user_name" => "User",
-                "email" => "user@gmail.com",
+                "user_name" => "Alice Doe",
+                "email" => "alicedoe@gmail.com",
                 "password" => Hash::make("Ks82787294"),
-                'role' => "Tenant"
+                'role' => "Admin"
             ]
         ];
 
-        foreach ($users as $user) {
-            User::create($user);
+        //tenants
+        foreach ($admins as $admin) {
+            User::create($admin);
+        }
+
+        $tenants = DB::table('tenants')
+            ->select('id as tenant_id')
+            ->selectRaw('names[1] as first_tenant_name') // get the first name from names array
+            ->selectRaw('emails[1] as first_tenant_email') // get the first email from emails array
+            ->get();
+
+
+        foreach ($tenants as $tenant) {
+            User::create([
+                "user_name" => $tenant->first_tenant_name,
+                "email" => $tenant->first_tenant_email,
+                "password" => Hash::make("Ks82787294"),
+                'role' => "Tenant",
+                'tenant_id' => $tenant->tenant_id
+            ]);
         }
     }
 }
