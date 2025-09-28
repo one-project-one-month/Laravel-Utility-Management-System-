@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Receipt;
-use App\Models\User;
-use App\Models\Receipt;
 use App\Enums\PaymentMethod;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -21,6 +19,7 @@ class ReceiptController extends Controller
     public function index(){
           $receipts = Receipt::paginate(15);
          return $this->successResponse(content: $receipts);
+    }
 
 
     //Create Receipt
@@ -35,7 +34,7 @@ class ReceiptController extends Controller
         }
         $validatedData = $validator->validated();
         $invoice = Invoice::findOrFail($validatedData['invoice_id']);
-        
+
         if ($invoice->status == 'Paid') {
             return $this->errorResponse('This invoice has already been paid.', 409);
         }
