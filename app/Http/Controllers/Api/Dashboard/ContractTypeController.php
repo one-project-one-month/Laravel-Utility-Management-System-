@@ -78,4 +78,57 @@ class ContractTypeController extends Controller
             200
         );
     }
+
+    /**
+     * Update a specific contract type.
+     */
+    public function update(Request $request, String $id)
+    {
+        // validate incoming request
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'max:255'],
+            'duration' => ['required', 'integer'],
+            'price' => ['required', 'decimal:0,2']
+        ]);
+
+        // return error if the validation fails
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), 422);
+        }
+
+        // update the contract type
+        try {
+
+            // get the contract type to update
+            $contractType = ContractType::find($id);
+
+            // return error if the contract type does not exists
+            if (!$contractType) {
+                return $this->errorResponse([
+                    'Contract Type not found',
+                    404
+                ]);
+            }
+
+            // update the contract type
+            $contractType->update([
+                'name' => $request->name,
+                'duration' => $request->duration,
+                'price' => $request->price
+            ]);
+            
+            // return the contract type
+            return $this->successResponse(
+                'Contract Type updated successfully',
+                new ContractTypeResource($contractType),
+                201
+            );
+
+        } catch (\Exception $e) {
+            return $this->errorResponse(
+                'Contract type update fails: ' . $e->getMessage(),
+                500
+            );
+        }
+    }
 }

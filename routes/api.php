@@ -21,6 +21,7 @@ Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
     Route::get('/contract-types', [ContractTypeController::class, 'index']);
     Route::get('/contract-types/{id}', [ContractTypeController::class, 'show']);
     Route::post('/contract-types', [ContractTypeController::class, 'store']);
+    Route::patch('/contract-types/{id}', [ContractTypeController::class, 'update']);
     
 });
 
