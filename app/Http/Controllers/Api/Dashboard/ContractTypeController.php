@@ -95,12 +95,17 @@ class ContractTypeController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'max:255'],
             'duration' => ['required', 'integer'],
-            'price' => ['required', 'decimal:0,2']
+            'price' => ['required', 'decimal:0,2'],
+            'facilities' => ['required']
         ]);
 
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), 422);
         }
+
+        // format facilities field to appropriate format for storing into postgres text array field
+        $validated = $validator->validated();
+        $validated['facilities'] = $this->stringToPgArrayString($validated['facilities']);
 
         // update the contract-type
         try {
@@ -113,11 +118,7 @@ class ContractTypeController extends Controller
                 ]);
             }
 
-            $contractType->update([
-                'name' => $request->name,
-                'duration' => $request->duration,
-                'price' => $request->price
-            ]);
+            $contractType->update($validated);
             
             return $this->successResponse(
                 'Contract Type updated successfully',
