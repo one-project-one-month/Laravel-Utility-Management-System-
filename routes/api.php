@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\Api\Dashboard\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Dashboard\UserController;
+use App\Http\Controllers\Api\Dashboard\ReceiptController;
 use App\Http\Controllers\Api\Dashboard\ContractController;
 use App\Http\Controllers\Api\Dashboard\ContractTypeController;
 
@@ -41,6 +42,7 @@ Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
      Route::get('/receipts', [ReceiptController::class, 'index']);
      Route::post('/receipts',[ReceiptController::class,'create']);
      Route::get('/receipts/{id}', [ReceiptController::class, 'show']);
+     Route::put('/receipts/{id}', [ReceiptController::class,'update']);
 
 });
 
