@@ -76,7 +76,7 @@ class ContractTypeController extends Controller
             return $this->successResponse(
                 'A new Contract Type created successfully',
                 new ContractTypeResource($contractType),
-                200
+                201
             );
         } catch (\Exception $e) {
             return $this->errorResponse(
@@ -123,7 +123,7 @@ class ContractTypeController extends Controller
             return $this->successResponse(
                 'Contract Type updated successfully',
                 new ContractTypeResource($contractType),
-                201
+                200
             );
 
         } catch (\Exception $e) {
