@@ -2,13 +2,10 @@
 
 namespace Database\Seeders;
 
-
-use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserSeeder extends Seeder
 {
@@ -17,23 +14,21 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-
         $admins = [
             [
                 "user_name" => "John Doe",
-                "email" => "johndoe@gmail.com",
-                "password" => Hash::make("Ks82787294"),
-                'role' => "Admin"
+                "email"     => "johndoe@gmail.com",
+                "password"  => Hash::make("Ks82787294"),
+                "role"      => "Admin"
             ],
             [
                 "user_name" => "Alice Doe",
-                "email" => "alicedoe@gmail.com",
-                "password" => Hash::make("Ks82787294"),
-                'role' => "Admin"
+                "email"     => "alicedoe@gmail.com",
+                "password"  => Hash::make("Ks82787294"),
+                "role"      => "Admin"
             ]
         ];
 
-        //tenants
         foreach ($admins as $admin) {
             User::create($admin);
         }
@@ -48,10 +43,10 @@ class UserSeeder extends Seeder
         foreach ($tenants as $tenant) {
             User::create([
                 "user_name" => $tenant->first_tenant_name,
-                "email" => $tenant->first_tenant_email,
-                "password" => Hash::make("Ks82787294"),
-                'role' => "Tenant",
-                'tenant_id' => $tenant->tenant_id
+                "email"     => $tenant->first_tenant_email,
+                "password"  => Hash::make("Ks82787294"),
+                "role"      => "Tenant",
+                "tenant_id" => $tenant->tenant_id
             ]);
         }
     }
