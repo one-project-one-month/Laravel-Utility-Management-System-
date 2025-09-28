@@ -17,12 +17,13 @@ class ReceiptController extends Controller
 {
     use ApiResponse;
 
-    //Show All Receipt
+    
     public function index(){
           $receipts = Receipt::paginate(15);
          return $this->successResponse(content: $receipts);
     }
-    //Create Receipt
+  
+   
     public function create(Request $request){
         $validator = Validator::make($request->all(), [
             'invoice_id' => 'required|exists:invoices,id',
@@ -34,7 +35,7 @@ class ReceiptController extends Controller
         }
         $validatedData = $validator->validated();
         $invoice = Invoice::findOrFail($validatedData['invoice_id']);
-        
+
         if ($invoice->status == 'Paid') {
             return $this->errorResponse('This invoice has already been paid.', 409);
         }
@@ -45,12 +46,12 @@ class ReceiptController extends Controller
             'paid_date' => $validatedData['paid_date'],
         ]);
 
-        //update invoice status to 'Paid'
+        
         $invoice->update(['status' => 'Paid']);
         return $this->successResponse('A new Receipt created successfully!', status: 201);
 
     }
-    //Show Receipt
+   
     public function show($id){
         $receipt = Receipt::find($id);
         if (!$receipt) {
