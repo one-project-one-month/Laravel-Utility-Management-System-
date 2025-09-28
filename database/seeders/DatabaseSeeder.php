@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Database\Seeders\TotalUnitSeeder;
 
 
 class DatabaseSeeder extends Seeder
@@ -19,7 +20,8 @@ class DatabaseSeeder extends Seeder
             CustomerServiceSeeder::class,
             ContractTypeSeeder::class,
             ContractSeeder::class,
-            BillSeeder::class
+            BillSeeder::class,
+            TotalUnitSeeder::class
         ]);
     }
 }
