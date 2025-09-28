@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Database\Seeders\InvoiceSeeder;
+use Database\Seeders\ReceiptSeeder;
 use Database\Seeders\TotalUnitSeeder;
 
 
@@ -23,7 +24,8 @@ class DatabaseSeeder extends Seeder
             ContractSeeder::class,
             BillSeeder::class,
             TotalUnitSeeder::class,
-            InvoiceSeeder::class
+            InvoiceSeeder::class,
+            ReceiptSeeder::class
         ]);
     }
 }
