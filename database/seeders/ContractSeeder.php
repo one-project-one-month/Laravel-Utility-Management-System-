@@ -19,7 +19,7 @@ class ContractSeeder extends Seeder
     public function run(): void
     {
         $contractTypeId = ContractType::pluck('id');
-        $rooms = Room::whereIn('status',['Rentend','Purchased'])->pluck('id');
+        $rooms = Room::whereIn('status',['Rented','Purchased'])->pluck('id');
 
         $tenants = [];
         foreach($rooms as $room) {

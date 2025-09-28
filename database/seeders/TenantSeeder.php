@@ -15,7 +15,7 @@ class TenantSeeder extends Seeder
      */
     public function run(): void
     {
-        $rooms = Room::whereIn('status', ['Rentend', 'Purchased'])->get(); // Corrected 'Rentend' to 'Rented'
+        $rooms = Room::whereIn('status', ['Rented', 'Purchased'])->get(); // Corrected 'Rentend' to 'Rented'
 
         foreach ($rooms as $room) {
             $names = [];
