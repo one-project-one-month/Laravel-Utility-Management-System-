@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Receipt;
-use App\Models\User;
-use App\Models\Receipt;
 use App\Enums\PaymentMethod;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -18,11 +16,11 @@ class ReceiptController extends Controller
 {
     use ApiResponse;
 
+    //Show All Receipt
     public function index(){
           $receipts = Receipt::paginate(15);
          return $this->successResponse(content: $receipts);
-
-
+    }
     //Create Receipt
     public function create(Request $request){
         $validator = Validator::make($request->all(), [
@@ -50,5 +48,18 @@ class ReceiptController extends Controller
         $invoice->update(['status' => 'Paid']);
         return $this->successResponse('A new Receipt created successfully!', status: 201);
 
+    }
+    //Show Receipt
+    public function show($id){
+        $receipt = Receipt::find($id);
+        if (!$receipt) {
+            return $this->errorResponse(
+                message: 'The receipt you are looking for does not exist!',
+                status: 404
+            );
+        }
+        return $this->successResponse(
+            content: $receipt,
+        );
     }
 }
