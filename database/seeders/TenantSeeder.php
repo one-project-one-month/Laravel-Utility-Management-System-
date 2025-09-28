@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Room;
 use App\Models\Tenant;
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -15,7 +16,7 @@ class TenantSeeder extends Seeder
      */
     public function run(): void
     {
-        $rooms = Room::whereIn('status', ['Rentend', 'Purchased'])->get(); // Corrected 'Rentend' to 'Rented'
+        $rooms = Room::whereIn('status', ['Rented', 'Purchased'])->get(); // Corrected 'Rentend' to 'Rented'
 
         foreach ($rooms as $room) {
             $names = [];
@@ -27,7 +28,7 @@ class TenantSeeder extends Seeder
             $numberOfTenants = $room->max_no_of_people;
 
             for ($i = 0; $i < $numberOfTenants; $i++) {
-                $names[] = fake()->name();
+                $names[] = Str::ascii(fake()->name()); // Fix name that O'Liver to Oliver
                 $emails[] = fake()->unique()->safeEmail();
                 $nrcs[] = '12/PZT(N)' . fake()->unique()->numberBetween(100000, 999999);
                 $phone_nos[] = '09' . fake()->numerify('#########');
