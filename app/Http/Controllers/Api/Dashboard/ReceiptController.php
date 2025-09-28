@@ -3,19 +3,25 @@
 namespace App\Http\Controllers\Api\Dashboard;
 
 
+use App\Http\Controllers\Controller;
+use App\Models\Receipt;
 use App\Models\User;
 use App\Models\Receipt;
 use App\Enums\PaymentMethod;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Helpers\ApiResponse;
-use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use Illuminate\Support\Facades\Validator;
 
 class ReceiptController extends Controller
 {
     use ApiResponse;
+
+    public function index(){
+          $receipts = Receipt::paginate(15);
+         return $this->successResponse(content: $receipts);
+
 
     //Create Receipt
     public function create(Request $request){
@@ -43,5 +49,6 @@ class ReceiptController extends Controller
         //update invoice status to 'Paid'
         $invoice->update(['status' => 'Paid']);
         return $this->successResponse('A new Receipt created successfully!', status: 201);
+
     }
 }

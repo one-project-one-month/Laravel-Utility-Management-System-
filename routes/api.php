@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Dashboard\ReceiptController;
 
 
 
+
 Route::post('/v1/auth/login',[AuthController::class,'login'])->name('login');
 
 Route::prefix('v1')->group(function() {
@@ -20,7 +21,10 @@ Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
     Route::post('/users',[UserController::class,'create']);
     Route::get('/users', [UserController::class,'index']);
 
-    
+
+   
+ 
+   
     // Contract Types
     Route::get('/contract-types', [ContractTypeController::class, 'index']);
     Route::get('/contract-types/{id}', [ContractTypeController::class, 'show']);
@@ -30,11 +34,14 @@ Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
 
 
     //Receipt
+     Route::get('/receipts', [ReceiptController::class, 'index']);
      Route::post('/receipts',[ReceiptController::class,'create']);
+
 
 });
 
 Route::middleware(['auth:sanctum',"Role.check:Tenant"])->group(function() {
+
 
 });
 
