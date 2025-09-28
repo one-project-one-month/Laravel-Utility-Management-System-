@@ -17,6 +17,8 @@ Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
     // Users Route
     Route::post('/users',[UserController::class,'create']);
     Route::get('/users', [UserController::class,'index']);
+    Route::put('/users/{id}', [UserController::class,'update']);
+    Route::get('/users/{id}', [UserController::class,'show']);
 
 
 
@@ -34,7 +36,7 @@ Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
     Route::get('/contract-types', [ContractTypeController::class, 'index']);
     Route::get('/contract-types/{id}', [ContractTypeController::class, 'show']);
     Route::post('/contract-types', [ContractTypeController::class, 'store']);
-    Route::patch('/contract-types/{id}', [ContractTypeController::class, 'update']);
+    Route::get('/contract-types/{id}', [ContractTypeController::class, 'update']);
 
 
 

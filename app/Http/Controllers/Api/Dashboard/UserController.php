@@ -40,7 +40,7 @@ class UserController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role' => $request->role,
-                'tenant_id' => $request->tenant_id,
+                'tenant_id' => $request->tenantId,
             ]);
 
             return $this->successResponse('User created successfully', new UserResource($user), 201);
@@ -55,5 +55,64 @@ class UserController extends Controller
         $users = User::paginate(10);
 
         return $this->successResponse('Users retrieved successfully', UserResource::collection($users), 200);
+    }
+
+    //Users Update Method
+    public function update(Request $request, $id) {
+        $user = User::find($id);
+        if(!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        
+        //validation
+        $validator = Validator::make($request->all(),[
+            'userName' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,'.$id,
+            'password' => 'nullable|min:6|regex:/[0-9]/|regex:/[a-zA-Z]/',
+            'role' => 'required|in:Admin,Tenant,Staff',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), 422);
+        };
+
+        //update user
+        $userData = [
+            'user_name' => $request->userName,
+            'email' => $request->email,
+            'role' => $request->role,
+            'tenant_id' => $request->tenantId,
+        ];
+
+        if(isset($request->password)) {
+            $userData['password'] = Hash::make($request->password);
+        }
+        
+        $user->update($userData);
+
+        return response()->json([
+            'message' => 'User Updated Successfully',
+            'user' => $user
+        ], 200);
+    }
+
+    //User Show
+    public function show($id)
+    {
+        $user = User::find($id);
+
+        if(!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'User Fetched Successfully',
+            'user' => $user
+        ], 200);
     }
 }
