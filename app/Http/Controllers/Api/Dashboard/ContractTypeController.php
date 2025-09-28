@@ -14,12 +14,14 @@ class ContractTypeController extends Controller
     use ApiResponse;
 
     /**
-     * Display a listing of contract types.
+     * Display a listing of contract-types.
      */
     public function index()
     {
+        // retrieve a list of contract-types with pagination
         $contractTypes = ContractType::paginate(10);
 
+        // return the list of contract-types
         return $this->successResponse(
             'Contract types retrieved successfully',
             ContractTypeResource::collection($contractTypes),
@@ -28,11 +30,11 @@ class ContractTypeController extends Controller
     }
 
     /**
-     * Display a specific contract type.
+     * Display a specific contract-type.
      */
     public function show(String $id)
     {
-        // retrieve a single resource
+        // retrieve a single contract-type
         $contractType = ContractType::find($id);
 
         // return error if the resource is not found
@@ -43,7 +45,7 @@ class ContractTypeController extends Controller
             );
         }
 
-        // return the resource
+        // return the contract-type
         return $this->successResponse(
             'Contract type retrieved successfully',
             new ContractTypeResource($contractType),
@@ -52,11 +54,11 @@ class ContractTypeController extends Controller
     }
 
     /**
-     * Create a new contract type.
+     * Create a new contract-type.
      */
     public function store(Request $request)
     {
-        // validate request
+        // validate incoming request
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'max:255'],
             'duration' => ['required', 'integer'],
@@ -68,19 +70,27 @@ class ContractTypeController extends Controller
             return $this->errorResponse($validator->errors(), 422);
         }
 
-        // create new contract type
-        $contractType = ContractType::create($validator->validated());
-
-        // return the resource
-        return $this->successResponse(
-            'A new Contract Type created successfully',
-            new ContractTypeResource($contractType),
-            200
-        );
+        // create new contract-type
+        try {
+            // create new contract-type
+            $contractType = ContractType::create($validator->validated());
+    
+            // return the contract-type
+            return $this->successResponse(
+                'A new Contract Type created successfully',
+                new ContractTypeResource($contractType),
+                200
+            );
+        } catch (\Exception $e) {
+            return $this->errorResponse(
+                'Contract type creation failed',
+                500
+            );
+        }
     }
 
     /**
-     * Update a specific contract type.
+     * Update a specific contract-type.
      */
     public function update(Request $request, String $id)
     {
@@ -96,13 +106,13 @@ class ContractTypeController extends Controller
             return $this->errorResponse($validator->errors(), 422);
         }
 
-        // update the contract type
+        // update the contract-type
         try {
 
-            // get the contract type to update
+            // reterieve the contract-type to update
             $contractType = ContractType::find($id);
 
-            // return error if the contract type does not exists
+            // return error if the contract-type does not exists
             if (!$contractType) {
                 return $this->errorResponse([
                     'Contract Type not found',
@@ -110,14 +120,14 @@ class ContractTypeController extends Controller
                 ]);
             }
 
-            // update the contract type
+            // update the contract-type
             $contractType->update([
                 'name' => $request->name,
                 'duration' => $request->duration,
                 'price' => $request->price
             ]);
             
-            // return the contract type
+            // return the contract-type
             return $this->successResponse(
                 'Contract Type updated successfully',
                 new ContractTypeResource($contractType),
