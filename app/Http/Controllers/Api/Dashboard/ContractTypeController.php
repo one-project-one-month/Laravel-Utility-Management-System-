@@ -62,7 +62,8 @@ class ContractTypeController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'max:255'],
             'duration' => ['required', 'integer'],
-            'price' => ['required', 'decimal:0,2']
+            'price' => ['required', 'decimal:0,2'],
+            'facilities' => ['required']
         ]);
 
         // return error if the validation fails 
@@ -70,10 +71,14 @@ class ContractTypeController extends Controller
             return $this->errorResponse($validator->errors(), 422);
         }
 
+        // format facilities field to appropriate format for storing into postgres text array field
+        $validated = $validator->validated();
+        $validated['facilities'] = $this->stringToPgArrayString($validated['facilities']);
+
         // create new contract-type
         try {
             // create new contract-type
-            $contractType = ContractType::create($validator->validated());
+            $contractType = ContractType::create($validated);
     
             // return the contract-type
             return $this->successResponse(
@@ -140,5 +145,23 @@ class ContractTypeController extends Controller
                 500
             );
         }
+    }
+
+    /**
+     * format the string to postgres array string
+     */
+    private function stringToPgArrayString($textString)
+    {
+        $textArray = explode(',', $textString);
+
+        // trim whitespaces
+        $textArray = collect($textArray)->map(function ($value) {
+            return trim($value);
+        })->toArray();
+
+        // change to text array format
+        $pgArrayString = "{" . implode(",", $textArray) . "}";
+
+        return $pgArrayString;
     }
 }
