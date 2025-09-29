@@ -22,7 +22,7 @@ class UserController extends Controller
     public function create(Request $request)
     {
         //validation
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'userName' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|min:6|regex:/[0-9]/|regex:/[a-zA-Z]/',
@@ -51,8 +51,10 @@ class UserController extends Controller
     }
 
     //index users
-    public function index(){
-        $users = User::paginate(10);
+    public function index()
+    {
+        $users = User::with(['tenant'])->paginate(10);
+        // $users = User::paginate(10);
 
         return $this->successResponse('Users retrieved successfully', UserResource::collection($users), 200);
     }
