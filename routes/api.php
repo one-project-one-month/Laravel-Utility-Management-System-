@@ -14,7 +14,7 @@ use App\Http\Controllers\Api\Dashboard\TotalUnitController;
 
 Route::post('/v1/auth/login',[AuthController::class,'login'])->name('login');
 
-Route::prefix('v1')->middleware('auth:sanctum')->group(function() {
+Route::prefix('v1')->group(function() {
 
     Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
 
@@ -35,7 +35,9 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function() {
         Route::post('/receipts',[ReceiptController::class,'create']);
 
         // Total Units
+        Route::get('/total-units', [TotalUnitController::class, 'index']);
         Route::post('/total-units', [TotalUnitController::class, 'store']);
+        Route::get('/total-units/{id}', [TotalUnitController::class, 'show']);
         Route::put('/total-units/{id}', [TotalUnitController::class, 'update']);
 
 
@@ -45,10 +47,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function() {
         
     });
 
-    // Total Units
-    Route::get('/total-units', [TotalUnitController::class, 'index']);
-    Route::get('/total-units/{id}', [TotalUnitController::class, 'show']);
-
+    
 
 
 
