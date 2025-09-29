@@ -40,10 +40,12 @@ Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
     Route::get('/contract-types/{id}', [ContractTypeController::class, 'update']);
 
     Route::patch('/contract-types/{id}', [ContractTypeController::class, 'update']);
-    
-    //Tenant type
+
+    //Tenant
     Route::put('/tenants/{id}', [TenantController::class, 'update']);
     Route::get('/tenants/{id}', [TenantController::class, 'show']);
+    Route::get('/tenants', [TenantController::class, 'index']);
+    Route::post('/tenants', [TenantController::class, 'store']);
 
 
     //Receipt
