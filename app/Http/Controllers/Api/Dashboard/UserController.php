@@ -94,7 +94,7 @@ class UserController extends Controller
 
         $user->update($userData);
 
-        return $this->successResponse('User Updated Successfully', new UserResource($user),200);
+        return $this->successResponse('User Updated Successfully', new UserResource($user), 200);
     }
 
     //User Show

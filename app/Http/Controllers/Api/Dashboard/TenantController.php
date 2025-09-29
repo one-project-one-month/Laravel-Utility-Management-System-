@@ -122,8 +122,8 @@ class TenantController extends Controller
                 new TenantResource($tenant), 200
             );
         } catch (\Exception $e) {
-            return $this->errorResponse('Tenant update failed: ',$e->getMessage(),
-            500);
+            return $this->errorResponse('Tenant update failed: '. $e->getMessage(),
+            500); // changed (,) to (.) for proper string joining
         }
     }
 
@@ -136,6 +136,5 @@ class TenantController extends Controller
 
         $pgArrayString = "{".implode(",", $textArray). "}";
         return $pgArrayString;
-
     }
 }
