@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Dashboard\UserController;
 use App\Http\Controllers\Api\Dashboard\ReceiptController;
 use App\Http\Controllers\Api\Dashboard\ContractController;
 use App\Http\Controllers\Api\Dashboard\ContractTypeController;
+use App\Http\Controllers\Api\Dashboard\TenantController;
 
 Route::post('/v1/auth/login',[AuthController::class,'login']);
 
@@ -38,6 +39,11 @@ Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
     Route::post('/contract-types', [ContractTypeController::class, 'store']);
     Route::get('/contract-types/{id}', [ContractTypeController::class, 'update']);
 
+    Route::patch('/contract-types/{id}', [ContractTypeController::class, 'update']);
+    
+    //Tenant type
+    Route::put('/tenants/{id}', [TenantController::class, 'update']);
+    Route::get('/tenants/{id}', [TenantController::class, 'show']);
 
 
     //Receipt
