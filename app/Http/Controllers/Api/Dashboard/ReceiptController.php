@@ -33,7 +33,7 @@ class ReceiptController extends Controller
         }
         $validatedData = $validator->validated();
         $invoice = Invoice::findOrFail($validatedData['invoice_id']);
-        
+
         if ($invoice->status == 'Paid') {
             return $this->errorResponse('This invoice has already been paid.', 409);
         }
