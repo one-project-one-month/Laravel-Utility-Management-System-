@@ -13,6 +13,7 @@ class Contract extends Model
    protected $keyType = 'string';
 
     protected $fillable = [
+            'room_id',
             'contract_type_id',
             'tenant_id',
             'expiry_date'
