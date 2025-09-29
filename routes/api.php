@@ -23,12 +23,8 @@ Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
 
 
     // Contracts Route
-
-    Route::get('/contracts', [ContractController::class,'index']);
-    Route::get('/contracts/show/{contract}', [ContractController::class,'show']);
-    Route::post('/contracts', [ContractController::class,'store']);
-
-
+    
+    Route::apiResource('contracts', ContractController::class)->except(['destroy']);
 
 
 
