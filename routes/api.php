@@ -42,11 +42,7 @@ Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
     Route::patch('/contract-types/{id}', [ContractTypeController::class, 'update']);
 
     //Tenant
-    Route::put('/tenants/{id}', [TenantController::class, 'update']);
-    Route::get('/tenants/{id}', [TenantController::class, 'show']);
-    Route::get('/tenants', [TenantController::class, 'index']);
-    Route::post('/tenants', [TenantController::class, 'store']);
-
+    Route::resource('tenants',TenantController::class, ['only' => ['index','store','update','show']]);
 
     //Receipt
      Route::get('/receipts', [ReceiptController::class, 'index']);
