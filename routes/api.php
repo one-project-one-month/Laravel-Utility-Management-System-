@@ -24,7 +24,7 @@ Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
 
 
     // Contracts Route
-    
+
     Route::apiResource('contracts', ContractController::class)->except(['destroy']);
 
 
