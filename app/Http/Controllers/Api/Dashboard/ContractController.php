@@ -89,7 +89,11 @@ class ContractController extends Controller
         $validatedData = $validator->validated();
 
         $room = Room::find($validatedData['roomNo']);
-        $contract = Contract::findOrFail($id);
+        
+        $contract = Contract::find($id);
+        if (!$contract) {
+            return $this->errorResponse('Contract not found', 404);
+        }
 
         if ($room->status === 'Available' || $contract->room_id === $validatedData['roomNo']) {
 
