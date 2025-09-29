@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Room;
 use App\Models\CustomerService;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class CustomerServiceSeeder extends Seeder
 {
@@ -19,12 +18,12 @@ class CustomerServiceSeeder extends Seeder
         for($i = 1; $i <= 20; $i++) {
             CustomerService::create(
                 [
-                    "room_id"  => $roomIds->random(),
-                    "category" => fake()->randomElement(['Complain','Maintenance','Other']),
-                    "description" => fake()->sentence(),
-                    "status" => fake()->randomElement(['Pending','Ongoing','Resolved']),
+                    "room_id"        => $roomIds->random(),
+                    "category"       => fake()->randomElement(['Complain','Maintenance','Other']),
+                    "description"    => fake()->sentence(),
+                    "status"         => fake()->randomElement(['Pending','Ongoing','Resolved']),
                     "priority_level" => fake()->randomElement(['Low', 'Medium', 'High']),
-                    "issued_date"   => fake()->dateTimeBetween('2020-01-01', 'now')
+                    "issued_date"    => fake()->dateTimeBetween('2020-01-01')
                 ]
             );
         }

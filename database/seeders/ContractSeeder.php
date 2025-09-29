@@ -2,14 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Room;
 use App\Models\Tenant;
 use App\Models\Contract;
-use Illuminate\Log\Logger;
 use App\Models\ContractType;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Enums\RoomStatus;
 
 class ContractSeeder extends Seeder
 {
@@ -19,22 +16,19 @@ class ContractSeeder extends Seeder
     public function run(): void
     {
         $contractTypeId = ContractType::pluck('id');
-        $rooms = Room::whereIn('status',['Rentend','Purchased'])->pluck('id');
 
-        $tenants = [];
-        foreach($rooms as $room) {
-            $tenants[] = Tenant::where('room_id',$room)->get();
-        }
+        $tenants = Tenant::select('tenants.*')
+            ->join('rooms as rm', 'rm.id', '=', 'tenants.room_id')
+            ->whereIn('rm.status', [RoomStatus::Rented->value, RoomStatus::Purchased->value])
+            ->get();
 
-        foreach( $tenants as $tenant) {
-            foreach($tenant as $item) {
-                    $data = Contract::create([
-                            'contract_type_id' => $contractTypeId->random(),
-                            'tenant_id'          => $item['id'],
-                            'room_id'          => $item['room_id'],
-                            'expiry_date'      => fake()->dateTimeBetween('2020-01-01', 'now')
-                    ]);
-            }
+        foreach($tenants as $tenant) {
+            Contract::create([
+                'contract_type_id' => $contractTypeId->random(),
+                'tenant_id'        => $tenant->id,
+                'room_id'          => $tenant->room_id,
+                'expiry_date'      => fake()->dateTimeBetween('2020-01-01')
+            ]);
         }
     }
 }
