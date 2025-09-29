@@ -10,50 +10,51 @@ class TotalUnitController extends Controller
 {
     // index
     public function index(){
-        return response()->json(TotalUnit::with('bill')->get());
+        $totalunits = TotalUnit::orderBy('created_at','desc')->get();
+        return response()->json($totalunits,200);
     }
     
     // create
     public function store(Request $request) {
         $data = $request->validate([
             'billId' => 'required|exists:bills,id',
-            'electricityUnits' => 'required|integer',
-            'waterUnits' => 'required|integer',
+            'electricity_units' => 'nullable|integer',
+            'water_units' => 'nullable|integer',
         ]);
 
-        $unit = TotalUnit::create([
-            'bill_id' => $data['billId'],
-            'electricity_units' => $data['electricityUnits'],
-            'water_units' => $data['waterUnits'],
-        ]);
+        $totalunits = new TotalUnit();
+        $totalunits->bill_id = $request["billId"];
+        $totalunits->electricity_units = is_null($request["electricity_units"]) ?  $totalunits->generatetotalunit(3) : $request["electricity_units"];
+        $totalunits->water_units = is_null($request["water_units"]) ?  $totalunits->generatetotalunit(2) : $request["water_units"];
+        $totalunits->save();
 
-        return response()->json($unit, 201);
+        return response()->json($totalunits, 200);
     }
 
     // (show) 
     public function show($id) {
-        return response()->json(TotalUnit::with('bill')->findOrFail($id));
+        $totalunits = TotalUnit::findOrFail($id);
+        return response()->json($totalunits, 200);
     }
+
 
     // (update)
     public function update(Request $request, $id) {
-        $unit = TotalUnit::findOrFail($id);
 
         $data = $request->validate([
-            'billId' => 'sometimes|exists:bills,id',
-            'electricityUnits' => 'sometimes|integer',
-            'waterUnits' => 'sometimes|integer',
-            'createdAt' => 'sometimes|date'
+            'billId' => 'required|exists:bills,id',
+            'electricity_units' => 'nullable|integer',
+            'water_units' => 'nullable|integer',
         ]);
 
-        $unit->update([
-            'bill_id' => $data['billId'] ?? $unit->bill_id,
-            'electricity_units' => $data['electricityUnits'] ?? $unit->electricity_units,
-            'water_units' => $data['waterUnits'] ?? $unit->water_units,
-            'created_at' => $data['createdAt'] ?? $unit->created_at
-        ]);
+        $totalunits = TotalUnit::findOrFail($id);
+        $totalunits->bill_id = $request["billId"];
+        $totalunits->electricity_units = is_null($request["electricity_units"]) ?  $totalunits->generatetotalunit(3) : $request["electricity_units"];
+        $totalunits->water_units = is_null($request["water_units"]) ?  $totalunits->generatetotalunit(2) : $request["water_units"];
+        $totalunits->save();
 
-        return response()->json($unit);
+        return response()->json($totalunits, 200);
+
     }
 
 }
