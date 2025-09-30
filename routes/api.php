@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Dashboard\ContractTypeController;
 use App\Http\Controllers\Api\Dashboard\TenantController;
 use App\Http\Controllers\Api\Dashboard\TotalUnitController;
 use App\Http\Controllers\Api\Dashboard\CustomerServiceController;
+use App\Http\Controllers\Api\Dashboard\RoomController;
 
 
 Route::post('/v1/auth/login', [AuthController::class, 'login']);
@@ -21,21 +22,6 @@ Route::prefix('v1')->group(function () {
         // Users Route
         Route::resource('users', UserController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
-<<<<<<< HEAD
-    // Users Route
-    Route::post('/users',[UserController::class,'create']);
-    Route::get('/users', [UserController::class,'index']);
-    Route::put('/users/{id}', [UserController::class,'update']);
-    Route::get('/users/{id}', [UserController::class,'show']);
-
-    
-    // Contract Types
-    Route::get('/contract-types', [ContractTypeController::class, 'index']);
-    Route::get('/contract-types/{id}', [ContractTypeController::class, 'show']);
-    Route::post('/contract-types', [ContractTypeController::class, 'store']);
-    Route::get('/contract-types/{id}', [ContractTypeController::class, 'update']);
-    
-=======
         // Contracts Route
         Route::apiResource('contracts', ContractController::class)->except(['destroy']);
 
@@ -72,7 +58,6 @@ Route::prefix('v1')->group(function () {
          Route::get('/rooms',[RoomController::class,'index']);
          Route::get('/rooms/{id}',[RoomController::class,'show']);
          Route::patch('/rooms/{id}',[RoomController::class,'update']);
->>>>>>> b475cff3f15e206520e8c246f6d290104d4a77f7
 
 
     });
