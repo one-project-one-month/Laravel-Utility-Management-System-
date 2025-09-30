@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('room_id');
             $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
-            $table->integer('user_id');
+            $table->uuid('user_id'); //changed primary key to UUID
             $table->decimal('rental_fee',20,2);
             $table->decimal('electricity_fee',20,2);
             $table->decimal('water_fee',20,2);
