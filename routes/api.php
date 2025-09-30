@@ -40,17 +40,24 @@ Route::prefix('v1')->group(function () {
         Route::post('/receipts', [ReceiptController::class, 'create']);
         Route::get('/receipts/{id}', [ReceiptController::class, 'show']);
         Route::put('/receipts/{id}', [ReceiptController::class, 'update']);
-      
+
         //Customer services
         Route::get('/customer-services', [CustomerServiceController::class, 'index']);
         Route::get('/customer-services/{id}', [CustomerServiceController::class, 'show']);
         Route::put('/customer-services/{id}', [CustomerServiceController::class, 'update']);
-      
+
         // Total Units
         Route::get('/total-units', [TotalUnitController::class, 'index']);
         Route::post('/total-units', [TotalUnitController::class, 'store']);
         Route::get('/total-units/{id}', [TotalUnitController::class, 'show']);
         Route::put('/total-units/{id}', [TotalUnitController::class, 'update']);
+
+        // Rooms Route
+        //  Route::post('/rooms',[RoomController::class,'create']);
+         Route::get('/rooms',[RoomController::class,'index']);
+         Route::get('/rooms/{id}',[RoomController::class,'show']);
+         Route::patch('/rooms/{id}',[RoomController::class,'update']);
+
 
     });
 
@@ -59,3 +66,4 @@ Route::prefix('v1')->group(function () {
 
      });
 });
+
