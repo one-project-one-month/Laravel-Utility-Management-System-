@@ -19,10 +19,10 @@ class UserController extends Controller
     use ApiResponse, HasApiTokens, HasFactory, Notifiable;
 
     //user create
-    public function create(Request $request)
+    public function store(Request $request)
     {
         //validation
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'userName' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|min:6|regex:/[0-9]/|regex:/[a-zA-Z]/',
@@ -40,7 +40,7 @@ class UserController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role' => $request->role,
-                'tenant_id' => $request->tenant_id,
+                'tenant_id' => $request->tenantId,
             ]);
 
             return $this->successResponse('User created successfully', new UserResource($user), 201);
@@ -51,57 +51,62 @@ class UserController extends Controller
     }
 
     //index users
-    public function index(){
-        $users = User::paginate(10);
+    public function index()
+    {
+        $users = User::with(['tenant'])->paginate(10);
 
         return $this->successResponse('Users retrieved successfully', UserResource::collection($users), 200);
     }
 
     //Users Update Method
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         $user = User::find($id);
-        if(!$user) {
-            return response()->json([
-                'message' => 'User not found'
-            ], 404);
+        if (!$user) {
+            return $this->errorResponse('User not found.', 404);
         }
-        
+
+
         //validation
-        $validator = $request->validate([
+        $validator = Validator::make($request->all(), [
             'userName' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users'.$id,
-            'password' => 'required|min:6|regex:/[0-9]/|regex:/[a-zA-Z]/',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'password' => 'nullable|min:6|regex:/[0-9]/|regex:/[a-zA-Z]/',
             'role' => 'required|in:Admin,Tenant,Staff',
         ]);
 
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), 422);
+        }
+        ;
+
         //update user
-        if(isset($validated['name'])) $user->name = $validated['name'];
-        if(isset($validated['email'])) $user->name = $validated['email'];
-        if(isset($validated['password'])) $user->name = $validated['password'];
-        if(isset($validated['role'])) $user->name = $validated['role'];
+        $userData = [
+            'user_name' => $request->userName,
+            'email' => $request->email,
+            'role' => $request->role,
+            'tenant_id' => $request->tenantId,
+        ];
 
-        $user->save();
+        if (isset($request->password)) {
+            $userData['password'] = Hash::make($request->password);
+        }
 
-        return response()->json([
-            'message' => 'User Updated Successfully',
-            'user' => $user
-        ], 200);
+        $user->update($userData);
+
+        return $this->successResponse('User Updated Successfully', new UserResource($user), 200);
     }
 
     //User Show
     public function show($id)
     {
         $user = User::find($id);
+        $user->load('tenant');
 
-        if(!$user) {
-            return response()->json([
-                'message' => 'User not found'
-            ], 404);
+        if (!$user) {
+            return $this->errorResponse('User not found.', 404);
         }
 
-        return response()->json([
-            'message' => 'User Fetched Successfully',
-            'user' => $user
-        ], 200);
+        return $this->successResponse('User Fetched Successfully', new UserResource($user), 200);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Str;
 
 class ContractTypeResource extends JsonResource
 {
@@ -17,7 +18,17 @@ class ContractTypeResource extends JsonResource
         return [
             'name' => $this->name,
             'duration' => $this->duration,
-            'price' => $this->price
+            'price' => $this->price,
+            'facilities' => $this->textArrayToString($this->facilities)
         ];
+    }
+
+    private function textArrayToString(String $textArray): String
+    {
+        return str_replace(
+            "\"",
+            "",
+            Str::between($textArray, '{', '}')
+        );
     }
 }

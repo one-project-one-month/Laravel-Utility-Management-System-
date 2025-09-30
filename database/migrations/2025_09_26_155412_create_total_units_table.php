@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('total_units', function (Blueprint $table) {
             $table->id();
             $table->foreignId('bill_id')->references('id')->on('bills')->onDelete('cascade');
-            $table->integer('electricity_units');
-            $table->integer('water_units');
+            $table->decimal('electricity_units',20,2);
+            $table->decimal('water_units',20,2);
             $table->timestamps();
         });
     }

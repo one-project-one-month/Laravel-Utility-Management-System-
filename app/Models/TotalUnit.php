@@ -16,4 +16,16 @@ class TotalUnit extends Model
     public function bill() {
         return $this->belongsTo(Bill::class);
     }
+
+    public function generateTotalUnit($length){
+        if ($length === 1) {
+            return rand(0, 9); 
+        } elseif ($length === 2) {
+            return rand(10, 99); 
+        } elseif ($length === 3) {
+            return rand(100, 999); 
+        } else {
+            return rand(0, 999);
+        }
+    }
 }
