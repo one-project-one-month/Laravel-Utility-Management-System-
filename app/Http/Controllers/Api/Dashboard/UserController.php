@@ -73,6 +73,8 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
             'password' => 'nullable|min:6|regex:/[0-9]/|regex:/[a-zA-Z]/',
             'role' => 'required|in:Admin,Tenant,Staff',
+            'tenantId' => 'nullable',
+            'isActive' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -86,6 +88,7 @@ class UserController extends Controller
             'email' => $request->email,
             'role' => $request->role,
             'tenant_id' => $request->tenantId,
+            'is_active' => $request->isActive
         ];
 
         if (isset($request->password)) {

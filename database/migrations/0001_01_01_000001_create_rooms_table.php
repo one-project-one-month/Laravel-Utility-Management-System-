@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->integer('room_no');
+            $table->integer('room_no')->unique();
             $table->string('dimension');
             $table->integer('no_of_bed_room');
             $table->enum('status',['Available','Rented','Purchased','In Maintenance']);
