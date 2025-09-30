@@ -3,12 +3,13 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Dashboard\RoomController;
 use App\Http\Controllers\Api\Dashboard\UserController;
+use App\Http\Controllers\Api\Dashboard\TenantController;
 use App\Http\Controllers\Api\Dashboard\ReceiptController;
 use App\Http\Controllers\Api\Dashboard\ContractController;
-use App\Http\Controllers\Api\Dashboard\ContractTypeController;
-use App\Http\Controllers\Api\Dashboard\TenantController;
 use App\Http\Controllers\Api\Dashboard\TotalUnitController;
+use App\Http\Controllers\Api\Dashboard\ContractTypeController;
 use App\Http\Controllers\Api\Dashboard\CustomerServiceController;
 
 
