@@ -23,8 +23,7 @@ class ReceiptController extends Controller
          return $this->successResponse(content: $receipts);
     }
   
-   
-    public function create(Request $request){
+    public function store(Request $request){
         $validator = Validator::make($request->all(), [
             'invoice_id' => 'required|exists:invoices,id',
             'payment_method' => ['required', Rule::enum(PaymentMethod::class)],
