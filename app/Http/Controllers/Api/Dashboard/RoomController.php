@@ -146,7 +146,7 @@ class RoomController extends Controller
             // success response
             return $this->successResponse('Room updated successfully',new RoomResource($roomData),200);
 
-        } catch (\Exceptiion $error) {
+        } catch (\Exception $error) {
             //error response
             return $this->errorResponse('Room update fails: '.$error->getMessage(), 500);
         }
