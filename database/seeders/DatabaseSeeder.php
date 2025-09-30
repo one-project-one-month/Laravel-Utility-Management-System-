@@ -2,15 +2,10 @@
 
 namespace Database\Seeders;
 
-
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Database\Seeders\RoomSeeder;
-use Database\Seeders\UserSeeder;
-use Database\Seeders\TenantSeeder;
-use Database\Seeders\ContractSeeder;
-use Database\Seeders\ContractTypeSeeder;
-use Database\Seeders\CustomerServiceSeeder;
+use Database\Seeders\InvoiceSeeder;
+use Database\Seeders\ReceiptSeeder;
+use Database\Seeders\TotalUnitSeeder;
 
 
 class DatabaseSeeder extends Seeder
@@ -26,7 +21,11 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             CustomerServiceSeeder::class,
             ContractTypeSeeder::class,
-            ContractSeeder::class
+            ContractSeeder::class,
+            BillSeeder::class,
+            TotalUnitSeeder::class,
+            InvoiceSeeder::class,
+            ReceiptSeeder::class
         ]);
     }
 }

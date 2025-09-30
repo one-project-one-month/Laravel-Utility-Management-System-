@@ -13,9 +13,73 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+
+/**
+ * @OA\Info(
+ *     title="Utility Management System API",
+ *     version="1.0.0",
+ *     description="API documentation for the Laravel Utility Management System",
+ * )
+ *
+ */
 class AuthController extends Controller
 {
     use ApiResponse, HasApiTokens, HasFactory, Notifiable;
+
+    /**
+ * @OA\Post(
+ *     path="/v1/auth/login",
+ *     summary="Login user and return token",
+ *     tags={"Authentication"},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"email","password"},
+ *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+ *             @OA\Property(property="password", type="string", format="password", example="Password123")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Login successful",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Login success"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(property="user", type="object", example={"id": 1, "name": "John Doe", "email": "user@example.com"}),
+ *                 @OA\Property(property="token", type="string", example="1|abcxyz123")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthorized - invalid password",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Your credential is wrong!")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="User not found",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="Your credentials have not served!")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Validation errors",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+ *             @OA\Property(
+ *                 property="errors",
+ *                 type="object",
+ *                 example={"email": {"The email field is required."}, "password": {"The password must be at least 6 characters."}}
+ *             )
+ *         )
+ *     )
+ * )
+ */
 
     public function login (Request $request) {
         $validator = Validator::make($request->all(),[
