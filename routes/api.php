@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Dashboard\ContractController;
 use App\Http\Controllers\Api\Dashboard\TotalUnitController;
 use App\Http\Controllers\Api\Dashboard\ContractTypeController;
 use App\Http\Controllers\Api\Dashboard\CustomerServiceController;
+use App\Http\Controllers\Api\Dashboard\BillController;
 
 
 Route::post('/v1/auth/login', [AuthController::class, 'login']);
@@ -38,7 +39,6 @@ Route::prefix('v1')->group(function () {
 
         //Receipt
         Route::apiResource('/receipts', ReceiptController::class)->except(['destroy']);
-      
 
         //Customer services
         Route::get('/customer-services', [CustomerServiceController::class, 'index']);
@@ -57,6 +57,13 @@ Route::prefix('v1')->group(function () {
          Route::get('/rooms/{id}',[RoomController::class,'show']);
          Route::patch('/rooms/{id}',[RoomController::class,'update']);
 
+        // Bills
+        Route::prefix('bills')->group(function() {
+            Route::get('', [BillController::class, 'index']);
+            Route::post('', [BillController::class, 'store']);
+            Route::put('{id}', [BillController::class, 'update']);
+            Route::get('{id}', [BillController::class, 'show']);
+        });
 
     });
 
