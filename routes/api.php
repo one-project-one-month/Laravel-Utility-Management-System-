@@ -8,7 +8,9 @@ use App\Http\Controllers\Api\Dashboard\ReceiptController;
 use App\Http\Controllers\Api\Dashboard\ContractController;
 use App\Http\Controllers\Api\Dashboard\ContractTypeController;
 use App\Http\Controllers\Api\Dashboard\TenantController;
+use App\Http\Controllers\Api\Dashboard\TotalUnitController;
 use App\Http\Controllers\Api\Dashboard\CustomerServiceController;
+
 
 Route::post('/v1/auth/login', [AuthController::class, 'login']);
 
@@ -43,13 +45,17 @@ Route::prefix('v1')->group(function () {
         Route::get('/customer-services', [CustomerServiceController::class, 'index']);
         Route::get('/customer-services/{id}', [CustomerServiceController::class, 'show']);
         Route::put('/customer-services/{id}', [CustomerServiceController::class, 'update']);
+      
+        // Total Units
+        Route::get('/total-units', [TotalUnitController::class, 'index']);
+        Route::post('/total-units', [TotalUnitController::class, 'store']);
+        Route::get('/total-units/{id}', [TotalUnitController::class, 'show']);
+        Route::put('/total-units/{id}', [TotalUnitController::class, 'update']);
 
     });
 
     Route::middleware(['auth:sanctum', "Role.check:Tenant"])->group(function () {
 
 
-
-    });
-
+     });
 });
