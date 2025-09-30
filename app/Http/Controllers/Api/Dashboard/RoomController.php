@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Api\Dashboard;
 
+use Exceptiion;
 use App\Models\Room;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Helpers\ApiResponse;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\RoomResource;
+use Exception;
 use Illuminate\Support\Facades\Validator;
 
 class RoomController extends Controller
@@ -59,10 +62,6 @@ class RoomController extends Controller
 
     // }
 
-
-    /**
-     * Display a list of room
-     */
     public function index(){
 
         // retrieve a list of rooms with pagination
@@ -72,43 +71,29 @@ class RoomController extends Controller
         return $this->successResponse('Rooms retrieved successfully', RoomResource::collection($roomData),200);
     }
 
-
-    /**
-     * Display a specific room
-     */
     public function show(String $id){
 
-        // check room uuid format
         if (!Str::isUuid($id)) {
             return $this->errorResponse('Invalid room id format', 400);
         }
 
-        // retrieve a specific room
         $roomData = Room::find($id);
 
-        // return error response if room not found
-        if( !$roomData ){
+        if(!$roomData ){
             return $this->errorResponse('Room not found',404);
         }
 
-        // return specific room
         return $this->successResponse('Room retrieved successfully', new RoomResource($roomData), 200);
     }
 
-
-    /**
-     * Update a specific room
-     */
     public function update(Request $request, String $id){
 
-        // check room uuid format
         if (!Str::isUuid($id)) {
             return $this->errorResponse('Invalid room id format', 400);
         }
 
-        // check validation room data input
         $validator = Validator::make($request->all(), [
-            'roomNo' => 'required|integer',
+            'roomNo' => 'required|integer|unique:rooms,room_no,' . $id . ',id',
             'dimension' => 'required|string|max:255',
             'noOfBedRoom' => 'required|integer|min:1|max:4',
             'status' => 'required|in:Available,Rented,Purchased,In Maintenance',
@@ -117,22 +102,17 @@ class RoomController extends Controller
             'description' => 'string|max:255'
         ]);
 
-        // return error if validation fails
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(),422);
         }
 
         try {
-
-            // retrieve a specific room
             $roomData = Room::find($id);
 
-            // return error response if room not found
             if( !$roomData ){
                 return $this->errorResponse('Room not found',404);
             }
 
-            // update a specific room with room data input
             $roomData->update([
                 'room_no' => $request->roomNo,
                 'dimension' => $request->dimension,
@@ -143,14 +123,11 @@ class RoomController extends Controller
                 'description' => $request->description
             ]);
 
-            // success response
             return $this->successResponse('Room updated successfully',new RoomResource($roomData),200);
 
         } catch (\Exception $error) {
             //error response
             return $this->errorResponse('Room update fails: '.$error->getMessage(), 500);
         }
-
     }
-
 }

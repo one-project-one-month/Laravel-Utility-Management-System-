@@ -20,6 +20,7 @@ class UserResource extends JsonResource
             'userName' => $this->user_name,
             'email' => $this->email,
             'role' => $this->role,
+            'isActive' => $this->is_active,
             'tenantId' => $this->tenant_id,
             'tenant' => new TenantResource($this->whenLoaded('tenant')),
             'createdAt' => $this->created_at,

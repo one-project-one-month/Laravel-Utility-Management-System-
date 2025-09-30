@@ -27,12 +27,12 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('contracts', ContractController::class)->except(['destroy']);
 
         // Contract Types
-        Route::get('/contract-types', [ContractTypeController::class, 'index']);
-        Route::get('/contract-types/{id}', [ContractTypeController::class, 'show']);
-        Route::post('/contract-types', [ContractTypeController::class, 'store']);
-        Route::get('/contract-types/{id}', [ContractTypeController::class, 'update']);
-
-        Route::patch('/contract-types/{id}', [ContractTypeController::class, 'update']);
+        // Route::get('/contract-types', [ContractTypeController::class, 'index']);
+        // Route::get('/contract-types/{id}', [ContractTypeController::class, 'show']);
+        // Route::post('/contract-types', [ContractTypeController::class, 'store']);
+        // Route::get('/contract-types/{id}', [ContractTypeController::class, 'update']);
+        Route::resource('contract-types', ContractTypeController::class, ['only' => ['index', 'store', 'update', 'show']]);
+        // Route::patch('/contract-types/{id}', [ContractTypeController::class, 'update']);
 
         //Tenant
         Route::resource('tenants', TenantController::class, ['only' => ['index', 'store', 'update', 'show']]);
@@ -46,16 +46,13 @@ Route::prefix('v1')->group(function () {
         Route::put('/customer-services/{id}', [CustomerServiceController::class, 'update']);
 
         // Total Units
-        Route::get('/total-units', [TotalUnitController::class, 'index']);
-        Route::post('/total-units', [TotalUnitController::class, 'store']);
-        Route::get('/total-units/{id}', [TotalUnitController::class, 'show']);
-        Route::put('/total-units/{id}', [TotalUnitController::class, 'update']);
+        Route::resource('total-units', TotalUnitController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
         // Rooms Route
         //  Route::post('/rooms',[RoomController::class,'create']);
          Route::get('/rooms',[RoomController::class,'index']);
          Route::get('/rooms/{id}',[RoomController::class,'show']);
-         Route::patch('/rooms/{id}',[RoomController::class,'update']);
+         Route::put('/rooms/{id}',[RoomController::class,'update']);
 
         // Bills
         Route::prefix('bills')->group(function() {

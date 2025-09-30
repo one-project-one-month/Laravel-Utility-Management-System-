@@ -19,7 +19,7 @@ class ContractTypeResource extends JsonResource
             'name' => $this->name,
             'duration' => $this->duration,
             'price' => $this->price,
-            'facilities' => $this->textArrayToString($this->facilities)
+            'facilities' => $this->facilities
         ];
     }
 

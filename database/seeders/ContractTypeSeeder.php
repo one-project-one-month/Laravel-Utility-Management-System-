@@ -17,7 +17,7 @@ class ContractTypeSeeder extends Seeder
         $pricePerMonth = 800000.00;
         $price = $pricePerMonth; // init price with a month value
 
-        $facilities = DB::raw("ARRAY['Smart Tv','Washing Machine','Aircon']");
+        $facilities = DB::raw("ARRAY['Smart Tv','Washing Machine','Air-con']");
 
         $contracts = [];
 
