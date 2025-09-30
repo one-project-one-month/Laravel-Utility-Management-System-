@@ -27,12 +27,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('contracts', ContractController::class)->except(['destroy']);
 
         // Contract Types
-        // Route::get('/contract-types', [ContractTypeController::class, 'index']);
-        // Route::get('/contract-types/{id}', [ContractTypeController::class, 'show']);
-        // Route::post('/contract-types', [ContractTypeController::class, 'store']);
-        // Route::get('/contract-types/{id}', [ContractTypeController::class, 'update']);
         Route::resource('contract-types', ContractTypeController::class, ['only' => ['index', 'store', 'update', 'show']]);
-        // Route::patch('/contract-types/{id}', [ContractTypeController::class, 'update']);
 
         //Tenant
         Route::resource('tenants', TenantController::class, ['only' => ['index', 'store', 'update', 'show']]);
@@ -41,26 +36,18 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('/receipts', ReceiptController::class)->except(['destroy']);
 
         //Customer services
-        Route::get('/customer-services', [CustomerServiceController::class, 'index']);
-        Route::get('/customer-services/{id}', [CustomerServiceController::class, 'show']);
-        Route::put('/customer-services/{id}', [CustomerServiceController::class, 'update']);
+        Route::resource('customer-services', CustomerServiceController::class, ['only' => ['index', 'update', 'show']]);
 
         // Total Units
         Route::resource('total-units', TotalUnitController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
         // Rooms Route
-        //  Route::post('/rooms',[RoomController::class,'create']);
-         Route::get('/rooms',[RoomController::class,'index']);
-         Route::get('/rooms/{id}',[RoomController::class,'show']);
-         Route::put('/rooms/{id}',[RoomController::class,'update']);
+        Route::resource('bills', RoomController::class, ['only' => ['index', 'update', 'show']]);
 
         // Bills
-        Route::prefix('bills')->group(function() {
-            Route::get('', [BillController::class, 'index']);
-            Route::post('', [BillController::class, 'store']);
-            Route::put('{id}', [BillController::class, 'update']);
-            Route::get('{id}', [BillController::class, 'show']);
-        });
+        Route::resource('bills', BillController::class, ['only' => ['index', 'store', 'update', 'show']]);
+
+
 
     });
 
