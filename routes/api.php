@@ -36,7 +36,7 @@ Route::prefix('v1')->group(function () {
         Route::resource('tenants', TenantController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
         //Receipt
-        Route::apiResource('/receipts', ReceiptController::class)->except(['destroy']);;
+        Route::apiResource('/receipts', ReceiptController::class)->except(['destroy']);
       
         //Customer services
         Route::get('/customer-services', [CustomerServiceController::class, 'index']);
