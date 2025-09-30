@@ -59,7 +59,7 @@ class BillController extends Controller
     {
         $validator = Validator::make($request->all(),
             [
-                'roomId'         => 'bail|required|exists:rooms,id',
+                'roomId'         => 'bail|required|uuid|exists:rooms,id',
                 'rentalFee'      => 'bail|required|numeric|min:0|decimal:2',
                 'electricityFee' => 'bail|required|numeric|min:0|decimal:2',
                 'waterFee'       => 'bail|required|numeric|min:0|decimal:2',
@@ -107,7 +107,7 @@ class BillController extends Controller
 
         $validator = Validator::make($request->all(),
             [
-                'roomId'         => 'bail|sometimes|required|exists:rooms,id',
+                'roomId'         => 'bail|sometimes|required|uuid|exists:rooms,id',
                 'rentalFee'      => 'bail|sometimes|required|numeric|min:0|decimal:2',
                 'electricityFee' => 'bail|sometimes|required|numeric|min:0|decimal:2',
                 'waterFee'       => 'bail|sometimes|required|numeric|min:0|decimal:2',
