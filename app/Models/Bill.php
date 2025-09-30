@@ -24,10 +24,10 @@ class Bill extends Model
     ];
 
     public function totalUnit() {
-        return $this->belongsTo(TotalUnit::class);
+        return $this->hasOne(TotalUnit::class);
     }
 
     public function invoice() {
-        return $this->belongsTo(Invoice::class);
+        return $this->hasOne(Invoice::class);
     }
 }
