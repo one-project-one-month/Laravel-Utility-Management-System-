@@ -9,48 +9,40 @@ use App\Http\Controllers\Api\Dashboard\ContractController;
 use App\Http\Controllers\Api\Dashboard\ContractTypeController;
 use App\Http\Controllers\Api\Dashboard\TenantController;
 
-Route::post('/v1/auth/login',[AuthController::class,'login']);
+Route::post('/v1/auth/login', [AuthController::class, 'login']);
 
-Route::prefix('v1')->group(function() {
+Route::prefix('v1')->group(function () {
 
-Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
+    Route::middleware(['auth:sanctum', "Role.check:Admin"])->group(function () {
 
-    // Users Route
-    Route::post('/users',[UserController::class,'create']);
-    Route::get('/users', [UserController::class,'index']);
-    Route::put('/users/{id}', [UserController::class,'update']);
-    Route::get('/users/{id}', [UserController::class,'show']);
+        // Users Route
+        Route::resource('users', UserController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
+        // Contracts Route
+        Route::apiResource('contracts', ContractController::class)->except(['destroy']);
 
+        // Contract Types
+        Route::get('/contract-types', [ContractTypeController::class, 'index']);
+        Route::get('/contract-types/{id}', [ContractTypeController::class, 'show']);
+        Route::post('/contract-types', [ContractTypeController::class, 'store']);
+        Route::get('/contract-types/{id}', [ContractTypeController::class, 'update']);
 
-    // Contracts Route
+        Route::patch('/contract-types/{id}', [ContractTypeController::class, 'update']);
 
-    Route::apiResource('contracts', ContractController::class)->except(['destroy']);
+        //Tenant
+        Route::resource('tenants', TenantController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
+        //Receipt
+        Route::get('/receipts', [ReceiptController::class, 'index']);
+        Route::post('/receipts', [ReceiptController::class, 'create']);
+        Route::get('/receipts/{id}', [ReceiptController::class, 'show']);
+        Route::put('/receipts/{id}', [ReceiptController::class, 'update']);
 
+    });
 
-    // Contract Types
-    Route::get('/contract-types', [ContractTypeController::class, 'index']);
-    Route::get('/contract-types/{id}', [ContractTypeController::class, 'show']);
-    Route::post('/contract-types', [ContractTypeController::class, 'store']);
-    Route::get('/contract-types/{id}', [ContractTypeController::class, 'update']);
-
-    Route::patch('/contract-types/{id}', [ContractTypeController::class, 'update']);
-
-    //Tenant
-    Route::resource('tenants',TenantController::class, ['only' => ['index','store','update','show']]);
-
-    //Receipt
-     Route::get('/receipts', [ReceiptController::class, 'index']);
-     Route::post('/receipts',[ReceiptController::class,'create']);
-     Route::get('/receipts/{id}', [ReceiptController::class, 'show']);
-     Route::put('/receipts/{id}', [ReceiptController::class,'update']);
-
-});
-
-Route::middleware(['auth:sanctum',"Role.check:Tenant"])->group(function() {
+    Route::middleware(['auth:sanctum', "Role.check:Tenant"])->group(function () {
 
 
-});
+    });
 
 });
