@@ -3,14 +3,14 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Dashboard\RoomController;
 use App\Http\Controllers\Api\Dashboard\UserController;
+use App\Http\Controllers\Api\Dashboard\TenantController;
 use App\Http\Controllers\Api\Dashboard\ReceiptController;
 use App\Http\Controllers\Api\Dashboard\ContractController;
-use App\Http\Controllers\Api\Dashboard\ContractTypeController;
-use App\Http\Controllers\Api\Dashboard\TenantController;
 use App\Http\Controllers\Api\Dashboard\TotalUnitController;
+use App\Http\Controllers\Api\Dashboard\ContractTypeController;
 use App\Http\Controllers\Api\Dashboard\CustomerServiceController;
-use App\Http\Controllers\Api\Dashboard\RoomController;
 
 
 Route::post('/v1/auth/login', [AuthController::class, 'login']);
@@ -37,10 +37,8 @@ Route::prefix('v1')->group(function () {
         Route::resource('tenants', TenantController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
         //Receipt
-        Route::get('/receipts', [ReceiptController::class, 'index']);
-        Route::post('/receipts', [ReceiptController::class, 'create']);
-        Route::get('/receipts/{id}', [ReceiptController::class, 'show']);
-        Route::put('/receipts/{id}', [ReceiptController::class, 'update']);
+        Route::apiResource('/receipts', ReceiptController::class)->except(['destroy']);
+      
 
         //Customer services
         Route::get('/customer-services', [CustomerServiceController::class, 'index']);

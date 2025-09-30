@@ -20,11 +20,10 @@ class ReceiptController extends Controller
     
     public function index(){
           $receipts = Receipt::paginate(15);
-         return $this->successResponse(content: $receipts);
+         return $this->successResponse(content: ReceiptResource::collection($receipts));
     }
   
-   
-    public function create(Request $request){
+    public function store(Request $request){
         $validator = Validator::make($request->all(), [
             'invoice_id' => 'required|exists:invoices,id',
             'payment_method' => ['required', Rule::enum(PaymentMethod::class)],
@@ -40,7 +39,7 @@ class ReceiptController extends Controller
             return $this->errorResponse('This invoice has already been paid.', 409);
         }
 
-        Receipt::create([
+        $newReceipt = Receipt::create([
             'invoice_id' => $validatedData['invoice_id'],
             'payment_method' => $validatedData['payment_method'],
             'paid_date' => $validatedData['paid_date'],
@@ -48,7 +47,7 @@ class ReceiptController extends Controller
 
         
         $invoice->update(['status' => 'Paid']);
-        return $this->successResponse('A new Receipt created successfully!', status: 201);
+        return $this->successResponse('A new Receipt created successfully!', content: new ReceiptResource($newReceipt) , status: 201);
 
     }
    
