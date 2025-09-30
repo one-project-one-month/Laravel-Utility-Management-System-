@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Dashboard\ReceiptController;
 use App\Http\Controllers\Api\Dashboard\ContractController;
 use App\Http\Controllers\Api\Dashboard\ContractTypeController;
 use App\Http\Controllers\Api\Dashboard\TenantController;
+use App\Http\Controllers\Api\Dashboard\CustomerServiceController;
 
 Route::post('/v1/auth/login', [AuthController::class, 'login']);
 
@@ -37,10 +38,16 @@ Route::prefix('v1')->group(function () {
         Route::post('/receipts', [ReceiptController::class, 'create']);
         Route::get('/receipts/{id}', [ReceiptController::class, 'show']);
         Route::put('/receipts/{id}', [ReceiptController::class, 'update']);
+      
+        //Customer services
+        Route::get('/customer-services', [CustomerServiceController::class, 'index']);
+        Route::get('/customer-services/{id}', [CustomerServiceController::class, 'show']);
+        Route::put('/customer-services/{id}', [CustomerServiceController::class, 'update']);
 
     });
 
     Route::middleware(['auth:sanctum', "Role.check:Tenant"])->group(function () {
+
 
 
     });
