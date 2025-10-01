@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Dashboard\ContractController;
 use App\Http\Controllers\Api\Dashboard\TotalUnitController;
 use App\Http\Controllers\Api\Dashboard\ContractTypeController;
 use App\Http\Controllers\Api\Dashboard\CustomerServiceController;
+use App\Http\Controllers\Api\Dashboard\InvoiceController;
 
 
 Route::post('/v1/auth/login', [AuthController::class, 'login']);
@@ -38,6 +39,12 @@ Route::prefix('v1')->group(function () {
 
         //Receipt
         Route::apiResource('/receipts', ReceiptController::class)->except(['destroy']);
+
+        //Invoices
+        Route::get('/invoices', [InvoiceController::class, 'index']);     
+        Route::get('/invoices/{id}', [InvoiceController::class, 'show']);  
+        Route::put('/invoices/{id}', [InvoiceController::class, 'update']); 
+        Route::delete('/invoices/{id}', [InvoiceController::class, 'destroy']); 
       
 
         //Customer services
