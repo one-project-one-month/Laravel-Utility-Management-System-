@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use Carbon\Carbon;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Helpers\ApiResponse;
 use Laravel\Sanctum\HasApiTokens;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Api\Auth\AuthResource;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\Api\Auth\AuthResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
@@ -81,7 +83,8 @@ class AuthController extends Controller
  * )
  */
 
-    public function login (Request $request) {
+    public function login (Request $request)
+    {
         $validator = Validator::make($request->all(),[
             'email' =>  'required|email',
             'password' => 'required|min:6|regex:/[0-9]/|regex:/[a-zA-Z]/'
@@ -103,13 +106,56 @@ class AuthController extends Controller
             return $this->errorResponse('Your credential is wrong!',401);
         }
 
-        $token = $user->createToken('token')->plainTextToken;
+        $accessToken = $user->createToken('access-token', ['*'], now()->addHour())->plainTextToken;
+
+        $refreshToken = Str::random(64);
+
+        $user->update([
+            'refresh_token' => hash('sha256', $refreshToken),
+            'refresh_token_expires_at' => Carbon::now()->addDays(15),
+        ]);
 
         $content = [
             'user'=> $user,
-            'token' => $token
+            'accessToken' => $accessToken,
+            'refreshToken' =>  $refreshToken
         ];
 
         return $this->successResponse('Login success',new AuthResource($content),200);
+    }
+
+    public function refresh(Request $request)
+    {
+        $refreshToken = $request->input('refreshToken');
+        $hashed = hash('sha256', $refreshToken);
+
+        $user = User::where('refresh_token', $hashed)
+            ->where('refresh_token_expires_at', '>', now())
+            ->first();
+
+        if (!$user) {
+            return $this->errorResponse('Invalid refresh token',401);
+        }
+
+        $accessToken = $user->createToken('access-token', ['*'], now()->addHour())->plainTextToken;
+
+        $content = [
+            'user'=> $user,
+            'accessToken' => $accessToken,
+        ];
+
+        return $this->successResponse('successful',new AuthResource($content),200);
+    }
+
+    public function logout(Request $request)
+    {
+        $user = $request->user();
+        $user->tokens()->delete();
+        $user->update([
+            'refresh_token' => null,
+            'refresh_token_expires_at' => null,
+        ]);
+
+        return response()->json(['message' => 'Logged out']);
     }
 }

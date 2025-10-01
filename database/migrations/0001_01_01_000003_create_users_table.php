@@ -18,7 +18,9 @@ return new class extends Migration {
             $table->string('password');
             $table->enum('role', ['Admin', 'Staff', 'Tenant']);
             $table->boolean('is_active')->default(1);
-            $table->foreignId('tenant_id')->nullable()->references('id')->on('tenants')->onDelete('cascade')->nullable();
+            $table->foreignId('tenant_id')->nullable()->references('id')->on('tenants')->onDelete('cascade');
+            $table->string('refresh_token')->nullable();
+            $table->timestamp('refresh_token_expires_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
