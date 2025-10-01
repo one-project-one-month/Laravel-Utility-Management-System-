@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
-use App\Http\Resources\Api\ContractTypeResource;
+use App\Http\Resources\Api\Dashboard\ContractTypeResource;
 use App\Models\ContractType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
