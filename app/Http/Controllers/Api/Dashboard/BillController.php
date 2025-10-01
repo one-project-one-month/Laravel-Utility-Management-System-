@@ -60,7 +60,7 @@ class BillController extends Controller
     {
         GenerateBillsJob::dispatch();
 
-        return $this->successResponse('Monthly bill created', 201);
+        return $this->successResponse('Monthly bill created successfully. Auto-calculates units and generates invoice. Email feature coming next.', null ,201);
     }
 
     /**
