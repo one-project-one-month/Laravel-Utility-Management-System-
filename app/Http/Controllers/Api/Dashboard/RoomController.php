@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Dashboard;
 
+use Exception;
 use Exceptiion;
 use App\Models\Room;
 use Illuminate\Support\Str;
@@ -9,9 +10,8 @@ use Illuminate\Http\Request;
 use App\Http\Helpers\ApiResponse;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Api\Dashboard\RoomResource;
-use Exception;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\Api\Dashboard\RoomResource;
 
 class RoomController extends Controller
 {

@@ -44,17 +44,14 @@ Route::prefix('v1')->group(function () {
         Route::resource('total-units', TotalUnitController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
         // Rooms Route
-        Route::resource('bills', RoomController::class, ['only' => ['index', 'update', 'show']]);
+        Route::resource('rooms', RoomController::class, ['only' => ['index', 'update', 'show']]);
 
         // Bills
         Route::resource('bills', BillController::class, ['only' => ['index', 'store', 'update', 'show']]);
-
-
-
     });
 
     Route::middleware(['auth:sanctum', "Role.check:Tenant"])->group(function () {
-
+        
 
      });
 });
