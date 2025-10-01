@@ -17,51 +17,6 @@ class RoomController extends Controller
 {
     use ApiResponse;
 
-    /**
-     * Create a new room
-     */
-    // public function create(Request $request){
-
-    //     // check validation room data input
-    //     $validator = Validator::make($request->all(), [
-    //         'roomNo' => 'required|integer',
-    //         'dimension' => 'required|string|max:255',
-    //         'noOfBedRoom' => 'required|integer|min:1|max:4',
-    //         'status' => 'required|in:Available,Rented,Purchased,In Maintenance',
-    //         'sellingPrice' => 'required|numeric|regex:/^\d{1,18}(\.\d{1,2})?$/',
-    //         'maxNoOfPeople' => 'required|integer|min:1|max:6',
-    //         'description' => 'string|max:255'
-    //     ]);
-
-    //     // return error if validation fails
-    //     if ($validator->fails()) {
-    //         return $this->errorResponse($validator->errors(),422);
-    //     }
-
-    //     // error handling state
-    //     try {
-
-    //         // create new room
-    //         $roomData = Room::create([
-    //             'room_no' => $request->roomNo,
-    //             'dimension' => $request->dimension,
-    //             'no_of_bed_room' => $request->noOfBedRoom,
-    //             'status' => $request->status,
-    //             'selling_price' => $request->sellingPrice,
-    //             'max_no_of_people' => $request->maxNoOfPeople,
-    //             'description' => $request->description
-    //         ]);
-
-    //         // success response
-    //         return $this->successResponse('New room created successfully',new RoomResource($roomData),200);
-
-    //     } catch(\Exception $error) {
-    //         // error response
-    //         return $this->errorResponse('New room creation fails: ' . $error->getMessage(), 500);
-    //     }
-
-    // }
-
     public function index(){
 
         // retrieve a list of rooms with pagination
@@ -94,6 +49,7 @@ class RoomController extends Controller
 
         $validator = Validator::make($request->all(), [
             'roomNo' => 'required|integer|unique:rooms,room_no,' . $id . ',id',
+            'floor' => 'required|integer|min:1|max:10',
             'dimension' => 'required|string|max:255',
             'noOfBedRoom' => 'required|integer|min:1|max:4',
             'status' => 'required|in:Available,Rented,Purchased,In Maintenance',
@@ -115,6 +71,7 @@ class RoomController extends Controller
 
             $roomData->update([
                 'room_no' => $request->roomNo,
+                'floor' => $request->floor,
                 'dimension' => $request->dimension,
                 'no_of_bed_room' => $request->noOfBedRoom,
                 'status' => $request->status,

@@ -16,11 +16,14 @@ class TotalUnitSeeder extends Seeder
     {
         $bills = Bill::select('id','electricity_fee','water_fee')->get();
 
+        $electricUnit = config('units.electric', 1);
+        $waterUnit = config('units.water', 1);
+
         foreach ($bills as $bill) {
             TotalUnit::Create([
                     'bill_id'           => $bill->id,
-                    'electricity_units' => $bill->electricity_fee / config('units.electric'),
-                    'water_units'       => $bill->water_fee / config('units.water')
+                    'electricity_units' => $electricUnit ? $bill->electricity_fee / $electricUnit : 0,
+                    'water_units'       => $waterUnit ? $bill->water_fee / $waterUnit : 0,
             ]);
         }
     }

@@ -55,6 +55,7 @@ class TenantSeeder extends Seeder
      */
     private function wrapWithArrayDataType(array $data): \Illuminate\Database\Query\Expression|\Illuminate\Contracts\Database\Query\Expression
     {
-        return DB::raw("ARRAY['" . implode("','", $data) . "']");
+        $escapedData = array_map(fn($item) => str_replace("'", "''", $item), $data);
+        return DB::raw("ARRAY['" . implode("','", $escapedData) . "']");
     }
 }
