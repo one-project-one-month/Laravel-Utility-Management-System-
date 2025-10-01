@@ -23,7 +23,9 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'tenant_id'
+        'tenant_id',
+        'refresh_token',
+        'refresh_token_expires_at'
     ];
 
     protected static function boot() {
@@ -48,6 +50,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'refresh_token'
     ];
 
     /**
