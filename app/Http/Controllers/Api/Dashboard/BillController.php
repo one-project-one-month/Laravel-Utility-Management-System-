@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
+use App\Http\Jobs\GenerateBillsJob;
 use App\Http\Resources\Api\Dashboard\BillResource;
 use App\Models\Bill;
 use Illuminate\Http\JsonResponse;
@@ -57,36 +58,9 @@ class BillController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validator = Validator::make($request->all(),
-            [
-                'roomId'         => 'bail|required|uuid|exists:rooms,id',
-                'rentalFee'      => 'bail|required|numeric|min:0|decimal:2',
-                'electricityFee' => 'bail|required|numeric|min:0|decimal:2',
-                'waterFee'       => 'bail|required|numeric|min:0|decimal:2',
-                'fineFee'        => 'bail|nullable|numeric|min:0|decimal:2',
-                'serviceFee'     => 'bail|required|numeric|min:0|decimal:2',
-                'groundFee'      => 'bail|required|numeric|min:0|decimal:2',
-                'carParkingFee'  => 'bail|nullable|numeric|min:0|decimal:2',
-                'wifiFee'        => 'bail|nullable|numeric|min:0|decimal:2',
-                'totalAmount'    => 'bail|required|numeric|min:0|decimal:2',
-                'dueDate'        => 'bail|required|date',
-            ]
-        );
+        GenerateBillsJob::dispatch();
 
-        if($validator->fails()){
-            return $this->errorResponse($validator->errors(), 422);
-        }
-
-        $validated = $validator->validated();
-
-        // transform camel case to snake case for key (field names)
-        $validated = collect($validated)->keyBy(fn ($value, $key) => Str::snake($key))->all();
-
-        if (Bill::create($validated)) {
-            return $this->successResponse('Bill added successfully', status: 201);
-        }
-
-        return $this->errorResponse('Failed to add bill', 422);
+        return $this->successResponse('Monthly bill created successfully. Auto-calculates units and generates invoice. Email feature coming next.', null ,201);
     }
 
     /**

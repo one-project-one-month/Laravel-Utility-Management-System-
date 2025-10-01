@@ -48,8 +48,10 @@ return new class extends Migration
         // (Optional) add back the old version
         DB::statement("
             ALTER TABLE rooms
-            ADD CONSTRAINT rooms_status_check
-            CHECK (status IN ('Available', 'Purchased', 'In Maintenance'))
+ADD CONSTRAINT rooms_status_check
+CHECK (status IN ('Available', 'Rented', 'Purchased', 'In Maintenance'))
         ");
+
+
     }
 };

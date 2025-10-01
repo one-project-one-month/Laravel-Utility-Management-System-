@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Bill extends Model
 {
-
     protected $fillable = [
         'room_id',
+        'user_id',
         'rental_fee',
         'electricity_fee',
         'water_fee',

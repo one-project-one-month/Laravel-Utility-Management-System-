@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api\Dashboard;
 
-use App\Http\Controllers\Controller;
-use App\Http\Helpers\ApiResponse;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
+use App\Http\Helpers\ApiResponse;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\TenantResource;
+use app\Http\Resources\Api\Dashboard\TenantResource;
+
 
 class TenantController extends Controller
 {
