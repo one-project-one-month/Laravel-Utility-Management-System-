@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Dashboard\TotalUnitController;
 use App\Http\Controllers\Api\Dashboard\ContractTypeController;
 use App\Http\Controllers\Api\Dashboard\CustomerServiceController;
 use App\Http\Controllers\Api\Dashboard\BillController;
+use App\Http\Controllers\Api\Client\InvoiceController;
 
 
 Route::post('/v1/auth/login', [AuthController::class, 'login']);
@@ -51,7 +52,7 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::middleware(['auth:sanctum', "Role.check:Tenant"])->group(function () {
-        
+        Route::get('/tenants/{tenant_id}/invoices/history', [InvoiceController::class, 'history']);
 
      });
 });
