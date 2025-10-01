@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Api;
+namespace App\Http\Resources\Api\Dashboard;
 
-use App\Http\Resources\TenantResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use app\Http\Resources\Api\Dashboard\TenantResource;
 
 class UserResource extends JsonResource
 {

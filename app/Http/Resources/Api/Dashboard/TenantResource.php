@@ -1,6 +1,6 @@
 <?php
-namespace app\Http\Resources\Api;
-namespace App\Http\Resources;
+namespace app\Http\Resources\Api\Dashboard;
+
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;

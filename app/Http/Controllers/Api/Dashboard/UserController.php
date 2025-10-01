@@ -8,7 +8,7 @@ use App\Http\Helpers\ApiResponse;
 use Laravel\Sanctum\HasApiTokens;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Resources\Api\UserResource;
+use App\Http\Resources\Api\Dashboard\UserResource;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
