@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Client\ReceiptController as ClientReceiptController;
 use App\Http\Controllers\Api\Dashboard\RoomController;
 use App\Http\Controllers\Api\Dashboard\UserController;
 use App\Http\Controllers\Api\Dashboard\TenantController;
@@ -52,6 +53,8 @@ Route::prefix('v1')->group(function () {
 
     Route::middleware(['auth:sanctum', "Role.check:Tenant"])->group(function () {
         
+        // Receipt latest
+        Route::get('/tenants/{tenant_id}/receipts/latest', action: [ClientReceiptController::class, 'latest']);
 
      });
 });
