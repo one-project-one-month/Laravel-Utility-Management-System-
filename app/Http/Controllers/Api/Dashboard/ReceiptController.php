@@ -17,40 +17,40 @@ class ReceiptController extends Controller
 {
     use ApiResponse;
 
-    
+
     public function index(){
           $receipts = Receipt::paginate(15);
          return $this->successResponse(content: ReceiptResource::collection($receipts));
     }
-  
+
     public function store(Request $request){
         $validator = Validator::make($request->all(), [
-            'invoice_id' => 'required|exists:invoices,id',
-            'payment_method' => ['required', Rule::enum(PaymentMethod::class)],
-            'paid_date' => 'required|date'
+            'invoiceId' => 'required|exists:invoices,id',
+            'paymentMethod' => ['required', Rule::enum(PaymentMethod::class)],
+            'paidDate' => 'required|date'
         ]);
          if($validator->fails()) {
             return $this->errorResponse($validator->errors(),422);
         }
         $validatedData = $validator->validated();
-        $invoice = Invoice::findOrFail($validatedData['invoice_id']);
+        $invoice = Invoice::findOrFail($validatedData['invoiceId']);
 
         if ($invoice->status == 'Paid') {
             return $this->errorResponse('This invoice has already been paid.', 409);
         }
 
         $newReceipt = Receipt::create([
-            'invoice_id' => $validatedData['invoice_id'],
-            'payment_method' => $validatedData['payment_method'],
-            'paid_date' => $validatedData['paid_date'],
+            'invoice_id' => $validatedData['invoiceId'],
+            'payment_method' => $validatedData['paymentMethod'],
+            'paid_date' => $validatedData['paidDate'],
         ]);
 
-        
+
         $invoice->update(['status' => 'Paid']);
         return $this->successResponse('A new Receipt created successfully!', content: new ReceiptResource($newReceipt) , status: 201);
 
     }
-   
+
     public function show($id){
         $receipt = Receipt::find($id);
         if (!$receipt) {
@@ -59,15 +59,16 @@ class ReceiptController extends Controller
                 status: 404
             );
         }
-        return $this->successResponse(
-            content: $receipt,
+        return $this->successResponse("Receipt found successful" ,
+            new ReceiptResource($receipt),
+            200
         );
     }
     public function update(Request $request , $id){
         $validator = Validator::make($request->all(),[
-            'invoice_id' => 'required|exists:invoices,id',
-            'payment_method' => ['required', Rule::enum(PaymentMethod::class)],
-            'paid_date' => 'required|date'
+            'invoiceId' => 'required|exists:invoices,id',
+            'paymentMethod' => ['required', Rule::enum(PaymentMethod::class)],
+            'paidDate' => 'required|date'
         ]);
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), 422);

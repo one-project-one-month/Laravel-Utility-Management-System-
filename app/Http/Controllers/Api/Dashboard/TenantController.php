@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use app\Http\Resources\Api\Dashboard\TenantResource;
+use App\Http\Resources\Api\Dashboard\TenantResource;
 
 
 class TenantController extends Controller
@@ -75,7 +75,7 @@ class TenantController extends Controller
             );
         }
         return $this->successResponse(
-            'Tenent find successfull',
+            'Tenent find successful',
             new TenantResource($tenant),200
         );
     }

@@ -17,8 +17,8 @@ class CustomerServiceController extends Controller
     public function index()
     {
         $services = CustomerService::all();
-        return $this->successResponse(
-            content: CustomerServiceResource::collection($services)
+        return $this->successResponse('hello',
+            CustomerServiceResource::collection($services),200
         );
     }
 
@@ -35,14 +35,17 @@ class CustomerServiceController extends Controller
         }
 
         return $this->successResponse(
-            content: new CustomerServiceResource($service)
+            message: "CustomerService found successful!",
+            content: new CustomerServiceResource($service),
+            status: 200
         );
     }
 
     // Update
     public function update(Request $request, $id)
     {
-        $service = CustomerService::find($id);
+        try {
+             $service = CustomerService::findOrFail($id);
 
         if (!$service) {
             return $this->errorResponse(
@@ -79,5 +82,13 @@ class CustomerServiceController extends Controller
             message: 'Customer Service updated successfully!',
             content: new CustomerServiceResource($service)
         );
+
+        } catch (\Exception $e) {
+              return $this->errorResponse(
+                $e->getMessage(),
+                500
+            );
+        }
+
     }
 }
