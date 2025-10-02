@@ -28,8 +28,8 @@ class BillResource extends JsonResource
             'wifiFee' => $this->wifi_fee,
             'totalAmount' => $this->total_amount,
             'dueDate' => $this->due_date,
-            'totalUnit' => $this->totalUnit,
-            'invoice' => $this->invoice,
+            // 'totalUnit' => $this->totalUnit,
+            // 'invoice' => $this->invoice,
         ];
     }
 }

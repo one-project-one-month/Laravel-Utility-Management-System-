@@ -9,6 +9,7 @@ use App\Models\Tenant;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Resources\Api\Dashboard\InvoiceResource;
+use Exception;
 
 class InvoiceController extends Controller
 {
@@ -29,7 +30,7 @@ class InvoiceController extends Controller
     // Display a specific invoice
     public function show(String $id)
     {
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::with(['bill'])->findOrFail($id);
 
         if (!$invoice) {
             return $this->errorResponse(
@@ -56,7 +57,7 @@ class InvoiceController extends Controller
         }
 
         $validated = $request->validate([
-            'bill_id' => 'sometimes|exists:bills,id',
+            'billId' => 'sometimes|exists:bills,id',
             'status' => 'sometimes|string|in:Pending,Paid,Overdue',
         ]);
 
@@ -67,22 +68,22 @@ class InvoiceController extends Controller
             new InvoiceResource($invoice),
             200
         );
-        }catch (Exception $e) {
-        return $this->errorResponse('Internel Server Error '.$e->getMessage(), 500);
+        }catch (\Exception $e) {
+            return $this->errorResponse('Internel Server Error '.$e->getMessage(), 500);
         }
     }
 
     // Delete invoice
-    public function destroy(int $id)
-    {
-        $invoice = Invoice::find($id);
+    // public function destroy(int $id)
+    // {
+    //     $invoice = Invoice::find($id);
 
-        if (!$invoice) {
-            return $this->errorResponse('Invoice not found', 404);
-        }
+    //     if (!$invoice) {
+    //         return $this->errorResponse('Invoice not found', 404);
+    //     }
 
-        $invoice->delete();
+    //     $invoice->delete();
 
-        return $this->successResponse('Invoice deleted successfully', null, 200);
-    }
+    //     return $this->successResponse('Invoice deleted successfully', null, 200);
+    // }
 }
