@@ -52,8 +52,8 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::middleware(['auth:sanctum', "Role.check:Tenant"])->group(function () {
+        Route::get('/tenants/{id}/invoices/latest', [InvoiceController::class, 'latest']);
         Route::get('/tenants/{tenant_id}/invoices/history', [InvoiceController::class, 'history']);
-
      });
 });
 
