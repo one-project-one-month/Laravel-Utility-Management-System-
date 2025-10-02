@@ -20,7 +20,7 @@ class Room extends Model
         'no_of_bed_room',
         'status',
         'selling_price',
-        'max_no_people',
+        'max_no_of_people',
         'description'
     ];
 

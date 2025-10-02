@@ -15,19 +15,28 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasApiTokens;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     protected $fillable = [
         'user_name',
         'email',
         'password',
         'role',
-        'tenant_id'
+        'tenant_id',
+        'refresh_token',
+        'refresh_token_expires_at'
     ];
 
+    protected static function boot() {
+        parent::boot();
+
+        static::creating(function($model){
+            if(empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = (string) Str::uuid();
+            }
+        });
+    }
 
     public function tenant() {
         return $this->belongsTo(Tenant::class);
@@ -41,6 +50,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'refresh_token'
     ];
 
     /**

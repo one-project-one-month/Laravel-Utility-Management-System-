@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Api;
+namespace App\Http\Resources\Api\Dashboard;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use app\Http\Resources\Api\Dashboard\TenantResource;
 
 class UserResource extends JsonResource
 {
@@ -19,7 +20,9 @@ class UserResource extends JsonResource
             'userName' => $this->user_name,
             'email' => $this->email,
             'role' => $this->role,
+            'isActive' => $this->is_active,
             'tenantId' => $this->tenant_id,
+            'tenant' => new TenantResource($this->whenLoaded('tenant')),
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
         ];
