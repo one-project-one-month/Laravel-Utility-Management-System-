@@ -57,8 +57,7 @@ Route::middleware(['auth:sanctum', 'Role.check:Tenant'])->group(function () {
     // Tenant Customer Services
     Route::prefix('v1/tenants/{id}/customer-services')->group(function () {
         Route::post('/create', [ClientCustomerServiceController::class, 'create']);
-        Route::get('/history/{status}', [ClientCustomerServiceController::class, 'history']);
-        Route::get('/history', [ClientCustomerServiceController::class, 'history']);
+        Route::get('/history/{status?}', [ClientCustomerServiceController::class, 'history']);
     });
 
 });
