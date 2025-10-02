@@ -17,4 +17,8 @@ class ContractType extends Model
     public function contracts() {
         return $this->hasMany(Contract::class);
     }
+
+    // protected $casts = [
+    //     'facilities' => 'array',
+    // ];
 }

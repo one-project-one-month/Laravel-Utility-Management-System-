@@ -1,54 +1,65 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Dashboard\BillController;
+use App\Http\Controllers\Api\Dashboard\ContractController;
+use App\Http\Controllers\Api\Dashboard\ContractTypeController;
+use App\Http\Controllers\Api\Dashboard\CustomerServiceController;
+use App\Http\Controllers\Api\Dashboard\InvoiceController;
+use App\Http\Controllers\Api\Dashboard\ReceiptController;
+use App\Http\Controllers\Api\Dashboard\RoomController;
+use App\Http\Controllers\Api\Dashboard\TenantController;
+use App\Http\Controllers\Api\Dashboard\TotalUnitController;
+use App\Http\Controllers\Api\Dashboard\UserController;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Api\Auth\AuthController;
-use App\Http\Controllers\Api\Dashboard\ContractTypeController;
-use App\Http\Controllers\Api\Dashboard\UserController;
-use App\Http\Controllers\Api\Dashboard\ReceiptController;
-use App\Http\Controllers\Api\Dashboard\TotalUnitController;
+use App\Http\Controllers\Api\Client\CustomerServiceController as ClientCustomerServiceController;
 
 
+Route::post('/v1/auth/login', [AuthController::class, 'login']);
+Route::post('/v1/auth/refresh', [AuthController::class, 'refresh']);
+Route::post('/v1/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
+Route::middleware(['auth:sanctum', 'Role.check:Admin'])->group(function () {
+    // Users Route
+    Route::resource('users', UserController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
-Route::post('/v1/auth/login',[AuthController::class,'login'])->name('login');
+    // Contracts Route
+    Route::resource('contracts', ContractController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
-Route::prefix('v1')->group(function() {
+    // Contract Types
+    Route::resource('contract-types', ContractTypeController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
-    Route::middleware(['auth:sanctum',"Role.check:Admin"])->group(function() {
+    // Tenant
+    Route::resource('tenants', TenantController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
-        // Users Route
-        Route::post('/users',[UserController::class,'create']);
-        Route::get('/users', [UserController::class,'index']);
+    // Receipt
+    Route::resource('receipts', ReceiptController::class, ['only' => ['index', 'update', 'show']]);
 
-        
-        // Contract Types
-        Route::get('/contract-types', [ContractTypeController::class, 'index']);
-        Route::get('/contract-types/{id}', [ContractTypeController::class, 'show']);
-        Route::post('/contract-types', [ContractTypeController::class, 'store']);
-        Route::patch('/contract-types/{id}', [ContractTypeController::class, 'update']);
-        
+    // Invoices
+    Route::apiResource('invoices', InvoiceController::class)->only(['index', 'show', 'update']);
 
+    // Customer services
+    Route::resource('customer-services', CustomerServiceController::class, ['only' => ['index', 'update', 'show']]);
 
-        //Receipt
-        Route::post('/receipts',[ReceiptController::class,'create']);
+    // Total Units
+    Route::resource('total-units', TotalUnitController::class, ['only' => ['index', 'show']]);
 
-        // Total Units
-        Route::get('/total-units', [TotalUnitController::class, 'index']);
-        Route::post('/total-units', [TotalUnitController::class, 'store']);
-        Route::get('/total-units/{id}', [TotalUnitController::class, 'show']);
-        Route::put('/total-units/{id}', [TotalUnitController::class, 'update']);
+    // Rooms Route
+    Route::resource('rooms', RoomController::class, ['only' => ['index', 'update', 'show']]);
 
+    // Bills
+    Route::resource('bills', BillController::class, ['only' => ['index', 'store', 'show']]);
+});
 
+Route::middleware(['auth:sanctum', 'Role.check:Tenant'])->group(function () {
+
+    // Tenant Customer Services
+    Route::prefix('v1/tenants/{id}/customer-services')->group(function () {
+        Route::post('/create', [ClientCustomerServiceController::class, 'create']);
+        Route::get('/history/{status}', [ClientCustomerServiceController::class, 'history']);
+        Route::get('/history', [ClientCustomerServiceController::class, 'history']);
     });
-
-    Route::middleware(['auth:sanctum',"Role.check:Tenant"])->group(function() {
-        
-    });
-
-    
-
-
 
 });
+
