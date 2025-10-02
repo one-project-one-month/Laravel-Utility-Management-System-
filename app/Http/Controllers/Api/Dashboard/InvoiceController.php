@@ -29,7 +29,7 @@ class InvoiceController extends Controller
     // Display a specific invoice
     public function show(String $id)
     {
-        $invoice = Invoice::find($id);
+        $invoice = Invoice::findOrFail($id);
 
         if (!$invoice) {
             return $this->errorResponse(
@@ -48,7 +48,8 @@ class InvoiceController extends Controller
     // Update invoice
     public function update(Request $request, int $id)
     {
-        $invoice = Invoice::find($id);
+        try{
+            $invoice = Invoice::findOrFail($id);
 
         if (!$invoice) {
             return $this->errorResponse('Invoice not found', 404);
@@ -66,6 +67,9 @@ class InvoiceController extends Controller
             new InvoiceResource($invoice),
             200
         );
+        }catch (Exception $e) {
+        return $this->errorResponse('Internel Server Error '.$e->getMessage(), 500);
+        }
     }
 
     // Delete invoice

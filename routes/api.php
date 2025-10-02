@@ -41,10 +41,9 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('/receipts', ReceiptController::class)->except(['destroy']);
 
         //Invoices
-        Route::get('/invoices', [InvoiceController::class, 'index']);     
-        Route::get('/invoices/{id}', [InvoiceController::class, 'show']);  
-        Route::put('/invoices/{id}', [InvoiceController::class, 'update']); 
-        Route::delete('/invoices/{id}', [InvoiceController::class, 'destroy']); 
+        Route::apiResource('invoices', InvoiceController::class)
+        ->only(['index', 'show', 'update', 'destroy']);
+
       
 
         //Customer services
