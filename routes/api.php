@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Dashboard\UserController;
 use App\Http\Controllers\Api\Dashboard\TenantController;
 use App\Http\Controllers\Api\Dashboard\ReceiptController;
 use App\Http\Controllers\Api\Dashboard\ContractController;
+use App\Http\Controllers\Api\Client\ContractController as ClientContractController;
 use App\Http\Controllers\Api\Dashboard\TotalUnitController;
 use App\Http\Controllers\Api\Dashboard\ContractTypeController;
 use App\Http\Controllers\Api\Dashboard\CustomerServiceController;
@@ -51,8 +52,7 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::middleware(['auth:sanctum', "Role.check:Tenant"])->group(function () {
-        
-
+        Route::get('/tenants/{id}/contracts', [ClientContractController::class,'index']);
      });
 });
 
