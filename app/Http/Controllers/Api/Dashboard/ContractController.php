@@ -54,7 +54,7 @@ class ContractController extends Controller
         $validatedData = $validator->validated();
 
         $room = Room::find($validatedData['roomNo']);
-        if ($room->status !== 'Avaliable') {
+        if ($room->status !== 'Available') {
             return $this->errorResponse('Room is not Avaliable', 404);
         };
 
