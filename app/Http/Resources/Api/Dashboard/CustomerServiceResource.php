@@ -21,7 +21,7 @@ class CustomerServiceResource extends JsonResource
             'description'   => $this->description,
             'status'        => $this->status,
             'priorityLevel' => $this->priority_level,
-            'issuedDate'    => $this->issued_date?->format('Y-m-d'),
+            'issuedDate'    => $this->issued_date
         ];
     }
 }

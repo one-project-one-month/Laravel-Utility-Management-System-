@@ -24,12 +24,11 @@ Route::post('/v1/auth/logout', [AuthController::class, 'logout'])->middleware('a
 Route::prefix('v1')->group(function () {
 
     Route::middleware(['auth:sanctum', "Role.check:Admin"])->group(function () {
-
         // Users Route
         Route::resource('users', UserController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
         // Contracts Route
-        Route::apiResource('contracts', ContractController::class)->except(['destroy']);
+        Route::resource('contracts', ContractController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
         // Contract Types
         Route::resource('contract-types', ContractTypeController::class, ['only' => ['index', 'store', 'update', 'show']]);
@@ -38,18 +37,17 @@ Route::prefix('v1')->group(function () {
         Route::resource('tenants', TenantController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
         //Receipt
-        Route::apiResource('/receipts', ReceiptController::class)->except(['destroy']);
+        Route::resource('receipts', ReceiptController::class, ['only' => ['index', 'update', 'show']]);
 
 
         //Invoices
-        Route::apiResource('invoices', InvoiceController::class)->only(['index', 'show', 'update', 'destroy']);
-
+        Route::apiResource('invoices', InvoiceController::class)->only(['index', 'show', 'update',]);
 
         //Customer services
         Route::resource('customer-services', CustomerServiceController::class, ['only' => ['index', 'update', 'show']]);
 
         // Total Units
-        Route::resource('total-units', TotalUnitController::class, ['only' => ['index', 'store', 'update', 'show']]);
+        Route::resource('total-units', TotalUnitController::class, ['only' => ['index', 'show']]);
 
         // Rooms Route
         Route::resource('rooms', RoomController::class, ['only' => ['index', 'update', 'show']]);
@@ -62,7 +60,7 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::middleware(['auth:sanctum', "Role.check:Tenant"])->group(function () {
-        
+
 
      });
 });
