@@ -14,10 +14,10 @@ class InvoiceController extends Controller
 {
     use ApiResponse;
 
-    // Display a listing of contract-types.
+    // Display a listing of invoice
     public function index()
     {
-        $invoices =  Invoice::latest()->paginate(10);
+        $invoices= Invoice::with(['bill'])->paginate(10);
 
         return $this->successResponse(
             'Invoices retrieved successfully',
