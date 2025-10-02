@@ -21,6 +21,7 @@ class RoomSeeder extends Seeder
             Room::create([
                 'id'               => Str::uuid()->toString(),
                 'room_no'          => 100 + $i,
+                'floor'            => rand(1,10),
                 'dimension'        => rand(200, 500) . ' sqft',
                 'no_of_bed_room'   => rand(1, 4),
                 'status'           => Arr::random($status)->value,

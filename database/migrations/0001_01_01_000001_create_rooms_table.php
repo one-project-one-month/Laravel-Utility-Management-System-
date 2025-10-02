@@ -14,7 +14,8 @@ return new class extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->integer('room_no');
+            $table->integer('room_no')->unique();
+            $table->integer('floor');
             $table->string('dimension');
             $table->integer('no_of_bed_room');
             $table->enum('status',['Available','Rented','Purchased','In Maintenance']);
@@ -48,8 +49,10 @@ return new class extends Migration
         // (Optional) add back the old version
         DB::statement("
             ALTER TABLE rooms
-            ADD CONSTRAINT rooms_status_check
-            CHECK (status IN ('Available', 'Purchased', 'In Maintenance'))
+ADD CONSTRAINT rooms_status_check
+CHECK (status IN ('Available', 'Rented', 'Purchased', 'In Maintenance'))
         ");
+
+
     }
 };

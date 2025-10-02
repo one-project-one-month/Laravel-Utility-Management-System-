@@ -20,7 +20,7 @@ class TotalUnitSeeder extends Seeder
             TotalUnit::Create([
                     'bill_id'           => $bill->id,
                     'electricity_units' => $bill->electricity_fee / config('units.electric'),
-                    'water_units'       => $bill->water_fee / config('units.water')
+                    'water_units'       => $bill->water_fee / config('units.water'),
             ]);
         }
     }
