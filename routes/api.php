@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Client\BillController as ClientBillController;
 use App\Http\Controllers\Api\Dashboard\RoomController;
 use App\Http\Controllers\Api\Dashboard\UserController;
 use App\Http\Controllers\Api\Dashboard\TenantController;
@@ -55,6 +56,9 @@ Route::prefix('v1')->group(function () {
 
         // Bills
         Route::resource('bills', BillController::class, ['only' => ['index', 'store', 'update', 'show']]);
+
+        //Bill History and Latest
+        Route::get('tenants/{id}/bills/latest', [ClientBillController::class,'latestBill']);
     });
 
     Route::middleware(['auth:sanctum', "Role.check:Tenant"])->group(function () {
