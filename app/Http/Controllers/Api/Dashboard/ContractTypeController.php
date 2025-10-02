@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
-use App\Http\Resources\Api\ContractTypeResource;
+use App\Http\Resources\Api\Dashboard\ContractTypeResource;
 use App\Models\ContractType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -41,6 +41,14 @@ class ContractTypeController extends Controller
             );
         }
 
+      $contractType->facilities = str_replace(['{','}'], '', $contractType->facilities); // remove braces
+$contractType->facilities = explode(',', $contractType->facilities);               // split
+
+// remove surrounding quotes from each element
+$contractType->facilities = array_map(function($item) {
+    return trim($item, '"');
+}, $contractType->facilities);
+
         return $this->successResponse(
             'Contract type retrieved successfully',
             new ContractTypeResource($contractType),
@@ -72,7 +80,7 @@ class ContractTypeController extends Controller
         // create new contract-type
         try {
             $contractType = ContractType::create($validated);
-    
+
             return $this->successResponse(
                 'A new Contract Type created successfully',
                 new ContractTypeResource($contractType),
@@ -119,7 +127,7 @@ class ContractTypeController extends Controller
             }
 
             $contractType->update($validated);
-            
+
             return $this->successResponse(
                 'Contract Type updated successfully',
                 new ContractTypeResource($contractType),

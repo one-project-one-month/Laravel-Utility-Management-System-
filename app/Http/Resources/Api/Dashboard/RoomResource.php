@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Api;
+namespace App\Http\Resources\Api\Dashboard;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -17,6 +17,7 @@ class RoomResource extends JsonResource
         return [
             'id' => $this->id,
             'roomNo' => $this->room_no,
+            'floor' => $this->floor,
             'dimension' => $this->dimension,
             'noOfBedRoom' => $this->no_of_bed_room,
             'status' => $this->status,

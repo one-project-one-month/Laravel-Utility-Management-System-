@@ -15,7 +15,7 @@ class AuthResource extends JsonResource
     public function toArray(Request $request): array
     {
         // return parent::toArray($request);
-       return [
+       $data = [
             'user' => [
                 'id'         => $this['user']->id,
                 'userName'   => $this['user']->user_name,
@@ -24,7 +24,14 @@ class AuthResource extends JsonResource
                 'createdAt'  => $this['user']->created_at,
                 'updatedAt'  => $this['user']->updated_at,
             ],
-            'token' => $this['token']
+            'token' => $this['accessToken'],
+            // 'refresh_token' => $this['refreshToken'] ?? ''
        ];
+
+        if (isset($this['refreshToken'])) {
+            $data['refresh_token'] = $this['refreshToken'];
+        }
+
+        return $data;
     }
 }
