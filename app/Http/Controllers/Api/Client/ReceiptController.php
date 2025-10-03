@@ -9,8 +9,6 @@ use App\Models\Receipt;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ReceiptController extends Controller
 {
