@@ -9,11 +9,13 @@ use App\Http\Controllers\Api\Dashboard\UserController;
 use App\Http\Controllers\Api\Dashboard\TenantController;
 use App\Http\Controllers\Api\Dashboard\ReceiptController;
 use App\Http\Controllers\Api\Dashboard\ContractController;
+use App\Http\Controllers\Api\Client\ContractController as ClientContractController;
 use App\Http\Controllers\Api\Dashboard\TotalUnitController;
 use App\Http\Controllers\Api\Dashboard\ContractTypeController;
 use App\Http\Controllers\Api\Dashboard\CustomerServiceController;
 use App\Http\Controllers\Api\Dashboard\InvoiceController;
 use App\Http\Controllers\Api\Dashboard\BillController;
+use App\Http\Controllers\Api\Client\InvoiceController;
 
 
 
@@ -58,7 +60,16 @@ Route::prefix('v1')->group(function () {
 
     Route::middleware(['auth:sanctum', "Role.check:Tenant"])->group(function () {
 
+
         // Receipt latest
-        Route::get('/tenants/{tenant_id}/receipts/latest', action: [ClientReceiptController::class, 'latest']);
-    });
+        Route::get('/tenants/{id}/receipts/latest', action: [ClientReceiptController::class, 'latest']);
+    
+        Route::get('/tenants/{id}/contracts', [ClientContractController::class,'index']);
+
+        Route::get('/tenants/{id}/invoices/latest', [InvoiceController::class, 'latest']);
+        Route::get('/tenants/{id}/invoices/history', [InvoiceController::class, 'history']);
+
+
+     });
+
 });
