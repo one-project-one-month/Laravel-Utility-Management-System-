@@ -4,7 +4,7 @@ namespace App\Http\Resources\Api\Dashboard;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use app\Http\Resources\Api\Dashboard\TenantResource;
+use App\Http\Resources\Api\Dashboard\TenantResource;
 
 class UserResource extends JsonResource
 {
