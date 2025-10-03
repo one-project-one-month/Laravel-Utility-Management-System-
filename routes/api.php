@@ -65,13 +65,12 @@ Route::prefix('v1')->group(function () {
         // Receipt latest
         Route::get('/tenants/{id}/receipts/latest', action: [ClientReceiptController::class, 'latest']);
 
-        Route::get('/tenants/{id}/contracts', [ClientContractController::class,'index']);
+        Route::get('/tenants/{id}/contracts', [ClientContractController::class, 'index']);
 
         Route::get('/tenants/{id}/invoices/latest', [ClientInvoiceController::class, 'latest']);
         Route::get('/tenants/{id}/invoices/history', [ClientInvoiceController::class, 'history']);
 
         //Bill Latest
-        Route::get('/tenants/{id}/bills/latest', [ClientBillController::class,'latestBill']);
-     });
-
+        Route::get('/tenants/{id}/bills/latest', [ClientBillController::class, 'latestBill']);
+    });
 });
