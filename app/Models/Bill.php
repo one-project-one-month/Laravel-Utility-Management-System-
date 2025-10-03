@@ -30,8 +30,4 @@ class Bill extends Model
     public function invoice() {
         return $this->hasOne(Invoice::class);
     }
-
-    public function tenant() {
-        return $this->belongsTo(Tenant::class);
-    }
 }
