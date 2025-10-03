@@ -23,10 +23,40 @@ class UserSeeder extends Seeder
             ],
             [
                 "user_name" => "Alice Doe",
-                "email"     => "alicedoe@gmail.com",
+                "email"     => "alice244doe@gmail.com",
                 "password"  => Hash::make("Ks82787294"),
                 "role"      => "Admin"
-            ]
+            ],
+              [
+                "user_name" => "Alice Doe",
+                "email"     => "aliced242oe@gmail.com",
+                "password"  => Hash::make("Ks82787294"),
+                "role"      => "Admin"
+              ],
+                [
+                "user_name" => "Alice Doe",
+                "email"     => "aliced2424oe@gmail.com",
+                "password"  => Hash::make("Ks82787294"),
+                "role"      => "Admin"
+                ],
+                  [
+                "user_name" => "Alice Doe",
+                "email"     => "alicedoe114@gmail.com",
+                "password"  => Hash::make("Ks82787294"),
+                "role"      => "Admin"
+                  ],
+                    [
+                "user_name" => "Alice Doe",
+                "email"     => "aliced221oe@gmail.com",
+                "password"  => Hash::make("Ks82787294"),
+                "role"      => "Admin"
+                    ],
+                      [
+                "user_name" => "Alice Doe",
+                "email"     => "alicedo22e@gmail.com",
+                "password"  => Hash::make("Ks82787294"),
+                "role"      => "Admin"
+                      ],
         ];
 
         foreach ($admins as $admin) {
