@@ -5,11 +5,8 @@ namespace App\Http\Controllers\Api\Dashboard;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Invoice;
-use App\Models\Tenant;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Resources\Api\Dashboard\InvoiceResource;
-use Exception;
 
 class InvoiceController extends Controller
 {
@@ -18,19 +15,25 @@ class InvoiceController extends Controller
     // Display a listing of invoice
     public function index()
     {
-        $invoices= Invoice::with(['bill'])->paginate(10);
+        $invoices= Invoice::with(['bill'])
+            ->orderBy('invoices.created_at', 'desc')
+            ->orderBy('invoices.id', 'desc')
+            ->paginate(config('pagination.perPage'));
+
+        if ($invoices->isEmpty()) {
+            return $this->errorResponse('Invoices not found', 404);
+        }
 
         return $this->successResponse(
             'Invoices retrieved successfully',
-            InvoiceResource::collection($invoices),
-            200
+            $this->buildPaginatedResourceResponse(InvoiceResource::class, $invoices)
         );
     }
 
     // Display a specific invoice
     public function show(String $id)
     {
-        $invoice = Invoice::with(['bill'])->findOrFail($id);
+        $invoice = Invoice::with(['bill'])->find($id);
 
         if (!$invoice) {
             return $this->errorResponse(
@@ -41,8 +44,7 @@ class InvoiceController extends Controller
 
         return $this->successResponse(
             'Invoice retrieved successfully',
-            new InvoiceResource($invoice),
-            200
+            new InvoiceResource($invoice)
         );
     }
 
@@ -50,26 +52,25 @@ class InvoiceController extends Controller
     public function update(Request $request, int $id)
     {
         try{
-            $invoice = Invoice::findOrFail($id);
+            $invoice = Invoice::find($id);
 
-        if (!$invoice) {
-            return $this->errorResponse('Invoice not found', 404);
-        }
+            if (!$invoice) {
+                return $this->errorResponse('Invoice not found', 404);
+            }
 
-        $validated = $request->validate([
-            'billId' => 'sometimes|exists:bills,id',
-            'status' => 'sometimes|string|in:Pending,Paid,Overdue',
-        ]);
+            $validated = $request->validate([
+                'billId' => 'sometimes|exists:bills,id',
+                'status' => 'sometimes|string|in:Pending,Paid,Overdue',
+            ]);
 
-        $invoice->update($validated);
+            $invoice->update($validated);
 
-        return $this->successResponse(
-            'Invoice updated successfully',
-            new InvoiceResource($invoice),
-            200
-        );
+            return $this->successResponse(
+                'Invoice updated successfully',
+                new InvoiceResource($invoice)
+            );
         }catch (\Exception $e) {
-            return $this->errorResponse('Internel Server Error '.$e->getMessage(), 500);
+            return $this->errorResponse('Internal Server Error '.$e->getMessage(), 500);
         }
     }
 

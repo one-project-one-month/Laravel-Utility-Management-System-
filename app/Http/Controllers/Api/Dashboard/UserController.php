@@ -11,12 +11,10 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\Api\Dashboard\UserResource;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 
 class UserController extends Controller
 {
-    use ApiResponse, HasApiTokens, HasFactory, Notifiable;
+    use ApiResponse, HasApiTokens, Notifiable;
 
     //user create
     public function store(Request $request)
@@ -53,9 +51,13 @@ class UserController extends Controller
     //index users
     public function index()
     {
-        $users = User::with(['tenant'])->paginate(10);
+        $users = User::with(['tenant'])
+            ->paginate(config('pagination.perPage'));
 
-        return $this->successResponse('Users retrieved successfully', UserResource::collection($users), 200);
+        return $this->successResponse(
+            'Users retrieved successfully',
+            $this->buildPaginatedResourceResponse(UserResource::class, $users),
+        );
     }
 
     //Users Update Method
@@ -65,7 +67,6 @@ class UserController extends Controller
         if (!$user) {
             return $this->errorResponse('User not found.', 404);
         }
-
 
         //validation
         $validator = Validator::make($request->all(), [
@@ -79,8 +80,7 @@ class UserController extends Controller
 
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), 422);
-        }
-        ;
+        };
 
         //update user
         $userData = [
@@ -97,7 +97,7 @@ class UserController extends Controller
 
         $user->update($userData);
 
-        return $this->successResponse('User Updated Successfully', new UserResource($user), 200);
+        return $this->successResponse('User Updated Successfully', new UserResource($user));
     }
 
     //User Show
@@ -110,6 +110,6 @@ class UserController extends Controller
             return $this->errorResponse('User not found.', 404);
         }
 
-        return $this->successResponse('User Fetched Successfully', new UserResource($user), 200);
+        return $this->successResponse('User Fetched Successfully', new UserResource($user));
     }
 }
