@@ -17,7 +17,7 @@ class ContractController extends Controller
     use ApiResponse;
     public function index()
     {
-        $contracts = Contract::all();
+        $contracts = Contract::latest()->with(['contractType', 'tenant'])->get();
         return $this->successResponse('Contracts retrieved successfully', ContractResource::collection($contracts), 200);
     }
 
