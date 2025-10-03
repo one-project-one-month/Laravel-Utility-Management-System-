@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\ApiResponse;
+use App\Http\Helpers\PostgresHelper;
 use App\Http\Resources\Api\Dashboard\ContractTypeResource;
 use App\Models\ContractType;
 use Illuminate\Http\Request;
@@ -11,19 +12,24 @@ use Illuminate\Support\Facades\Validator;
 
 class ContractTypeController extends Controller
 {
-    use ApiResponse;
+    use ApiResponse, PostgresHelper;
 
     /**
      * Display a listing of contract-types.
      */
     public function index()
     {
-        $contractTypes = ContractType::paginate(10);
+        $contractTypes = ContractType::orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
+            ->paginate(config('pagination.perPage'));
+
+        if ($contractTypes->isEmpty()) {
+            return $this->errorResponse('Contract types not found', 404);
+        }
 
         return $this->successResponse(
             'Contract types retrieved successfully',
-            ContractTypeResource::collection($contractTypes),
-            200
+            $this->buildPaginatedResourceResponse(ContractTypeResource::class, $contractTypes)
         );
     }
 
@@ -41,18 +47,9 @@ class ContractTypeController extends Controller
             );
         }
 
-      $contractType->facilities = str_replace(['{','}'], '', $contractType->facilities); // remove braces
-$contractType->facilities = explode(',', $contractType->facilities);               // split
-
-// remove surrounding quotes from each element
-$contractType->facilities = array_map(function($item) {
-    return trim($item, '"');
-}, $contractType->facilities);
-
         return $this->successResponse(
             'Contract type retrieved successfully',
-            new ContractTypeResource($contractType),
-            200
+            new ContractTypeResource($contractType)
         );
     }
 
@@ -75,7 +72,7 @@ $contractType->facilities = array_map(function($item) {
 
         // format facilities field to appropriate format for storing into postgres text array field
         $validated = $validator->validated();
-        $validated['facilities'] = $this->stringToPgArrayString($validated['facilities']);
+        $validated['facilities'] = $this->nativeStringToPgArrayString($validated['facilities']);
 
         // create new contract-type
         try {
@@ -113,7 +110,7 @@ $contractType->facilities = array_map(function($item) {
 
         // format facilities field to appropriate format for storing into postgres text array field
         $validated = $validator->validated();
-        $validated['facilities'] = $this->stringToPgArrayString($validated['facilities']);
+        $validated['facilities'] = $this->nativeStringToPgArrayString($validated['facilities']);
 
         // update the contract-type
         try {
@@ -140,23 +137,5 @@ $contractType->facilities = array_map(function($item) {
                 500
             );
         }
-    }
-
-    /**
-     * format the string to postgres array string
-     */
-    private function stringToPgArrayString($textString)
-    {
-        $textArray = explode(',', $textString);
-
-        // trim whitespaces
-        $textArray = collect($textArray)->map(function ($value) {
-            return trim($value);
-        })->toArray();
-
-        // change to text array format
-        $pgArrayString = "{" . implode(",", $textArray) . "}";
-
-        return $pgArrayString;
     }
 }

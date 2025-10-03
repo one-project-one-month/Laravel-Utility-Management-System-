@@ -13,12 +13,19 @@ class CustomerServiceController extends Controller
 {
     use ApiResponse;
 
-
     public function index()
     {
-        $services = CustomerService::all();
-        return $this->successResponse('hello',
-            CustomerServiceResource::collection($services),200
+        $services = CustomerService::orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
+            ->paginate(config('pagination.perPage'));
+
+        if ($services->isEmpty()) {
+            return $this->errorResponse('Customer Services not found', 404);
+        }
+
+        return $this->successResponse(
+            'CustomerServices retrieved successfully.',
+            $this->buildPaginatedResourceResponse(CustomerServiceResource::class, $services)
         );
     }
 
@@ -36,8 +43,7 @@ class CustomerServiceController extends Controller
 
         return $this->successResponse(
             message: "CustomerService found successful!",
-            content: new CustomerServiceResource($service),
-            status: 200
+            content: new CustomerServiceResource($service)
         );
     }
 
@@ -45,43 +51,43 @@ class CustomerServiceController extends Controller
     public function update(Request $request, $id)
     {
         try {
-             $service = CustomerService::findOrFail($id);
+            $service = CustomerService::find($id);
 
-        if (!$service) {
-            return $this->errorResponse(
-                message: 'The customer service you are trying to update does not exist!',
-                status: 404
+            if (!$service) {
+                return $this->errorResponse(
+                    message: 'The customer service you are trying to update does not exist!',
+                    status: 404
+                );
+            }
+
+            $validator = Validator::make($request->all(), [
+                'roomId'        => 'sometimes|exists:rooms,id',
+                'category'      => 'sometimes|in:Complain,Maintenance,Other',
+                'description'   => 'sometimes|string',
+                'status'        => 'sometimes|in:Pending,Ongoing,Resolved',
+                'priorityLevel' => 'sometimes|in:Low,Medium,High',
+                'issuedDate'    => 'sometimes|date',
+            ]);
+
+            if ($validator->fails()) {
+                return $this->errorResponse($validator->errors(), 422);
+            }
+
+            $validated = $validator->validated();
+
+            $service->update([
+                'room_id'        => $validated['roomId'] ?? $service->room_id,
+                'category'       => $validated['category'] ?? $service->category,
+                'description'    => $validated['description'] ?? $service->description,
+                'status'         => $validated['status'] ?? $service->status,
+                'priority_level' => $validated['priorityLevel'] ?? $service->priority_level,
+                'issued_date'    => $validated['issuedDate'] ?? $service->issued_date,
+            ]);
+
+            return $this->successResponse(
+                message: 'Customer Service updated successfully!',
+                content: new CustomerServiceResource($service)
             );
-        }
-
-        $validator = Validator::make($request->all(), [
-            'roomId'        => 'sometimes|exists:rooms,id',
-            'category'      => 'sometimes|in:Complain,Maintenance,Other',
-            'description'   => 'sometimes|string',
-            'status'        => 'sometimes|in:Pending,Ongoing,Resolved',
-            'priorityLevel' => 'sometimes|in:Low,Medium,High',
-            'issuedDate'    => 'sometimes|date',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), 422);
-        }
-
-        $validated = $validator->validated();
-
-        $service->update([
-            'room_id'        => $validated['roomId'] ?? $service->room_id,
-            'category'       => $validated['category'] ?? $service->category,
-            'description'    => $validated['description'] ?? $service->description,
-            'status'         => $validated['status'] ?? $service->status,
-            'priority_level' => $validated['priorityLevel'] ?? $service->priority_level,
-            'issued_date'    => $validated['issuedDate'] ?? $service->issued_date,
-        ]);
-
-        return $this->successResponse(
-            message: 'Customer Service updated successfully!',
-            content: new CustomerServiceResource($service)
-        );
 
         } catch (\Exception $e) {
               return $this->errorResponse(

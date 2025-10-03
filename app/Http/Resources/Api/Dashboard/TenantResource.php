@@ -1,12 +1,15 @@
 <?php
-namespace app\Http\Resources\Api\Dashboard;
+namespace App\Http\Resources\Api\Dashboard;
 
 
+use App\Http\Helpers\PostgresHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TenantResource extends JsonResource
 {
+    use PostgresHelper;
+
     /**
      * Transform the resource into an array.
      *
@@ -18,11 +21,11 @@ class TenantResource extends JsonResource
             [
                 'id'            => $this->id,
                 'roomId'        => $this->room_id,
-                'name'          => $this->names,
-                'nrc'           => $this->nrcs,
-                'email'         => $this->emails,
-                'phNumber'      => $this->phone_nos,
-                'emergencyNo'   => $this->emergency_nos,
+                'name'          => $this->pgArrayStringToNativeArray($this->names),
+                'nrc'           => $this->pgArrayStringToNativeArray($this->nrcs),
+                'email'         => $this->pgArrayStringToNativeArray($this->emails),
+                'phNumber'      => $this->pgArrayStringToNativeArray($this->phone_nos),
+                'emergencyNo'   => $this->pgArrayStringToNativeArray($this->emergency_nos),
             ];
     }
 }
