@@ -16,9 +16,9 @@ class ReceiptResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'invoice_id' => $this->invoice_id,
-            'payment_method' => $this->payment_method,
-            'paid_date' => $this->paid_date
+            'invoiceId' => $this->invoice_id,
+            'paymentMethod' => $this->payment_method,
+            'paidDate' => $this->paid_date
         ];
     }
 }
