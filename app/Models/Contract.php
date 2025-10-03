@@ -30,8 +30,11 @@ class Contract extends Model
         });
     }
 
-    public function contractTypes() {
+    public function contractType() {
         return $this->belongsTo(ContractType::class);
+    }
+    public function tenant(){
+        return $this->belongsTo(Tenant::class);
     }
 
     public function room() {
