@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Client\BillController as ClientBillController;
 use App\Http\Controllers\Api\Client\ReceiptController as ClientReceiptController;
 use App\Http\Controllers\Api\Dashboard\RoomController;
 use App\Http\Controllers\Api\Dashboard\UserController;
@@ -13,7 +14,7 @@ use App\Http\Controllers\Api\Client\ContractController as ClientContractControll
 use App\Http\Controllers\Api\Dashboard\TotalUnitController;
 use App\Http\Controllers\Api\Dashboard\ContractTypeController;
 use App\Http\Controllers\Api\Dashboard\CustomerServiceController;
-use App\Http\Controllers\Api\Dashboard\InvoiceController;
+// use App\Http\Controllers\Api\Dashboard\InvoiceController;
 use App\Http\Controllers\Api\Dashboard\BillController;
 use App\Http\Controllers\Api\Client\InvoiceController;
 
@@ -69,7 +70,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/tenants/{id}/invoices/latest', [InvoiceController::class, 'latest']);
         Route::get('/tenants/{id}/invoices/history', [InvoiceController::class, 'history']);
 
-
+        //Bill Latest
+        Route::get('/tenants/{id}/bills/latest', [ClientBillController::class,'latestBill']);
      });
 
 });
