@@ -2,12 +2,15 @@
 
 namespace App\Http\Resources\Api\Dashboard;
 
+use App\Http\Helpers\PostgresHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
 
 class ContractTypeResource extends JsonResource
 {
+    use PostgresHelper;
+
     /**
      * Transform the resource into an array.
      *
@@ -20,16 +23,7 @@ class ContractTypeResource extends JsonResource
             'name' => $this->name,
             'duration' => $this->duration,
             'price' => $this->price,
-            'facilities' => $this->facilities
+            'facilities' => $this->pgArrayStringToNativeArray($this->facilities)
         ];
-    }
-
-    private function textArrayToString(String $textArray): String
-    {
-        return str_replace(
-            "\"",
-            "",
-            Str::between($textArray, '{', '}')
-        );
     }
 }

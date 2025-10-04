@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers\Api\Dashboard;
 
-use Exception;
-use Exceptiion;
 use App\Models\Room;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Helpers\ApiResponse;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Api\Dashboard\RoomResource;
@@ -20,16 +17,24 @@ class RoomController extends Controller
     public function index(){
 
         // retrieve a list of rooms with pagination
-        $roomData = Room::paginate(10);
+        $roomData = Room::orderBy('created_at', 'desc')
+            ->paginate(config('pagination.perPage'));
+
+        if ($roomData->isEmpty()) {
+            return $this->errorResponse('Rooms not found', 404);
+        }
 
         // return list of rooms
-        return $this->successResponse('Rooms retrieved successfully', RoomResource::collection($roomData),200);
+        return $this->successResponse(
+            'Rooms retrieved successfully',
+            $this->buildPaginatedResourceResponse(RoomResource::class, $roomData)
+        );
     }
 
     public function show(String $id){
 
         if (!Str::isUuid($id)) {
-            return $this->errorResponse('Invalid room id format', 400);
+            return $this->errorResponse('Invalid room id format');
         }
 
         $roomData = Room::find($id);
@@ -38,13 +43,13 @@ class RoomController extends Controller
             return $this->errorResponse('Room not found',404);
         }
 
-        return $this->successResponse('Room retrieved successfully', new RoomResource($roomData), 200);
+        return $this->successResponse('Room retrieved successfully', new RoomResource($roomData));
     }
 
     public function update(Request $request, String $id){
 
         if (!Str::isUuid($id)) {
-            return $this->errorResponse('Invalid room id format', 400);
+            return $this->errorResponse('Invalid room id format');
         }
 
         $validator = Validator::make($request->all(), [
@@ -55,7 +60,7 @@ class RoomController extends Controller
             'status' => 'required|in:Available,Rented,Purchased,In Maintenance',
             'sellingPrice' => 'required|numeric|regex:/^\d{1,18}(\.\d{1,2})?$/',
             'maxNoOfPeople' => 'required|integer|min:1|max:6',
-            'description' => 'string|max:255'
+            'description' => 'nullable|string|max:255'
         ]);
 
         if ($validator->fails()) {
@@ -80,7 +85,7 @@ class RoomController extends Controller
                 'description' => $request->description
             ]);
 
-            return $this->successResponse('Room updated successfully',new RoomResource($roomData),200);
+            return $this->successResponse('Room updated successfully',new RoomResource($roomData));
 
         } catch (\Exception $error) {
             //error response

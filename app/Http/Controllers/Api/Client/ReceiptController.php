@@ -9,8 +9,6 @@ use App\Models\Receipt;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ReceiptController extends Controller
 {
@@ -23,17 +21,17 @@ class ReceiptController extends Controller
         }
 
         // Authorize
-        $user = User::where('tenant_id', $tenantId)->first();
-        if (auth('sanctum')->user()->id != $user->id) {
+        $userId = User::where('tenant_id', $tenantId)->pluck('id')->first();
+        if (auth('sanctum')->user()->id != $userId) {
             return $this->errorResponse('Unathorized', 401);
         }
 
         // get latest receipt
-        $receipt = Receipt::where('invoice_id', function (Builder $query) use ($user) {
+        $receipt = Receipt::where('invoice_id', function (Builder $query) use ($userId) {
             $query->select('id')->from('invoices')
-                ->where('bill_id', function (Builder $query) use ($user) {
+                ->where('bill_id', function (Builder $query) use ($userId) {
                     $query->select('id')->from('bills')
-                        ->where('user_id', $user->id)->limit(1);
+                        ->where('user_id', $userId)->limit(1);
                 });
         })->latest()->first();
 

@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use App\Http\Helpers\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use App\Http\Jobs\GenerateBillsJob;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Api\Dashboard\BillResource;
@@ -24,13 +23,19 @@ class BillController extends Controller
      */
     public function index()
     {
-        $bills = Bill::with('totalUnit', 'invoice')->get();
+        $bills = Bill::with('totalUnit', 'invoice')
+            ->orderBy('bills.created_at','desc')
+            ->orderBy('bills.id','desc')
+            ->paginate(config('pagination.perPage'));
 
         if ($bills->isEmpty()) {
-            return $this->errorResponse('Not found!', 404);
+            return $this->errorResponse('Bills not found', 404);
         }
 
-        return $this->successResponse('Bills retrieved successfully', BillResource::collection($bills));
+        return $this->successResponse(
+            'Bills retrieved successfully',
+            $this->buildPaginatedResourceResponse(BillResource::class, $bills)
+        );
     }
 
     /**
@@ -106,8 +111,7 @@ class BillController extends Controller
         $validated = collect($validated)->keyBy(fn ($value, $key) => Str::snake($key))->all();
 
         if ($bill->update($validated)) {
-
-            return $this->successResponse('Bill updated successfully',new BillResource($bill),200);
+            return $this->successResponse('Bill updated successfully',new BillResource($bill));
         }
 
         return $this->errorResponse('Failed to update bill', 422);

@@ -17,10 +17,19 @@ class ReceiptController extends Controller
 {
     use ApiResponse;
 
-
     public function index(){
-          $receipts = Receipt::paginate(15);
-         return $this->successResponse(content: ReceiptResource::collection($receipts));
+        $receipts = Receipt::orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
+            ->paginate(config('pagination.perPage'));
+
+        if ($receipts->isEmpty()) {
+            return $this->errorResponse('Receipts not found', 404);
+        }
+
+        return $this->successResponse(
+            'Receipts retrieved successfully',
+            $this->buildPaginatedResourceResponse(ReceiptResource::class, $receipts),
+        );
     }
 
     public function store(Request $request){
@@ -59,9 +68,8 @@ class ReceiptController extends Controller
                 status: 404
             );
         }
-        return $this->successResponse("Receipt found successful" ,
-            new ReceiptResource($receipt),
-            200
+        return $this->successResponse("Receipt found successful",
+            new ReceiptResource($receipt)
         );
     }
     public function update(Request $request , $id){
@@ -81,11 +89,16 @@ class ReceiptController extends Controller
                 status: 404
             );
         }
-        $receipt->update($validatedData);
+
+        $receipt->update([
+            'invoice_id'     => $validatedData['invoiceId'],
+            'payment_method' => $validatedData['paymentMethod'],
+            'paid_date'      => $validatedData['paidDate'],
+        ]);
+
         return $this->successResponse(
             'Receipt updated successfully!',
-            new ReceiptResource($receipt),
-            200
+            new ReceiptResource($receipt)
         );
     }
 }
