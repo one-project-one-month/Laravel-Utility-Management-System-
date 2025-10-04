@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Dashboard;
 
+use App\Http\Helpers\PostgresHelper;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
 use App\Http\Helpers\ApiResponse;
@@ -12,22 +13,28 @@ use App\Http\Resources\Api\Dashboard\TenantResource;
 
 class TenantController extends Controller
 {
-    use ApiResponse;
+    use ApiResponse, PostgresHelper;
+
     public function index()
     {
-        $tenants = Tenant::paginate(10);
+        $tenants = Tenant::orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
+            ->paginate(config('pagination.perPage'));
+
+        if ($tenants->isEmpty()) {
+            return $this->errorResponse('Tenants not found', 404);
+        }
 
         return $this->successResponse(
             'Tenants retrieved successfully',
-            TenantResource::collection($tenants),
-            200
+            $this->buildPaginatedResourceResponse(TenantResource::class, $tenants),
         );
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'roomId' => ['required'],
+            'roomId' => ['required', 'uuid', 'exists:rooms,id'],
             'name' => ['required'],
             'nrc' => ['required'],
             'email' => ['required'],
@@ -42,11 +49,11 @@ class TenantController extends Controller
         $validatedData = $validator->validated();
         $tenantData = [
             'room_id'       => $validatedData['roomId'],
-            'names'         => $this->stringToPgArrayString($validatedData['name']),
-            'nrcs'          => $this->stringToPgArrayString($validatedData['nrc']),
-            'emails'        => $this->stringToPgArrayString($validatedData['email']),
-            'phone_nos'     => $this->stringToPgArrayString($validatedData['phNumber']),
-            'emergency_nos' => $this->stringToPgArrayString($validatedData['emergencyNo']),
+            'names'         => $this->nativeStringToPgArrayString($validatedData['name']),
+            'nrcs'          => $this->nativeStringToPgArrayString($validatedData['nrc']),
+            'emails'        => $this->nativeStringToPgArrayString($validatedData['email']),
+            'phone_nos'     => $this->nativeStringToPgArrayString($validatedData['phNumber']),
+            'emergency_nos' => $this->nativeStringToPgArrayString($validatedData['emergencyNo']),
         ];
 
         try {
@@ -101,18 +108,18 @@ class TenantController extends Controller
 
 
             if(!$tenant) {
-                return $this->errorResponse('Tentant not find', 404);
+                return $this->errorResponse('Tenant not find', 404);
             }
 
             $validatedData = $validator->validated();
 
             $tenantData = [
                 'room_id'       => $validatedData['roomId'],
-                'names'         => $this->stringToPgArrayString($validatedData['name']),
-                'nrcs'          => $this->stringToPgArrayString($validatedData['nrc']),
-                'emails'        => $this->stringToPgArrayString($validatedData['email']),
-                'phone_nos'     => $this->stringToPgArrayString($validatedData['phNumber']),
-                'emergency_nos' => $this->stringToPgArrayString($validatedData['emergencyNo']),
+                'names'         => $this->nativeStringToPgArrayString($validatedData['name']),
+                'nrcs'          => $this->nativeStringToPgArrayString($validatedData['nrc']),
+                'emails'        => $this->nativeStringToPgArrayString($validatedData['email']),
+                'phone_nos'     => $this->nativeStringToPgArrayString($validatedData['phNumber']),
+                'emergency_nos' => $this->nativeStringToPgArrayString($validatedData['emergencyNo']),
             ];
 
 
@@ -126,16 +133,5 @@ class TenantController extends Controller
             return $this->errorResponse('Tenant update failed: '. $e->getMessage(),
             500); // changed (,) to (.) for proper string joining
         }
-    }
-
-    private function stringToPgArrayString($textString){
-
-        $textArray = explode(',', $textString);
-        $textArray = collect($textArray)->map(function($value){
-            return trim($value);
-        })->toArray();
-
-        $pgArrayString = "{".implode(",", $textArray). "}";
-        return $pgArrayString;
     }
 }

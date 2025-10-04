@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Dashboard;
 
+use App\Enums\RoomStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Contract;
 use Illuminate\Http\Request;
@@ -10,15 +11,27 @@ use App\Http\Helpers\ApiResponse;
 use App\Http\Resources\Api\Dashboard\ContractResource;
 use App\Models\Room;
 
-use function Pest\Laravel\json;
-
 class ContractController extends Controller
 {
     use ApiResponse;
+
     public function index()
     {
-        $contracts = Contract::latest()->with(['contractType', 'tenant'])->get();
-        return $this->successResponse('Contracts retrieved successfully', ContractResource::collection($contracts), 200);
+
+        $contracts = Contract::latest()->with(['contractType', 'tenant'])->orderBy('id','desc')
+            ->paginate(config('pagination.perPage'));
+       
+
+
+        if ($contracts->isEmpty()) {
+            return $this->errorResponse('Contracts not found', 404);
+        }
+
+        return $this->successResponse(
+            'Contracts retrieved successfully',
+            $this->buildPaginatedResourceResponse(ContractResource::class, $contracts)
+        );
+
     }
 
     public function show($id)
@@ -31,8 +44,7 @@ class ContractController extends Controller
 
         return $this->successResponse(
             'Contract retrieved successfully',
-            new ContractResource($contract),
-            200
+            new ContractResource($contract)
         );
     }
 
@@ -54,8 +66,11 @@ class ContractController extends Controller
         $validatedData = $validator->validated();
 
         $room = Room::find($validatedData['roomNo']);
-        if ($room->status !== 'Available') {
-            return $this->errorResponse('Room is not Avaliable', 404);
+
+        $roomStatusAvailable = RoomStatus::Available->value;
+
+        if ($room->status !== $roomStatusAvailable) {
+            return $this->errorResponse("Room is not " . $roomStatusAvailable, 404);
         };
 
         $data = [
@@ -66,7 +81,7 @@ class ContractController extends Controller
         ];
 
         $contract = Contract::create($data);
-        $room->status = 'Rented';
+        $room->status = RoomStatus::Rented->value;
         $room->save();
 
         return $this->successResponse('Contract created successfully', new ContractResource($contract), 201);
@@ -94,7 +109,7 @@ class ContractController extends Controller
             return $this->errorResponse('Contract not found', 404);
         }
 
-        if ($room->status === 'Available' || $contract->room_id === $validatedData['roomNo']) {
+        if ($room->status === RoomStatus::Available->value || $contract->room_id === $validatedData['roomNo']) {
 
             $data = [
                 'contract_type_id' => $validatedData['contractId'],
@@ -106,7 +121,7 @@ class ContractController extends Controller
             $contract->update($data);
             $contract->refresh();
 
-            return $this->successResponse('Contract updated successfully', new ContractResource($contract), 200);
+            return $this->successResponse('Contract updated successfully', new ContractResource($contract));
         }
 
         return $this->errorResponse('Room is not Available', 409);

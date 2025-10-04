@@ -4,16 +4,30 @@ namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Helpers\ApiResponse;
+use App\Http\Resources\Api\Dashboard\TotalUnitResource;
 use App\Models\TotalUnit;
 
 class TotalUnitController extends Controller
 {
+    use ApiResponse;
+
     // index
     public function index(){
-        $totalunits = TotalUnit::orderBy('created_at','desc')->get();
-        return response()->json($totalunits,200);
+        $totalunits = TotalUnit::orderBy('created_at','desc')
+            ->orderBy('id','desc')
+            ->paginate(config('pagination.perPage'));
+
+        if ($totalunits->isEmpty()) {
+            return $this->errorResponse('No total units found', 404);
+        }
+
+        return $this->successResponse(
+            'Total units retrieved successfully',
+            $this->buildPaginatedResourceResponse(TotalUnitResource::class, $totalunits),
+        );
     }
-    
+
     // create
     public function store(Request $request) {
         $data = $request->validate([
@@ -31,10 +45,15 @@ class TotalUnitController extends Controller
         return response()->json($totalunits, 200);
     }
 
-    // (show) 
+    // (show)
     public function show($id) {
-        $totalunits = TotalUnit::findOrFail($id);
-        return response()->json($totalunits, 200);
+        $totalunits = TotalUnit::find($id);
+
+        if (!$totalunits) {
+            return $this->errorResponse('Total unit not found', 404);
+        }
+
+        return $this->successResponse('Total unit retrieved successfully', new TotalUnitResource($totalunits));
     }
 
 
