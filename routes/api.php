@@ -11,7 +11,6 @@ use App\Http\Controllers\Api\Dashboard\UserController;
 use App\Http\Controllers\Api\Dashboard\TenantController;
 use App\Http\Controllers\Api\Dashboard\ReceiptController;
 use App\Http\Controllers\Api\Dashboard\TotalUnitController;
-use App\Http\Controllers\Api\Dashboard\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Client\ReceiptController as ClientReceiptController;
 use App\Http\Controllers\Api\Client\ContractController as ClientContractController;
