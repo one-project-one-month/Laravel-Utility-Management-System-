@@ -78,6 +78,8 @@ Route::prefix('v1/')->group(function () {
 
         //Bill Latest
         Route::get('/tenants/{id}/bills/latest', [ClientBillController::class,'latestBill']);
+        Route::get('/tenants/{id}/bills/history', [ClientBillController::class,'billHistory']);
+     });
 
     });
 });

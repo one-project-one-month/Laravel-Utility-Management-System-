@@ -17,9 +17,11 @@ class ContractController extends Controller
 
     public function index()
     {
-        $contracts = Contract::orderBy('created_at', 'desc')
-            ->orderBy('id','desc')
+
+        $contracts = Contract::latest()->with(['contractType', 'tenant'])->orderBy('id','desc')
             ->paginate(config('pagination.perPage'));
+       
+
 
         if ($contracts->isEmpty()) {
             return $this->errorResponse('Contracts not found', 404);
@@ -29,6 +31,7 @@ class ContractController extends Controller
             'Contracts retrieved successfully',
             $this->buildPaginatedResourceResponse(ContractResource::class, $contracts)
         );
+
     }
 
     public function show($id)
