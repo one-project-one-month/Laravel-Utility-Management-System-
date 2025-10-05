@@ -7,6 +7,25 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
 
+
+
+/**
+ * @OA\Schema(
+ * schema="ContractTypeResource",
+ * title="Contract Type Resource",
+ * description="Contract Type model representation",
+ * @OA\Property(property="id", type="integer", example=1),
+ * @OA\Property(property="name", type="string", example="Standard 1-Year"),
+ * @OA\Property(property="duration", type="integer", description="Duration in months", example=12),
+ * @OA\Property(property="price", type="number", format="float", example=500.00),
+ * @OA\Property(
+ * property="facilities",
+ * type="array",
+ * @OA\Items(type="string"),
+ * example={"WiFi", "Air Conditioning"}
+ * )
+ * )
+ */
 class ContractTypeResource extends JsonResource
 {
     use PostgresHelper;

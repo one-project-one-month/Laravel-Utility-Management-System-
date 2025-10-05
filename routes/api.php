@@ -11,7 +11,6 @@ use App\Http\Controllers\Api\Dashboard\UserController;
 use App\Http\Controllers\Api\Dashboard\TenantController;
 use App\Http\Controllers\Api\Dashboard\ReceiptController;
 use App\Http\Controllers\Api\Dashboard\TotalUnitController;
-use App\Http\Controllers\Api\Dashboard\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Client\ReceiptController as ClientReceiptController;
 use App\Http\Controllers\Api\Client\ContractController as ClientContractController;
@@ -63,11 +62,11 @@ Route::prefix('v1/')->group(function () {
     Route::middleware(['auth:sanctum', "Role.check:Tenant"])->group(function () {
 
         // Tenant Customer Services
-        
+
         Route::post('tenants/{id}/customer-services/create', [ClientCustomerServiceController::class, 'create']);
         Route::get('tenants/{id}/customer-services/history/{status?}', [ClientCustomerServiceController::class, 'history']);
-       
-      
+
+
         // Receipt latest
         Route::get('/tenants/{id}/receipts/latest', action: [ClientReceiptController::class, 'latest']);
 
@@ -80,6 +79,5 @@ Route::prefix('v1/')->group(function () {
         Route::get('/tenants/{id}/bills/latest', [ClientBillController::class,'latestBill']);
         Route::get('/tenants/{id}/bills/history', [ClientBillController::class,'billHistory']);
      });
-
-    });
 });
+

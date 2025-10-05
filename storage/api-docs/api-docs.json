@@ -6,14 +6,16 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/v1/auth/login": {
+        "/api/v1/auth/login": {
             "post": {
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "Login user and return token",
-                "operationId": "d0c5ac61d58053f710bbb705e4b17338",
+                "summary": "Login user and return tokens",
+                "description": "Authenticate a user and receive an access token and a refresh token.",
+                "operationId": "97d0fa1f733dead1980e640104204374",
                 "requestBody": {
+                    "description": "User credentials",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -26,12 +28,12 @@
                                     "email": {
                                         "type": "string",
                                         "format": "email",
-                                        "example": "user@example.com"
+                                        "example": "johndoe@gmail.com"
                                     },
                                     "password": {
                                         "type": "string",
                                         "format": "password",
-                                        "example": "Password123"
+                                        "example": "Ks82787294"
                                     }
                                 },
                                 "type": "object"
@@ -53,16 +55,30 @@
                                         "data": {
                                             "properties": {
                                                 "user": {
-                                                    "type": "object",
-                                                    "example": {
-                                                        "id": 1,
-                                                        "name": "John Doe",
-                                                        "email": "user@example.com"
-                                                    }
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "John Doe"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "format": "email",
+                                                            "example": "johndoe@gmail.com"
+                                                        }
+                                                    },
+                                                    "type": "object"
                                                 },
-                                                "token": {
+                                                "accessToken": {
                                                     "type": "string",
-                                                    "example": "1|abcxyz123"
+                                                    "example": "1|aBcDeFgHiJkLmNoPqRsTuVwXyZ123456"
+                                                },
+                                                "refreshToken": {
+                                                    "type": "string",
+                                                    "example": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2"
                                                 }
                                             },
                                             "type": "object"
@@ -74,14 +90,184 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized - invalid password",
+                        "description": "Unauthorized - invalid password"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "422": {
+                        "description": "Validation errors"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Refresh the access token",
+                "description": "Uses a refresh token to generate a new access token.",
+                "operationId": "18eda0c146bbb7b84dd85353173dd930",
+                "requestBody": {
+                    "description": "Provide the refresh token",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "refresh_token"
+                                ],
+                                "properties": {
+                                    "refresh_token": {
+                                        "type": "string",
+                                        "example": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token refreshed successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Your credential is wrong!"
+                                            "example": "successful"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "John Doe"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "format": "email",
+                                                            "example": "johndoe@gmail.com"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "accessToken": {
+                                                    "type": "string",
+                                                    "example": "2|zYxWvUtSrQpOnMlKjIhGfEdCbA123456"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or expired refresh token"
+                    },
+                    "422": {
+                        "description": "Validation error - refresh_token is required"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Logout user",
+                "description": "Logs out the current authenticated user by invalidating their token.",
+                "operationId": "cf53777b1786575f52eb3cfd965c15a0",
+                "responses": {
+                    "200": {
+                        "description": "Logout successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logged out successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/contracts": {
+            "get": {
+                "tags": [
+                    "Contracts"
+                ],
+                "summary": "Get a list of contracts",
+                "description": "Returns a paginated list of all contracts.",
+                "operationId": "105304bf8dfd0ac02c4dc114a6c7144b",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Contracts retrieved successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/ContractResource"
+                                                    }
+                                                },
+                                                "pagination": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 50
+                                                        },
+                                                        "per_page": {
+                                                            "type": "integer",
+                                                            "example": 15
+                                                        },
+                                                        "current_page": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "last_page": {
+                                                            "type": "integer",
+                                                            "example": 4
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -90,53 +276,399 @@
                         }
                     },
                     "404": {
-                        "description": "User not found",
+                        "description": "Contracts not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Contracts"
+                ],
+                "summary": "Create a new contract",
+                "description": "Creates a new contract and assigns a tenant to a room.",
+                "operationId": "7dca7a1e54ece1d0144fcdc4bea3ac24",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "roomNo",
+                                    "contractId",
+                                    "tenantId",
+                                    "createdDate",
+                                    "expiryDate"
+                                ],
+                                "properties": {
+                                    "roomNo": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "9a7c6f2c-5b8a-4f2a-8f2c-6d8b3a0c1e9f"
+                                    },
+                                    "contractId": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "tenantId": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "createdDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2023-10-27"
+                                    },
+                                    "expiryDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-10-26"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Contract created successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Your credentials have not served!"
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ContractResource"
                                 }
                             }
                         }
                     },
                     "422": {
-                        "description": "Validation errors",
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Room is not available"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/contracts/{id}": {
+            "get": {
+                "tags": [
+                    "Contracts"
+                ],
+                "summary": "Get a single contract",
+                "description": "Returns the details of a specific contract by its ID.",
+                "operationId": "4a1a977464745a120b4e62995e9467f8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the contract",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "The given data was invalid."
-                                        },
-                                        "errors": {
-                                            "type": "object",
-                                            "example": {
-                                                "email": [
-                                                    "The email field is required."
-                                                ],
-                                                "password": [
-                                                    "The password must be at least 6 characters."
-                                                ]
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/ContractResource"
                                 }
                             }
                         }
+                    },
+                    "404": {
+                        "description": "Contract not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Contracts"
+                ],
+                "summary": "Update an existing contract",
+                "description": "Updates the details of an existing contract.",
+                "operationId": "6405d170407b8b189b5b4bbe1568d455",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the contract to update",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "roomNo",
+                                    "contractId",
+                                    "tenantId",
+                                    "createdDate",
+                                    "expiryDate"
+                                ],
+                                "properties": {
+                                    "roomNo": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "e1e2d736-3813-43be-8f1f-1b734cffb327"
+                                    },
+                                    "contractId": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "tenantId": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "createdDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-10-5"
+                                    },
+                                    "expiryDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-10-6"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Contract updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ContractResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Contract not found"
+                    },
+                    "409": {
+                        "description": "Room is not available"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ContractResource": {
+                "title": "Contract Resource",
+                "description": "Contract model representation",
+                "properties": {
+                    "id": {
+                        "description": "Contract ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "roomNo": {
+                        "description": "ID of the associated room",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "9a7c6f2c-5b8a-4f2a-8f2c-6d8b3a0c1e9f"
+                    },
+                    "contractId": {
+                        "description": "ID of the contract type",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "tenantId": {
+                        "description": "ID of the associated tenant",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "createdDate": {
+                        "description": "The date the contract was created",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-10-27T10:00:00.000000Z"
+                    },
+                    "expiryDate": {
+                        "description": "The date the contract expires",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-10-26"
+                    },
+                    "contractType": {
+                        "$ref": "#/components/schemas/ContractTypeResource"
+                    },
+                    "tenant": {
+                        "$ref": "#/components/schemas/TenantResource"
+                    }
+                },
+                "type": "object"
+            },
+            "ContractTypeResource": {
+                "title": "Contract Type Resource",
+                "description": "Contract Type model representation",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Standard 1-Year"
+                    },
+                    "duration": {
+                        "description": "Duration in months",
+                        "type": "integer",
+                        "example": 12
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 500
+                    },
+                    "facilities": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "WiFi",
+                            "Air Conditioning"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "TenantResource": {
+                "title": "Tenant Resource",
+                "description": "Tenant model representation",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "roomId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "9a7c6f2c-5b8a-4f2a-8f2c-6d8b3a0c1e9f"
+                    },
+                    "name": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "John Doe",
+                            "Jane Doe"
+                        ]
+                    },
+                    "nrc": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "12/ABC(N)123456",
+                            "12/DEF(N)654321"
+                        ]
+                    },
+                    "email": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "email"
+                        },
+                        "example": [
+                            "john.doe@example.com",
+                            "jane.doe@example.com"
+                        ]
+                    },
+                    "phNumber": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "09123456789",
+                            "09987654321"
+                        ]
+                    },
+                    "emergencyNo": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "09111222333",
+                            "09444555666"
+                        ]
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
             }
         }
     },
     "tags": [
+        {
+            "name": "Contracts",
+            "description": "API Endpoints for managing contracts"
+        },
         {
             "name": "Authentication",
             "description": "Authentication"
