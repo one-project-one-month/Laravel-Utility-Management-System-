@@ -10,10 +10,46 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Api\Dashboard\RoomResource;
 
+
+/**
+ * @OA\Tag(
+ * name="Rooms",
+ * description="API Endpoints for managing rooms"
+ * )
+ */
 class RoomController extends Controller
 {
     use ApiResponse;
 
+
+     /**
+     * @OA\Get(
+     * path="/api/v1/rooms",
+     * summary="Get a list of rooms",
+     * description="Returns a paginated list of all rooms.",
+     * tags={"Rooms"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Response(
+     * response=200,
+     * description="Successful operation",
+     * @OA\JsonContent(
+     * type="object",
+     * @OA\Property(property="message", type="string", example="Rooms retrieved successfully"),
+     * @OA\Property(property="data", type="object",
+     * @OA\Property(property="items", type="array", @OA\Items(ref="#/components/schemas/RoomResource")),
+     * @OA\Property(property="pagination", type="object",
+     * @OA\Property(property="total", type="integer", example=50),
+     * @OA\Property(property="per_page", type="integer", example=15),
+     * @OA\Property(property="current_page", type="integer", example=1),
+     * @OA\Property(property="last_page", type="integer", example=4)
+     * )
+     * )
+     * )
+     * ),
+     * @OA\Response(response=404, description="Rooms not found"),
+     * @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
     public function index(){
 
         // retrieve a list of rooms with pagination
@@ -31,6 +67,30 @@ class RoomController extends Controller
         );
     }
 
+
+     /**
+     * @OA\Get(
+     * path="/api/v1/rooms/{id}",
+     * summary="Get a single room",
+     * description="Returns the details of a specific room by its UUID.",
+     * tags={"Rooms"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     * name="id",
+     * in="path",
+     * required=true,
+     * description="UUID of the room",
+     * @OA\Schema(type="string", format="uuid")
+     * ),
+     * @OA\Response(
+     * response=200,
+     * description="Room retrieved successfully",
+     * @OA\JsonContent(ref="#/components/schemas/RoomResource")
+     * ),
+     * @OA\Response(response=404, description="Room not found"),
+     * @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
     public function show(String $id){
 
         if (!Str::isUuid($id)) {
@@ -46,6 +106,45 @@ class RoomController extends Controller
         return $this->successResponse('Room retrieved successfully', new RoomResource($roomData));
     }
 
+
+     /**
+     * @OA\Put(
+     * path="/api/v1/rooms/{id}",
+     * summary="Update an existing room",
+     * description="Updates the details of an existing room.",
+     * tags={"Rooms"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     * name="id",
+     * in="path",
+     * required=true,
+     * description="UUID of the room to update",
+     * @OA\Schema(type="string", format="uuid")
+     * ),
+     * @OA\RequestBody(
+     * required=true,
+     * @OA\JsonContent(
+     * required={"roomNo", "floor", "dimension", "noOfBedRoom", "status", "sellingPrice", "maxNoOfPeople"},
+     * @OA\Property(property="roomNo", type="integer", example=101),
+     * @OA\Property(property="floor", type="integer", example=1),
+     * @OA\Property(property="dimension", type="string", example="12x12 sqft"),
+     * @OA\Property(property="noOfBedRoom", type="integer", example=1),
+     * @OA\Property(property="status", type="string", enum={"Available", "Rented", "Purchased", "In Maintenance"}, example="Available"),
+     * @OA\Property(property="sellingPrice", type="number", format="float", example=150000.00),
+     * @OA\Property(property="maxNoOfPeople", type="integer", example=2),
+     * @OA\Property(property="description", type="string", nullable=true, example="A cozy room with a nice view.")
+     * )
+     * ),
+     * @OA\Response(
+     * response=200,
+     * description="Room updated successfully",
+     * @OA\JsonContent(ref="#/components/schemas/RoomResource")
+     * ),
+     * @OA\Response(response=422, description="Validation error"),
+     * @OA\Response(response=404, description="Room not found"),
+     * @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
     public function update(Request $request, String $id){
 
         if (!Str::isUuid($id)) {
