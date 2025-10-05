@@ -31,7 +31,7 @@ class BillSeeder extends Seeder
                 $totalAmount =  $rental_fee + $electricity_fee + $water_fee + $fine_fee + $service_fee + $ground_fee + $car_parking_fee + $wifi_fee ;
                 Bill::create([
                     'room_id' => $user->tenant->room_id,
-                    'user_id' =>  $user->id,
+                    'tenant_id' =>  $user->tenant_id,
                     'rental_fee' => $rental_fee,
                     'electricity_fee' =>  $electricity_fee,
                     'water_fee' =>   $water_fee,

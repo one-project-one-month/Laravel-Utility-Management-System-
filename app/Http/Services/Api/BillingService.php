@@ -8,8 +8,16 @@ use App\Models\Bill;
 use App\Models\Invoice;
 use App\Models\Receipt;
 use App\Models\TotalUnit;
+use App\Http\Services\Api\MailService;
 
 Class BillingService {
+
+    protected MailService $mailService;
+
+    public function __construct(MailService $mailService)
+    {
+        $this->mailService = $mailService;
+    }
 
     public function generateBillForRoom($user) {
 
@@ -24,6 +32,26 @@ Class BillingService {
         Receipt::create([
              'invoice_id' => $invoice->id,
         ]);
+
+   $this->mailService->send(
+    [
+        'username'    => $user->name,
+        'rental'      => $bill->rental_fee,
+        'electricity' => $bill->electricity_fee,
+        'water'       => $bill->water_fee,
+        'internet'    => $bill->wifi_fee,
+        'other'       => $bill->fine_fee + $bill->service_fee + $bill->ground_fee + $bill->car_parking_fee,
+        'total'       => $bill->total_amount,
+        'due_date'    => $bill->due_date,
+    ],
+    $user->email,
+    "Utility Alert - " . \Carbon\Carbon::now()->format('F'),
+    "billing-report"
+    );
+
+    // $this->mailService->sendQueued([...], $user->email, "Utility Alert - " . \Carbon\Carbon::now()->format('F'), "billing-report");
+
+
 
     }
 
@@ -44,7 +72,7 @@ Class BillingService {
 
         $data = [
             'room_id' => $user->tenant->room_id,
-            'user_id' => $user->id,
+            'tenant_id' => $user->tenant_id,
             'rental_fee' => $rental_fee,
             'electricity_fee' => $electricity_fee,
             'water_fee' => $water_fee,
