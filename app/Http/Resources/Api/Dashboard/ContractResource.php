@@ -35,7 +35,7 @@ class ContractResource extends JsonResource
                 'roomNo' => $this->room_id,
                 'contractId' => $this->contract_type_id,
                 'tenantId' => $this->tenant_id,
-                'createdDate' => $this->created_at,
+                'createdDate' => $this->created_date,
                 'expiryDate' => $this->expiry_date,
                 'contractType' => new ContractTypeResource($this->whenLoaded('contractType')),
                 'tenant' => new TenantResource($this->whenLoaded('tenant')),

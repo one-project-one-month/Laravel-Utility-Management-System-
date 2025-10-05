@@ -19,6 +19,8 @@ Class BillingService {
         Invoice::create([
             'bill_id' => $bill->id,
         ]);
+
+
     }
 
     private function createBill($user) {

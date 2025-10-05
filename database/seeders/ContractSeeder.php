@@ -27,6 +27,7 @@ class ContractSeeder extends Seeder
                 'contract_type_id' => $contractTypeId->random(),
                 'tenant_id'        => $tenant->id,
                 'room_id'          => $tenant->room_id,
+                'created_date'    => fake()->dateTimeBetween('2020-01-01'),
                 'expiry_date'      => fake()->dateTimeBetween('2020-01-01')
             ]);
         }
