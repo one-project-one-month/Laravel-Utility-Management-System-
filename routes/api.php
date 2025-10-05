@@ -62,11 +62,11 @@ Route::prefix('v1/')->group(function () {
     Route::middleware(['auth:sanctum', "Role.check:Tenant"])->group(function () {
 
         // Tenant Customer Services
-        
+
         Route::post('tenants/{id}/customer-services/create', [ClientCustomerServiceController::class, 'create']);
         Route::get('tenants/{id}/customer-services/history/{status?}', [ClientCustomerServiceController::class, 'history']);
-       
-      
+
+
         // Receipt latest
         Route::get('/tenants/{id}/receipts/latest', action: [ClientReceiptController::class, 'latest']);
 
