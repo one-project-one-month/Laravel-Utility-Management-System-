@@ -500,6 +500,1098 @@
                     }
                 ]
             }
+        },
+        "/api/v1/contract-types": {
+            "get": {
+                "tags": [
+                    "Contract Types"
+                ],
+                "summary": "Get a list of contract types",
+                "description": "Returns a paginated list of all contract types.",
+                "operationId": "6e708fadf1798f6e1273513f0990a4f5",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Contract types retrieved successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/ContractTypeResource"
+                                                    }
+                                                },
+                                                "pagination": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 50
+                                                        },
+                                                        "per_page": {
+                                                            "type": "integer",
+                                                            "example": 15
+                                                        },
+                                                        "current_page": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "last_page": {
+                                                            "type": "integer",
+                                                            "example": 4
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Contract types not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Contract Types"
+                ],
+                "summary": "Create a new contract type",
+                "description": "Creates a new contract type with specified details.",
+                "operationId": "5ac1d661682fd5931d5444d144dc70e7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "duration",
+                                    "price",
+                                    "facilities"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Standard 1-Year"
+                                    },
+                                    "duration": {
+                                        "description": "Duration in months",
+                                        "type": "integer",
+                                        "example": 12
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 550
+                                    },
+                                    "facilities": {
+                                        "description": "Comma-separated list of facilities",
+                                        "type": "string",
+                                        "example": "Wi-Fi,Air-Con,Laundry"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Contract Type created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ContractTypeResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "description": "Creation failed"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/contract-types/{id}": {
+            "get": {
+                "tags": [
+                    "Contract Types"
+                ],
+                "summary": "Get a single contract type",
+                "description": "Returns the details of a specific contract type by its ID.",
+                "operationId": "4007e3e2ec22d55048d713df0f3f62c1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the contract type",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ContractTypeResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Contract type not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Contract Types"
+                ],
+                "summary": "Update an existing contract type",
+                "description": "Updates the details of an existing contract type.",
+                "operationId": "40004b046e8c727f91b1533f9c1ccd26",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the contract type to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "duration",
+                                    "price",
+                                    "facilities"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Premium 2-Year"
+                                    },
+                                    "duration": {
+                                        "description": "Duration in months",
+                                        "type": "integer",
+                                        "example": 24
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 500
+                                    },
+                                    "facilities": {
+                                        "description": "Comma-separated list of facilities",
+                                        "type": "string",
+                                        "example": "Wi-Fi,Air-Con,Laundry,Cleaning"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Contract Type updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ContractTypeResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Contract Type not found"
+                    },
+                    "500": {
+                        "description": "Update failed"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/receipts": {
+            "get": {
+                "tags": [
+                    "Receipts"
+                ],
+                "summary": "Get a list of receipts",
+                "description": "Returns a paginated list of all receipts.",
+                "operationId": "0f2c005998fc93e1a691d4ae544a5249",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Receipts retrieved successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/ReceiptResource"
+                                                    }
+                                                },
+                                                "pagination": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 50
+                                                        },
+                                                        "per_page": {
+                                                            "type": "integer",
+                                                            "example": 15
+                                                        },
+                                                        "current_page": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "last_page": {
+                                                            "type": "integer",
+                                                            "example": 4
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Receipts not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/receipts/{id}": {
+            "get": {
+                "tags": [
+                    "Receipts"
+                ],
+                "summary": "Get a single receipt",
+                "description": "Returns the details of a specific receipt by its ID.",
+                "operationId": "2b9a9737068d0cd349cbb26354dc593e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the receipt",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Receipt found successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReceiptResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The receipt you are looking for does not exist!"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Receipts"
+                ],
+                "summary": "Update an existing receipt",
+                "description": "Updates the details of an existing receipt.",
+                "operationId": "6834d9922f11feb02140a0acbfd9d997",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the receipt to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "invoiceId",
+                                    "paymentMethod",
+                                    "paidDate"
+                                ],
+                                "properties": {
+                                    "invoiceId": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "9a7c6f2c-5b8a-4f2a-8f2c-6d8b3a0c1e9f"
+                                    },
+                                    "paymentMethod": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Cash",
+                                            "Bank Transfer"
+                                        ],
+                                        "example": "Bank Transfer"
+                                    },
+                                    "paidDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2023-10-29"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Receipt updated successfully!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReceiptResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "The receipt you are looking for does not exist!"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/tenants": {
+            "get": {
+                "tags": [
+                    "Tenants"
+                ],
+                "summary": "Get a list of tenants",
+                "description": "Returns a paginated list of all tenants.",
+                "operationId": "b2d6a7dfd92597bb14a6b1dd29f59a5c",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Tenants retrieved successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/TenantResource"
+                                                    }
+                                                },
+                                                "pagination": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 50
+                                                        },
+                                                        "per_page": {
+                                                            "type": "integer",
+                                                            "example": 15
+                                                        },
+                                                        "current_page": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "last_page": {
+                                                            "type": "integer",
+                                                            "example": 4
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tenants not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Tenants"
+                ],
+                "summary": "Create a new tenant",
+                "description": "Creates a new tenant record.",
+                "operationId": "f0081e7330ce16562f97fbe1fb6aefc5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "roomId",
+                                    "name",
+                                    "nrc",
+                                    "email",
+                                    "phNumber",
+                                    "emergencyNo"
+                                ],
+                                "properties": {
+                                    "roomId": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "9a7c6f2c-5b8a-4f2a-8f2c-6d8b3a0c1e9f"
+                                    },
+                                    "name": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "John Doe",
+                                            "Jane Doe"
+                                        ]
+                                    },
+                                    "nrc": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "12/ABC(N)123456"
+                                        ]
+                                    },
+                                    "email": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "email"
+                                        },
+                                        "example": [
+                                            "john.doe@example.com"
+                                        ]
+                                    },
+                                    "phNumber": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "09123456789"
+                                        ]
+                                    },
+                                    "emergencyNo": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "09987654321"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tenant created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TenantResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "description": "Tenant creation failed"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/tenants/{id}": {
+            "get": {
+                "tags": [
+                    "Tenants"
+                ],
+                "summary": "Get a single tenant",
+                "description": "Returns the details of a specific tenant by their ID.",
+                "operationId": "f9661d9d338c11947b7916880f02ceda",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the tenant",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tenant find successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TenantResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tenant did not find"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Tenants"
+                ],
+                "summary": "Update an existing tenant",
+                "description": "Updates the details of an existing tenant.",
+                "operationId": "a66b6a59d9cd46deabe8d200e6be09a0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the tenant to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "roomId",
+                                    "name",
+                                    "email",
+                                    "phNumber",
+                                    "emergencyNo"
+                                ],
+                                "properties": {
+                                    "roomId": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "9a7c6f2c-5b8a-4f2a-8f2c-6d8b3a0c1e9f"
+                                    },
+                                    "name": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "Johnathan Doe"
+                                        ]
+                                    },
+                                    "nrc": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "12/DEF(N)654321"
+                                        ]
+                                    },
+                                    "email": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "email"
+                                        },
+                                        "example": [
+                                            "johnathan.doe@example.com"
+                                        ]
+                                    },
+                                    "phNumber": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "09112233445"
+                                        ]
+                                    },
+                                    "emergencyNo": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "09556677889"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Tenant updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TenantResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Tenant not find"
+                    },
+                    "500": {
+                        "description": "Tenant update failed"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get a list of users",
+                "description": "Returns a paginated list of all users.",
+                "operationId": "f25fa8256cb99c9c2cd984aed2a58842",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Users retrieved successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/UserResource"
+                                                    }
+                                                },
+                                                "pagination": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 50
+                                                        },
+                                                        "per_page": {
+                                                            "type": "integer",
+                                                            "example": 15
+                                                        },
+                                                        "current_page": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "last_page": {
+                                                            "type": "integer",
+                                                            "example": 4
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Create a new user",
+                "description": "Creates a new user account.",
+                "operationId": "0c60234ded0e376881d8ad441d20f181",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "userName",
+                                    "email",
+                                    "password",
+                                    "role"
+                                ],
+                                "properties": {
+                                    "userName": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "johndoe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Password123"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Admin",
+                                            "Tenant",
+                                            "Staff"
+                                        ],
+                                        "example": "Tenant"
+                                    },
+                                    "tenantId": {
+                                        "description": "Required if role is Tenant",
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "500": {
+                        "description": "User creation failed"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get a single user",
+                "description": "Returns the details of a specific user by their ID.",
+                "operationId": "0f942f960aa85553b53c3d4249f5fcad",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the user",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User Fetched Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update an existing user",
+                "description": "Updates the details of an existing user.",
+                "operationId": "5ed3331acdfd0414ea07dbd04d100988",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the user to update",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "userName",
+                                    "email",
+                                    "role",
+                                    "isActive"
+                                ],
+                                "properties": {
+                                    "userName": {
+                                        "type": "string",
+                                        "example": "Johnathan Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "johnathandoe@example.com"
+                                    },
+                                    "password": {
+                                        "description": "Optional. Min 6 chars, 1 letter, 1 number",
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "NewPass123"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Admin",
+                                            "Tenant",
+                                            "Staff"
+                                        ],
+                                        "example": "Staff"
+                                    },
+                                    "tenantId": {
+                                        "type": "integer",
+                                        "example": null
+                                    },
+                                    "isActive": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User Updated Successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -585,6 +1677,35 @@
                 },
                 "type": "object"
             },
+            "ReceiptResource": {
+                "title": "Receipt Resource",
+                "description": "Receipt model representation",
+                "properties": {
+                    "id": {
+                        "description": "Receipt ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "invoiceId": {
+                        "description": "ID of the associated invoice",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "9a7c6f2c-5b8a-4f2a-8f2c-6d8b3a0c1e9f"
+                    },
+                    "paymentMethod": {
+                        "description": "Method of payment",
+                        "type": "string",
+                        "example": "Cash"
+                    },
+                    "paidDate": {
+                        "description": "The date the receipt was paid",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2023-10-28"
+                    }
+                },
+                "type": "object"
+            },
             "TenantResource": {
                 "title": "Tenant Resource",
                 "description": "Tenant model representation",
@@ -651,6 +1772,59 @@
                     }
                 },
                 "type": "object"
+            },
+            "UserResource": {
+                "title": "User Resource",
+                "description": "User model representation",
+                "properties": {
+                    "id": {
+                        "description": "User ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "userName": {
+                        "description": "Name of the user",
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "description": "Email of the user",
+                        "type": "string",
+                        "format": "email",
+                        "example": "johndoe@example.com"
+                    },
+                    "role": {
+                        "description": "Role of the user",
+                        "type": "string",
+                        "example": "Tenant"
+                    },
+                    "isActive": {
+                        "description": "User's active status",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "tenantId": {
+                        "description": "ID of the associated tenant",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "tenant": {
+                        "$ref": "#/components/schemas/TenantResource"
+                    },
+                    "createdAt": {
+                        "description": "Creation timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-10-28T12:00:00.000000Z"
+                    },
+                    "updatedAt": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-10-28T12:00:00.000000Z"
+                    }
+                },
+                "type": "object"
             }
         },
         "securitySchemes": {
@@ -668,6 +1842,22 @@
         {
             "name": "Contracts",
             "description": "API Endpoints for managing contracts"
+        },
+        {
+            "name": "Contract Types",
+            "description": "API Endpoints for managing contract types"
+        },
+        {
+            "name": "Receipts",
+            "description": "API Endpoints for managing receipts"
+        },
+        {
+            "name": "Tenants",
+            "description": "API Endpoints for managing tenants"
+        },
+        {
+            "name": "Users",
+            "description": "API Endpoints for managing users"
         },
         {
             "name": "Authentication",
