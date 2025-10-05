@@ -10,7 +10,7 @@ class Bill extends Model
 {
     protected $fillable = [
         'room_id',
-        'user_id',
+        'tenant_id',
         'rental_fee',
         'electricity_fee',
         'water_fee',
@@ -29,5 +29,9 @@ class Bill extends Model
 
     public function invoice() {
         return $this->hasOne(Invoice::class);
+    }
+
+    public function tenant() {
+        return $this->belongsTo(Tenant::class);
     }
 }
