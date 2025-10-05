@@ -6,6 +6,7 @@ use Log;
 use Carbon\Carbon;
 use App\Models\Bill;
 use App\Models\Invoice;
+use App\Models\Receipt;
 use App\Models\TotalUnit;
 
 Class BillingService {
@@ -16,10 +17,13 @@ Class BillingService {
 
         $this->totalUnitsCreate($bill->id, $bill->electricity_fee, $bill->water_fee);
 
-        Invoice::create([
+       $invoice = Invoice::create([
             'bill_id' => $bill->id,
         ]);
 
+        Receipt::create([
+             'invoice_id' => $invoice->id,
+        ]);
 
     }
 
