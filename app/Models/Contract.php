@@ -16,6 +16,7 @@ class Contract extends Model
             'room_id',
             'contract_type_id',
             'tenant_id',
+            'created_date',
             'expiry_date'
     ];
 
