@@ -69,6 +69,7 @@ Route::prefix('v1/')->group(function () {
 
         // Receipt latest
         Route::get('/tenants/{id}/receipts/latest', action: [ClientReceiptController::class, 'latest']);
+        Route::get('/tenants/{id}/receipts/history',[ClientReceiptController::class,'history']);
 
         Route::get('/tenants/{id}/contracts', [ClientContractController::class, 'index']);
 

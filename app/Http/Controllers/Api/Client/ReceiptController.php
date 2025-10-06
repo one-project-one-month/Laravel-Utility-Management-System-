@@ -76,4 +76,24 @@ class ReceiptController extends Controller
             200
         );
     }
+
+    /**
+     * receipt history
+     */
+}   public function history( $tenantId ){
+
+    $tenant = Tenant::find($tenantId);
+
+    if(!$tenant){
+        return $this->errorResponse('Tenant not found', 404);
+    }
+
+    $userId = User::where('tenant_id', $tenantId)->value('id')->toArray();
+    if($userId->contains(Auth::user()->id)){
+        //
+    }
+
+
+
+
 }
