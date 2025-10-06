@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Api\Client;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Http\Helpers\ApiResponse;
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Tenant;
 use App\Models\Invoice;
-use Carbon\Carbon;
+use Illuminate\Http\Request;
+use App\Http\Helpers\ApiResponse;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\Client\InvoiceResource;
+use Illuminate\Container\Attributes\Auth;
 
 class InvoiceController extends Controller
 {
@@ -16,9 +18,14 @@ class InvoiceController extends Controller
 
         public function latest($id)
     {
-        $tenant = Tenant::find($id);
+        //authorize 
+        $userId = User::where('tenant_id', $id)->value('id');
+        if (auth('sanctum')->user()->id != $userId) {
+            return $this->errorResponse('Unathorized', 401);
+        }
 
-        if (! $tenant) {
+        $tenant = Tenant::find($id);
+        if (!$tenant) {
             return $this->errorResponse(
                 'Tenant not found', 404
             );
