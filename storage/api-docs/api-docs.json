@@ -76,9 +76,9 @@
                                                     "type": "string",
                                                     "example": "1|aBcDeFgHiJkLmNoPqRsTuVwXyZ123456"
                                                 },
-                                                "refreshToken": {
+                                                "note": {
                                                     "type": "string",
-                                                    "example": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2"
+                                                    "example": "The refresh token is stored in an httpOnly cookie named 'refreshToken'."
                                                 }
                                             },
                                             "type": "object"
@@ -107,28 +107,19 @@
                     "Authentication"
                 ],
                 "summary": "Refresh the access token",
-                "description": "Uses a refresh token to generate a new access token.",
+                "description": "Uses a refresh token stored in an httpOnly cookie to generate a new access token.",
                 "operationId": "18eda0c146bbb7b84dd85353173dd930",
-                "requestBody": {
-                    "description": "Provide the refresh token",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "refresh_token"
-                                ],
-                                "properties": {
-                                    "refresh_token": {
-                                        "type": "string",
-                                        "example": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2"
-                                    }
-                                },
-                                "type": "object"
-                            }
+                "parameters": [
+                    {
+                        "name": "refreshToken",
+                        "in": "cookie",
+                        "description": "Refresh token cookie",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     }
-                },
+                ],
                 "responses": {
                     "200": {
                         "description": "Token refreshed successfully",
@@ -206,6 +197,661 @@
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/tenants/{id}/bills/latest": {
+            "get": {
+                "tags": [
+                    "Client Bills"
+                ],
+                "summary": "Get the latest bill for a tenant",
+                "description": "Retrieves the most recent bill for a specific tenant based on the user ID.",
+                "operationId": "0c7ab670d18b048b572e032f32b16695",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The User UUID of the tenant",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "latestBill Success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BillResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Bill not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/tenants/{id}/bills/history": {
+            "get": {
+                "tags": [
+                    "Client Bills"
+                ],
+                "summary": "Get the bill history for a tenant",
+                "description": "Retrieves the bill history for the current year for a specific tenant.",
+                "operationId": "2a2066d53208407a8e0f348b3273ff50",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The User UUID of the tenant",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "billHistory Success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/BillResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/tenants/{id}/contracts": {
+            "get": {
+                "tags": [
+                    "Client Contracts"
+                ],
+                "summary": "Get contract details for a tenant",
+                "description": "Retrieves the contract details associated with a specific tenant.",
+                "operationId": "b1629a9c69e2e8f46556f52340917a6e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the tenant",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Contract retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Contract retrieved successfully."
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/ClientContractResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Contract not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/tenants/{tenantId}/customer-services/create": {
+            "post": {
+                "tags": [
+                    "Client Customer Service"
+                ],
+                "summary": "Create a customer service request",
+                "description": "Allows a tenant to create a new customer service request (e.g., complain, maintenance).",
+                "operationId": "9580d2eedfbe3fa3b008c6281e7185d7",
+                "parameters": [
+                    {
+                        "name": "tenantId",
+                        "in": "path",
+                        "description": "The ID of the tenant making the request",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "roomId",
+                                    "category",
+                                    "description",
+                                    "status",
+                                    "priorityLevel",
+                                    "issuedDate"
+                                ],
+                                "properties": {
+                                    "roomId": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "9a7c6f2c-5b8a-4f2a-8f2c-6d8b3a0c1e9f"
+                                    },
+                                    "category": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Complain",
+                                            "Maintenance",
+                                            "Other"
+                                        ],
+                                        "example": "Maintenance"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "The kitchen sink is leaking."
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Pending",
+                                            "Ongoing",
+                                            "Resolved"
+                                        ],
+                                        "example": "Pending"
+                                    },
+                                    "priorityLevel": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Low",
+                                            "Medium",
+                                            "High"
+                                        ],
+                                        "example": "Medium"
+                                    },
+                                    "issuedDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-10-05"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Customer service request created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Customer Service created successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/CustomerServiceResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/tenants/{id}/customer-services/history/{status?}": {
+            "get": {
+                "tags": [
+                    "Client Customer Service"
+                ],
+                "summary": "Get customer service history for a tenant",
+                "description": "Retrieves a list of customer service requests for a specific tenant, optionally filtered by status.",
+                "operationId": "2e662b6e51cacbeef946f9ffc39fea0b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the tenant (or room ID associated with the tenant) to retrieve history for",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "path",
+                        "description": "Filter by status (e.g., Pending, Resolved)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "Pending",
+                                "Ongoing",
+                                "Resolved"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Customer Service History"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/CustomerServiceResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/tenants/{id}/invoices/latest": {
+            "get": {
+                "tags": [
+                    "Client Invoices"
+                ],
+                "summary": "Get the latest invoice for a tenant",
+                "description": "Retrieves the most recent invoice for a specific tenant.",
+                "operationId": "b3969d0b322d9e03257285034eeb3556",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the tenant",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Latest invoice retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Latest invoice retrieved successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/InvoiceResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tenant or Invoice not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/tenants/{id}/invoices/history": {
+            "get": {
+                "tags": [
+                    "Client Invoices"
+                ],
+                "summary": "Get invoice history for a tenant",
+                "description": "Retrieves the invoice history (excluding the current month) for a specific tenant.",
+                "operationId": "45aa5aa162866c355c83388a2d1b5304",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the tenant",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Invoice history retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invoice history retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/InvoiceResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tenant not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/tenants/{id}/receipts/latest": {
+            "get": {
+                "tags": [
+                    "Client Receipts"
+                ],
+                "summary": "Get the latest receipt for a tenant",
+                "description": "Retrieves the most recent receipt for a specific tenant.",
+                "operationId": "f49c6009eca837644400c2e855422b88",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the tenant",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Receipt retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Receipt retrieved successful"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/ClientReceiptResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tenant or Receipt not found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/bills": {
+            "get": {
+                "tags": [
+                    "Bills"
+                ],
+                "summary": "Get a list of bills",
+                "description": "Returns a paginated list of all bills.",
+                "operationId": "af349e3711a8159a3d904160063053d5",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Bills retrieved successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/BillResource"
+                                                    }
+                                                },
+                                                "pagination": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 50
+                                                        },
+                                                        "per_page": {
+                                                            "type": "integer",
+                                                            "example": 15
+                                                        },
+                                                        "current_page": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "last_page": {
+                                                            "type": "integer",
+                                                            "example": 4
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Bills not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Bills"
+                ],
+                "summary": "Generate monthly bills",
+                "description": "Triggers a job to generate monthly bills for all applicable tenants.",
+                "operationId": "3f86f90282742f48df2e8ec359f7898d",
+                "responses": {
+                    "201": {
+                        "description": "Bill generation process started successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Monthly bill created successfully. Auto-calculates units and generates invoice. Email feature coming next."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/bills/{id}": {
+            "get": {
+                "tags": [
+                    "Bills"
+                ],
+                "summary": "Get a single bill",
+                "description": "Returns the details of a specific bill by its ID.",
+                "operationId": "d32a8a64e701bc14dafa25a842eaf2e2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the bill",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Bill retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BillResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Bill not found"
                     },
                     "401": {
                         "description": "Unauthenticated"
@@ -772,6 +1418,411 @@
                 ]
             }
         },
+        "/api/v1/customer-services": {
+            "get": {
+                "tags": [
+                    "Customer Services"
+                ],
+                "summary": "Get a list of customer service requests",
+                "description": "Returns a paginated list of all customer service requests.",
+                "operationId": "ab9c129f994522de3e03afba9d5e4d66",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "CustomerServices retrieved successfully."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/CustomerServiceResource"
+                                                    }
+                                                },
+                                                "pagination": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 50
+                                                        },
+                                                        "per_page": {
+                                                            "type": "integer",
+                                                            "example": 15
+                                                        },
+                                                        "current_page": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "last_page": {
+                                                            "type": "integer",
+                                                            "example": 4
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Customer Services not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/customer-services/{id}": {
+            "get": {
+                "tags": [
+                    "Customer Services"
+                ],
+                "summary": "Get a single customer service request",
+                "description": "Returns the details of a specific customer service request by its ID.",
+                "operationId": "2cd52d109acaaf71b93fa3db2445bcf3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the customer service request",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "CustomerService found successful!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CustomerServiceResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Customer service request not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Customer Services"
+                ],
+                "summary": "Update an existing customer service request",
+                "description": "Updates the details of an existing customer service request.",
+                "operationId": "8687d8f7386880f401a077d576a44e6c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the customer service request to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "roomId": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "9a7c6f2c-5b8a-4f2a-8f2c-6d8b3a0c1e9f"
+                                    },
+                                    "category": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Complain",
+                                            "Maintenance",
+                                            "Other"
+                                        ],
+                                        "example": "Maintenance"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Leaky faucet in the kitchen."
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Pending",
+                                            "Ongoing",
+                                            "Resolved"
+                                        ],
+                                        "example": "Ongoing"
+                                    },
+                                    "priorityLevel": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Low",
+                                            "Medium",
+                                            "High"
+                                        ],
+                                        "example": "Medium"
+                                    },
+                                    "issuedDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-10-05"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Customer Service updated successfully!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CustomerServiceResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Customer service request not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/invoices": {
+            "get": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Get a list of invoices",
+                "description": "Returns a paginated list of all invoices.",
+                "operationId": "9944e4d0532fc102a8e44d9f86025314",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invoices retrieved successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/InvoiceResource"
+                                                    }
+                                                },
+                                                "pagination": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 50
+                                                        },
+                                                        "per_page": {
+                                                            "type": "integer",
+                                                            "example": 15
+                                                        },
+                                                        "current_page": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "last_page": {
+                                                            "type": "integer",
+                                                            "example": 4
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Invoices not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/invoices/{id}": {
+            "get": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Get a single invoice",
+                "description": "Returns the details of a specific invoice by its ID.",
+                "operationId": "d02369d1b2059ace1cd3a9a67ffe2f30",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the invoice",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Invoice retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InvoiceResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Invoice not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Invoices"
+                ],
+                "summary": "Update an existing invoice",
+                "description": "Updates the status or bill ID of an existing invoice.",
+                "operationId": "692a6ee6cd992b205108bf6461d07d02",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the invoice to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "billId": {
+                                        "description": "ID of the associated bill",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Pending",
+                                            "Paid",
+                                            "Overdue"
+                                        ],
+                                        "example": "Paid"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Invoice updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InvoiceResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Invoice not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/receipts": {
             "get": {
                 "tags": [
@@ -955,6 +2006,229 @@
                     },
                     "404": {
                         "description": "The receipt you are looking for does not exist!"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/rooms": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Get a list of rooms",
+                "description": "Returns a paginated list of all rooms.",
+                "operationId": "7f4754b7db3173fe97eae61d624a10f4",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Rooms retrieved successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/RoomResource"
+                                                    }
+                                                },
+                                                "pagination": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 50
+                                                        },
+                                                        "per_page": {
+                                                            "type": "integer",
+                                                            "example": 15
+                                                        },
+                                                        "current_page": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "last_page": {
+                                                            "type": "integer",
+                                                            "example": 4
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Rooms not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/rooms/{id}": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Get a single room",
+                "description": "Returns the details of a specific room by its UUID.",
+                "operationId": "5b14778d4ad1f8dd7d7b27f77cc6d099",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "UUID of the room",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Room retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RoomResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Room not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Update an existing room",
+                "description": "Updates the details of an existing room.",
+                "operationId": "98cd7940d692e048c3bc38cd5654eaea",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "UUID of the room to update",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "roomNo",
+                                    "floor",
+                                    "dimension",
+                                    "noOfBedRoom",
+                                    "status",
+                                    "sellingPrice",
+                                    "maxNoOfPeople"
+                                ],
+                                "properties": {
+                                    "roomNo": {
+                                        "type": "integer",
+                                        "example": 101
+                                    },
+                                    "floor": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "dimension": {
+                                        "type": "string",
+                                        "example": "12x12 sqft"
+                                    },
+                                    "noOfBedRoom": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Available",
+                                            "Rented",
+                                            "Purchased",
+                                            "In Maintenance"
+                                        ],
+                                        "example": "Available"
+                                    },
+                                    "sellingPrice": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 150000
+                                    },
+                                    "maxNoOfPeople": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "A cozy room with a nice view.",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Room updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RoomResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Room not found"
                     },
                     "401": {
                         "description": "Unauthenticated"
@@ -1306,6 +2580,121 @@
                 ]
             }
         },
+        "/api/v1/total-units": {
+            "get": {
+                "tags": [
+                    "Total Units"
+                ],
+                "summary": "Get a list of total units",
+                "description": "Returns a paginated list of all total units records.",
+                "operationId": "0fc02caaca61877da087de709d010392",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Total units retrieved successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/TotalUnitResource"
+                                                    }
+                                                },
+                                                "pagination": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 50
+                                                        },
+                                                        "per_page": {
+                                                            "type": "integer",
+                                                            "example": 15
+                                                        },
+                                                        "current_page": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "last_page": {
+                                                            "type": "integer",
+                                                            "example": 4
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No total units found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/total-units/{id}": {
+            "get": {
+                "tags": [
+                    "Total Units"
+                ],
+                "summary": "Get a single total unit record",
+                "description": "Returns the details of a specific total unit record by its ID.",
+                "operationId": "ec6e8c2a612da8859c089a94facab37f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the total unit record",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Total unit retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TotalUnitResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Total unit not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/users": {
             "get": {
                 "tags": [
@@ -1596,6 +2985,139 @@
     },
     "components": {
         "schemas": {
+            "ClientContractResource": {
+                "title": "Client Contract Resource",
+                "description": "Client-facing contract model representation",
+                "properties": {
+                    "id": {
+                        "description": "Contract ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "9a7c6f2c-5b8a-4f2a-8f2c-6d8b3a0c1e9f"
+                    },
+                    "room_id": {
+                        "description": "Associated Room ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "9a7c6f2c-5b8a-4f2a-8f2c-6d8b3a0c1e9f"
+                    },
+                    "expiry_date": {
+                        "description": "Expiry date of the contract",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-27"
+                    },
+                    "tenant": {
+                        "$ref": "#/components/schemas/TenantResource"
+                    },
+                    "contractType": {
+                        "$ref": "#/components/schemas/ContractTypeResource"
+                    }
+                },
+                "type": "object"
+            },
+            "ClientReceiptResource": {
+                "title": "Client Receipt Resource",
+                "description": "Client-facing receipt model representation",
+                "properties": {
+                    "id": {
+                        "description": "Receipt ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "invoiceId": {
+                        "description": "Associated Invoice ID",
+                        "type": "integer",
+                        "example": 101
+                    },
+                    "paymentMethod": {
+                        "description": "Payment method used",
+                        "type": "string",
+                        "enum": [
+                            "Cash",
+                            "Bank Transfer",
+                            "Credit Card"
+                        ],
+                        "example": "Credit Card"
+                    },
+                    "paidDate": {
+                        "description": "Date of payment",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2023-10-28"
+                    }
+                },
+                "type": "object"
+            },
+            "BillResource": {
+                "title": "Bill Resource",
+                "description": "Bill model representation",
+                "properties": {
+                    "id": {
+                        "description": "Bill's unique identifier",
+                        "type": "integer"
+                    },
+                    "roomId": {
+                        "description": "Associated room's UUID",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "rentalFee": {
+                        "description": "Monthly rental fee",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "electricityFee": {
+                        "description": "Electricity consumption fee",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "waterFee": {
+                        "description": "Water consumption fee",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "fineFee": {
+                        "description": "Any applicable late fees or fines",
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "serviceFee": {
+                        "description": "General service charges",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "groundFee": {
+                        "description": "Ground maintenance fees",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "carParkingFee": {
+                        "description": "Car parking charges",
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "wifiFee": {
+                        "description": "Wi-Fi service charges",
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "totalAmount": {
+                        "description": "The total bill amount",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "dueDate": {
+                        "description": "Payment due date",
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "type": "object"
+            },
             "ContractResource": {
                 "title": "Contract Resource",
                 "description": "Contract model representation",
@@ -1677,6 +3199,163 @@
                 },
                 "type": "object"
             },
+            "CustomerServiceResource": {
+                "title": "Customer Service Resource",
+                "description": "Customer Service model representation",
+                "properties": {
+                    "id": {
+                        "description": "Service request ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "roomId": {
+                        "description": "ID of the associated room",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "9a7c6f2c-5b8a-4f2a-8f2c-6d8b3a0c1e9f"
+                    },
+                    "category": {
+                        "description": "Category of the service request",
+                        "type": "string",
+                        "example": "Maintenance"
+                    },
+                    "description": {
+                        "description": "Detailed description of the issue",
+                        "type": "string",
+                        "example": "Leaky faucet in the kitchen."
+                    },
+                    "status": {
+                        "description": "Current status of the request",
+                        "type": "string",
+                        "example": "Ongoing"
+                    },
+                    "priorityLevel": {
+                        "description": "Priority level of the request",
+                        "type": "string",
+                        "example": "Medium"
+                    },
+                    "issuedDate": {
+                        "description": "Date the request was issued",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-05"
+                    }
+                },
+                "type": "object"
+            },
+            "InvoiceResource": {
+                "title": "Invoice Resource",
+                "description": "Invoice model representation",
+                "properties": {
+                    "id": {
+                        "description": "Invoice ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "billId": {
+                        "description": "ID of the associated bill",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "status": {
+                        "description": "Status of the invoice",
+                        "type": "string",
+                        "example": "Paid"
+                    },
+                    "createdAt": {
+                        "description": "Creation timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-10-28T12:00:00.000000Z"
+                    },
+                    "updatedAt": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-10-28T12:00:00.000000Z"
+                    },
+                    "bill": {
+                        "description": "Associated bill information",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "room_id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "example": "9a7c6f2c-5b8a-4f2a-8f2c-6d8b3a0c1e9f"
+                            },
+                            "user_id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "rental_fee": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 500
+                            },
+                            "electricity_fee": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 50
+                            },
+                            "water_fee": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 25
+                            },
+                            "fine_fee": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 0
+                            },
+                            "service_fee": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 10
+                            },
+                            "ground_fee": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 5
+                            },
+                            "car_parking_fee": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 15
+                            },
+                            "wifi_fee": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 20
+                            },
+                            "total_amount": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 625
+                            },
+                            "due_date": {
+                                "type": "string",
+                                "format": "date",
+                                "example": "2023-11-28"
+                            },
+                            "createdAt": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2023-10-28T12:00:00.000000Z"
+                            },
+                            "updatedAt": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2023-10-28T12:00:00.000000Z"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
             "ReceiptResource": {
                 "title": "Receipt Resource",
                 "description": "Receipt model representation",
@@ -1702,6 +3381,76 @@
                         "type": "string",
                         "format": "date",
                         "example": "2023-10-28"
+                    }
+                },
+                "type": "object"
+            },
+            "RoomResource": {
+                "title": "Room Resource",
+                "description": "Room model representation",
+                "properties": {
+                    "id": {
+                        "description": "Room's unique identifier",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "roomNo": {
+                        "description": "Room number",
+                        "type": "integer",
+                        "example": 101
+                    },
+                    "floor": {
+                        "description": "Floor number",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "dimension": {
+                        "description": "Room dimensions",
+                        "type": "string",
+                        "example": "12x12 sqft"
+                    },
+                    "noOfBedRoom": {
+                        "description": "Number of bedrooms",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "status": {
+                        "description": "Current status of the room",
+                        "type": "string",
+                        "enum": [
+                            "Available",
+                            "Rented",
+                            "Purchased",
+                            "In Maintenance"
+                        ],
+                        "example": "Available"
+                    },
+                    "sellingPrice": {
+                        "description": "Selling price of the room",
+                        "type": "number",
+                        "format": "float",
+                        "example": 150000
+                    },
+                    "maxNoOfPeople": {
+                        "description": "Maximum number of occupants",
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "description": {
+                        "description": "A brief description of the room",
+                        "type": "string",
+                        "example": "A cozy room with a nice view.",
+                        "nullable": true
+                    },
+                    "createdAt": {
+                        "description": "Creation timestamp",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time"
                     }
                 },
                 "type": "object"
@@ -1773,6 +3522,33 @@
                 },
                 "type": "object"
             },
+            "TotalUnitResource": {
+                "title": "Total Unit Resource",
+                "description": "Total unit model representation",
+                "properties": {
+                    "id": {
+                        "description": "Record ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "billId": {
+                        "description": "ID of the associated bill",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "electricityUnits": {
+                        "description": "Total electricity units consumed",
+                        "type": "integer",
+                        "example": 150
+                    },
+                    "waterUnits": {
+                        "description": "Total water units consumed",
+                        "type": "integer",
+                        "example": 50
+                    }
+                },
+                "type": "object"
+            },
             "UserResource": {
                 "title": "User Resource",
                 "description": "User model representation",
@@ -1840,6 +3616,30 @@
     },
     "tags": [
         {
+            "name": "Client Bills",
+            "description": "Endpoints for tenants to view their billing information"
+        },
+        {
+            "name": "Client Contracts",
+            "description": "Endpoints for tenants to view their contract information"
+        },
+        {
+            "name": "Client Customer Service",
+            "description": "Endpoints for tenants to manage their customer service requests"
+        },
+        {
+            "name": "Client Invoices",
+            "description": "Endpoints for tenants to view their invoice information"
+        },
+        {
+            "name": "Client Receipts",
+            "description": "Endpoints for tenants to view their receipt information"
+        },
+        {
+            "name": "Bills",
+            "description": "API Endpoints for managing bills"
+        },
+        {
             "name": "Contracts",
             "description": "API Endpoints for managing contracts"
         },
@@ -1848,12 +3648,28 @@
             "description": "API Endpoints for managing contract types"
         },
         {
+            "name": "Customer Services",
+            "description": "API Endpoints for managing customer service requests"
+        },
+        {
+            "name": "Invoices",
+            "description": "API Endpoints for managing invoices"
+        },
+        {
             "name": "Receipts",
             "description": "API Endpoints for managing receipts"
         },
         {
+            "name": "Rooms",
+            "description": "API Endpoints for managing rooms"
+        },
+        {
             "name": "Tenants",
             "description": "API Endpoints for managing tenants"
+        },
+        {
+            "name": "Total Units",
+            "description": "API Endpoints for managing total utility units"
         },
         {
             "name": "Users",

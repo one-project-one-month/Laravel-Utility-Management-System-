@@ -12,6 +12,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Api\Dashboard\BillResource;
 
+
+/**
+ * @OA\Tag(
+ * name="Bills",
+ * description="API Endpoints for managing bills"
+ * )
+ */
 class BillController extends Controller
 {
     use ApiResponse;
@@ -20,6 +27,35 @@ class BillController extends Controller
      * GET /api/v1/bills
      *
      * @return JsonResponse
+     */
+
+    /**
+     * @OA\Get(
+     * path="/api/v1/bills",
+     * summary="Get a list of bills",
+     * description="Returns a paginated list of all bills.",
+     * tags={"Bills"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Response(
+     * response=200,
+     * description="Successful operation",
+     * @OA\JsonContent(
+     * type="object",
+     * @OA\Property(property="message", type="string", example="Bills retrieved successfully"),
+     * @OA\Property(property="data", type="object",
+     * @OA\Property(property="items", type="array", @OA\Items(ref="#/components/schemas/BillResource")),
+     * @OA\Property(property="pagination", type="object",
+     * @OA\Property(property="total", type="integer", example=50),
+     * @OA\Property(property="per_page", type="integer", example=15),
+     * @OA\Property(property="current_page", type="integer", example=1),
+     * @OA\Property(property="last_page", type="integer", example=4)
+     * )
+     * )
+     * )
+     * ),
+     * @OA\Response(response=404, description="Bills not found"),
+     * @OA\Response(response=401, description="Unauthenticated")
+     * )
      */
     public function index()
     {
@@ -43,6 +79,31 @@ class BillController extends Controller
      *
      * @return JsonResponse
      */
+
+
+     /**
+     * @OA\Get(
+     * path="/api/v1/bills/{id}",
+     * summary="Get a single bill",
+     * description="Returns the details of a specific bill by its ID.",
+     * tags={"Bills"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     * name="id",
+     * in="path",
+     * required=true,
+     * description="ID of the bill",
+     * @OA\Schema(type="integer")
+     * ),
+     * @OA\Response(
+     * response=200,
+     * description="Bill retrieved successfully",
+     * @OA\JsonContent(ref="#/components/schemas/BillResource")
+     * ),
+     * @OA\Response(response=404, description="Bill not found"),
+     * @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
     public function show($id)
     {
         $bill = Bill::whereId($id)->with('totalUnit', 'invoice')->first();
@@ -62,6 +123,25 @@ class BillController extends Controller
      *
      * @return JsonResponse
      */
+
+
+     /**
+     * @OA\Post(
+     * path="/api/v1/bills",
+     * summary="Generate monthly bills",
+     * description="Triggers a job to generate monthly bills for all applicable tenants.",
+     * tags={"Bills"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Response(
+     * response=201,
+     * description="Bill generation process started successfully",
+     * @OA\JsonContent(
+     * @OA\Property(property="message", type="string", example="Monthly bill created successfully. Auto-calculates units and generates invoice. Email feature coming next.")
+     * )
+     * ),
+     * @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
     public function store(Request $request): JsonResponse
     {
         GenerateBillsJob::dispatch();
@@ -77,6 +157,10 @@ class BillController extends Controller
      *
      * @return JsonResponse
      */
+
+
+
+
     public function update(Request $request, int $id): JsonResponse
     {
         $bill = Bill::find($id);

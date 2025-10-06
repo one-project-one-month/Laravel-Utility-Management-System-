@@ -5,12 +5,59 @@ use App\Http\Controllers\Controller;
 use App\Models\CustomerService;
 use Illuminate\Http\Request;
 
+
+
+/**
+ * @OA\Tag(
+ * name="Client Customer Service",
+ * description="Endpoints for tenants to manage their customer service requests"
+ * )
+ */
 class CustomerServiceController extends Controller
 {
     /**
      * Create Customer Service Request (POST)
      */
 
+
+    /**
+     * @OA\Post(
+     * path="/api/v1/tenants/{tenantId}/customer-services/create",
+     * summary="Create a customer service request",
+     * description="Allows a tenant to create a new customer service request (e.g., complain, maintenance).",
+     * tags={"Client Customer Service"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     * name="tenantId",
+     * in="path",
+     * required=true,
+     * description="The ID of the tenant making the request",
+     * @OA\Schema(type="integer")
+     * ),
+     * @OA\RequestBody(
+     * required=true,
+     * @OA\JsonContent(
+     * required={"roomId", "category", "description", "status", "priorityLevel", "issuedDate"},
+     * @OA\Property(property="roomId", type="string", format="uuid", example="9a7c6f2c-5b8a-4f2a-8f2c-6d8b3a0c1e9f"),
+     * @OA\Property(property="category", type="string", enum={"Complain", "Maintenance", "Other"}, example="Maintenance"),
+     * @OA\Property(property="description", type="string", example="The kitchen sink is leaking."),
+     * @OA\Property(property="status", type="string", enum={"Pending", "Ongoing", "Resolved"}, example="Pending"),
+     * @OA\Property(property="priorityLevel", type="string", enum={"Low", "Medium", "High"}, example="Medium"),
+     * @OA\Property(property="issuedDate", type="string", format="date", example="2025-10-05")
+     * )
+     * ),
+     * @OA\Response(
+     * response=201,
+     * description="Customer service request created successfully",
+     * @OA\JsonContent(
+     * @OA\Property(property="message", type="string", example="Customer Service created successfully"),
+     * @OA\Property(property="data", ref="#/components/schemas/CustomerServiceResource")
+     * )
+     * ),
+     * @OA\Response(response=422, description="Validation error"),
+     * @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
     public function create(Request $request, $tenantId)
     {
         $validated = $request->validate([
@@ -41,6 +88,40 @@ class CustomerServiceController extends Controller
 
     /**
      * Get Customer Service History (GET)
+     */
+
+     /**
+     * @OA\Get(
+     * path="/api/v1/tenants/{id}/customer-services/history/{status?}",
+     * summary="Get customer service history for a tenant",
+     * description="Retrieves a list of customer service requests for a specific tenant, optionally filtered by status.",
+     * tags={"Client Customer Service"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     * name="id",
+     * in="path",
+     * required=true,
+     * description="The ID of the tenant (or room ID associated with the tenant) to retrieve history for",
+     * @OA\Schema(type="string", format="uuid")
+     * ),
+     * @OA\Parameter(
+     * name="status",
+     * in="path",
+     * required=false,
+     * description="Filter by status (e.g., Pending, Resolved)",
+     * @OA\Schema(type="string", enum={"Pending", "Ongoing", "Resolved"})
+     * ),
+     * @OA\Response(
+     * response=200,
+     * description="Successful operation",
+     * @OA\JsonContent(
+     * type="object",
+     * @OA\Property(property="message", type="string", example="Customer Service History"),
+     * @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/CustomerServiceResource"))
+     * )
+     * ),
+     * @OA\Response(response=401, description="Unauthenticated")
+     * )
      */
     public function history($id, $status = null)
     {
