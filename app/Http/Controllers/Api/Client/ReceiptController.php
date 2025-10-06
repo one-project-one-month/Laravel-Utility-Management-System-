@@ -27,11 +27,11 @@ class ReceiptController extends Controller
         }
 
         // get latest receipt
-        $receipt = Receipt::where('invoice_id', function (Builder $query) use ($userId) {
+        $receipt = Receipt::where('invoice_id', function (Builder $query) use ($tenantId) {
             $query->select('id')->from('invoices')
-                ->where('bill_id', function (Builder $query) use ($userId) {
+                ->where('bill_id', function (Builder $query) use ($tenantId) {
                     $query->select('id')->from('bills')
-                        ->where('user_id', $userId)->limit(1);
+                        ->where('tenant_id', $tenantId)->limit(1);
                 });
         })->latest()->first();
 
