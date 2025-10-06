@@ -47,11 +47,11 @@ class ContractController extends Controller
      * @OA\Response(response=401, description="Unauthenticated")
      * )
      */
-    public function index($id){
-        $contract = Contract::with(['contractType', 'tenant'])->where('tenant_id' , $id)->first();
-        if (!$contract) {
-            return $this->errorResponse('Contract not found.', 404);
+        public function index($id){
+            $contract = Contract::with(['contractType', 'tenant'])->where('tenant_id' , $id)->first();
+            if (!$contract) {
+                return $this->errorResponse('Contract not found.', 404);
+            }
+            return $this->successResponse('Contract retrieved successfully.',new ContractResource($contract), 200);
         }
-        return $this->successResponse('Contract retrieved successfully.',new ContractResource($contract), 200);
-    }
 }

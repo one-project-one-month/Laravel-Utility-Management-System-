@@ -22,7 +22,6 @@ class ReceiptController extends Controller
     use ApiResponse;
 
 
-
     /**
      * @OA\Get(
      * path="/api/tenants/{id}/receipts/latest",

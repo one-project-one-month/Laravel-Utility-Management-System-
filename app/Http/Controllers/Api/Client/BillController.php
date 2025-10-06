@@ -58,8 +58,6 @@ class BillController extends Controller
     }
 
 
-    //bill_history
-
 
      /**
      * @OA\Get(

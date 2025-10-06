@@ -49,33 +49,33 @@ class InvoiceController extends Controller
      * )
      */
         public function latest($id)
-    {
-        $tenant = Tenant::find($id);
+        {
+            $tenant = Tenant::find($id);
 
-        if (! $tenant) {
-            return $this->errorResponse(
-                'Tenant not found', 404
-            );
-        }
+            if (! $tenant) {
+                return $this->errorResponse(
+                    'Tenant not found', 404
+                );
+            }
 
-        $invoice = Invoice::with('bill')
-            ->whereHas('bill', function ($query) use ($tenant) {
-                $query->where('room_id', $tenant->room_id);
-            })->latest()->first();
+            $invoice = Invoice::with('bill')
+                ->whereHas('bill', function ($query) use ($tenant) {
+                    $query->where('room_id', $tenant->room_id);
+                })->latest()->first();
 
-        if (! $invoice) {
+            if (! $invoice) {
+                return $this->successResponse(
+                    'Invoice not found for this tenant',
+                    [], 404
+                );
+            }
+
             return $this->successResponse(
-                'Invoice not found for this tenant',
-                [], 404
+                'Latest invoice retrieved successfully',
+                new InvoiceResource($invoice), 200
             );
+
         }
-
-        return $this->successResponse(
-            'Latest invoice retrieved successfully',
-            new InvoiceResource($invoice), 200
-        );
-
-    }
 
 
 
