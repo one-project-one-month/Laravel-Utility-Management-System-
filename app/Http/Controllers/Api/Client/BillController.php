@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\Auth;
 class BillController extends Controller
 {
     use ApiResponse;
-    //bill_latest
 
 
      /**
