@@ -65,7 +65,7 @@ class MailService
 
     /**
      * Create a dynamic Mailable instance.
-     * 
+     *
      * Basically, this little guy wraps up your data, subject, and view into a neat package
      * and hands it over to Mail so you don’t have to wrestle with Mail::send() like it’s 2009.
      * Trust me, your future self (and inbox) will thank you :)

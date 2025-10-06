@@ -218,6 +218,165 @@
                 ]
             }
         },
+        "/api/tenants/{id}/bills/latest": {
+            "get": {
+                "tags": [
+                    "Client Bills"
+                ],
+                "summary": "Get the latest bill for a tenant",
+                "description": "Retrieves the most recent bill for a specific tenant based on the user ID.",
+                "operationId": "0c7ab670d18b048b572e032f32b16695",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The User UUID of the tenant",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "latestBill Success"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BillResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Bill not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/tenants/{id}/bills/history": {
+            "get": {
+                "tags": [
+                    "Client Bills"
+                ],
+                "summary": "Get the bill history for a tenant",
+                "description": "Retrieves the bill history for the current year for a specific tenant.",
+                "operationId": "2a2066d53208407a8e0f348b3273ff50",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The User UUID of the tenant",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "billHistory Success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/BillResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/tenants/{id}/contracts": {
+            "get": {
+                "tags": [
+                    "Client Contracts"
+                ],
+                "summary": "Get contract details for a tenant",
+                "description": "Retrieves the contract details associated with a specific tenant.",
+                "operationId": "b1629a9c69e2e8f46556f52340917a6e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the tenant",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Contract retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Contract retrieved successfully."
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/ClientContractResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Contract not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/tenants/{tenantId}/customer-services/create": {
             "post": {
                 "tags": [
@@ -391,6 +550,171 @@
                     },
                     "401": {
                         "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/tenants/{id}/invoices/latest": {
+            "get": {
+                "tags": [
+                    "Client Invoices"
+                ],
+                "summary": "Get the latest invoice for a tenant",
+                "description": "Retrieves the most recent invoice for a specific tenant.",
+                "operationId": "b3969d0b322d9e03257285034eeb3556",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the tenant",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Latest invoice retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Latest invoice retrieved successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/InvoiceResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tenant or Invoice not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/tenants/{id}/invoices/history": {
+            "get": {
+                "tags": [
+                    "Client Invoices"
+                ],
+                "summary": "Get invoice history for a tenant",
+                "description": "Retrieves the invoice history (excluding the current month) for a specific tenant.",
+                "operationId": "45aa5aa162866c355c83388a2d1b5304",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the tenant",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Invoice history retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invoice history retrieved successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/InvoiceResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tenant not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/tenants/{id}/receipts/latest": {
+            "get": {
+                "tags": [
+                    "Client Receipts"
+                ],
+                "summary": "Get the latest receipt for a tenant",
+                "description": "Retrieves the most recent receipt for a specific tenant.",
+                "operationId": "f49c6009eca837644400c2e855422b88",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the tenant",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Receipt retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Receipt retrieved successful"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/ClientReceiptResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tenant or Receipt not found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
                     }
                 },
                 "security": [
@@ -2670,6 +2994,70 @@
     },
     "components": {
         "schemas": {
+            "ClientContractResource": {
+                "title": "Client Contract Resource",
+                "description": "Client-facing contract model representation",
+                "properties": {
+                    "id": {
+                        "description": "Contract ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "9a7c6f2c-5b8a-4f2a-8f2c-6d8b3a0c1e9f"
+                    },
+                    "room_id": {
+                        "description": "Associated Room ID",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "9a7c6f2c-5b8a-4f2a-8f2c-6d8b3a0c1e9f"
+                    },
+                    "expiry_date": {
+                        "description": "Expiry date of the contract",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-10-27"
+                    },
+                    "tenant": {
+                        "$ref": "#/components/schemas/TenantResource"
+                    },
+                    "contractType": {
+                        "$ref": "#/components/schemas/ContractTypeResource"
+                    }
+                },
+                "type": "object"
+            },
+            "ClientReceiptResource": {
+                "title": "Client Receipt Resource",
+                "description": "Client-facing receipt model representation",
+                "properties": {
+                    "id": {
+                        "description": "Receipt ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "invoiceId": {
+                        "description": "Associated Invoice ID",
+                        "type": "integer",
+                        "example": 101
+                    },
+                    "paymentMethod": {
+                        "description": "Payment method used",
+                        "type": "string",
+                        "enum": [
+                            "Cash",
+                            "Bank Transfer",
+                            "Credit Card"
+                        ],
+                        "example": "Credit Card"
+                    },
+                    "paidDate": {
+                        "description": "Date of payment",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2023-10-28"
+                    }
+                },
+                "type": "object"
+            },
             "BillResource": {
                 "title": "Bill Resource",
                 "description": "Bill model representation",
@@ -3237,8 +3625,24 @@
     },
     "tags": [
         {
+            "name": "Client Bills",
+            "description": "Endpoints for tenants to view their billing information"
+        },
+        {
+            "name": "Client Contracts",
+            "description": "Endpoints for tenants to view their contract information"
+        },
+        {
             "name": "Client Customer Service",
             "description": "Endpoints for tenants to manage their customer service requests"
+        },
+        {
+            "name": "Client Invoices",
+            "description": "Endpoints for tenants to view their invoice information"
+        },
+        {
+            "name": "Client Receipts",
+            "description": "Endpoints for tenants to view their receipt information"
         },
         {
             "name": "Bills",
