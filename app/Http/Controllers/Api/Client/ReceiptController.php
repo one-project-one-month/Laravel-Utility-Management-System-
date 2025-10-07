@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Api\Client;
 
-use App\Http\Controllers\Controller;
-use App\Http\Helpers\ApiResponse;
-use App\Http\Resources\Api\Client\ReceiptResource;
-use App\Models\Receipt;
-use App\Models\Tenant;
+use Carbon\Carbon;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Tenant;
+use App\Models\Receipt;
+use App\Http\Helpers\ApiResponse;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Query\Builder;
+use App\Http\Resources\Api\Client\ReceiptResource;
 
 
 /**
@@ -72,5 +74,58 @@ class ReceiptController extends Controller
             new ReceiptResource($receipt),
             200
         );
+    }
+
+    /**
+     * receipt history
+     */
+    public function history($tenantId){
+
+        // tenant data retrieve
+        $tenant = Tenant::find($tenantId);
+
+        // return error response if no tenant data
+        if(!$tenant){
+            return $this->errorResponse('Tenant not found', 404);
+        }
+
+        // create user id array with same tenant id
+        $userId = User::where('tenant_id', $tenantId)->pluck('id');
+
+        // return error response if no auth user id in array
+        if(!$userId->contains(Auth::user()->id)){
+            return $this->errorResponse('Unathorized', 401);
+        }
+
+        try{
+
+            $receipts = Receipt::with('invoice.bill')
+            ->whereHas('invoice.bill', function ($query) use ($tenantId) {
+                $query->where('tenant_id', $tenantId);
+            })
+            ->orderBy('receipts.paid_date','desc')
+            ->skip(1)
+            ->get();
+
+            if ($receipts->isEmpty()) {
+                return $this->successResponse(
+                    'No receipt history found for this tenant',
+                    [], 200
+                );
+            }
+
+            return $this->successResponse(
+                'Receipt retrieved successful',
+                ReceiptResource::collection($receipts),
+                200
+            );
+
+        } catch (\Exception $e) {
+            return $this->errorResponse(
+               'Failed to fetch receipt history: ' . $e->getMessage(),
+               500
+           );
+       }
+
     }
 }

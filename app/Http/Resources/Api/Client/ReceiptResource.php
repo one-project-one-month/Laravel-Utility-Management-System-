@@ -4,6 +4,7 @@ namespace App\Http\Resources\Api\Client;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Api\Dashboard\BillResource;
 
 
 
@@ -32,7 +33,8 @@ class ReceiptResource extends JsonResource
             'id' => $this->id,
             'invoiceId' => $this->invoice_id,
             'paymentMethod' => $this->payment_method,
-            'paidDate' => $this->paid_date
+            'paidDate' => $this->paid_date,
+            'bill' => new BillResource($this->invoice->bill),
         ];
     }
 }
