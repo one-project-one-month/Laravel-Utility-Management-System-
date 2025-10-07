@@ -35,8 +35,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @OA\Security(
  * security={
  * {"bearerAuth": {}}
- * }
- * )
+ *}
+ *)
  */
 class AuthController extends Controller
 {
@@ -73,7 +73,11 @@ class AuthController extends Controller
      * @OA\Property(property="email", type="string", format="email", example="johndoe@gmail.com")
      * ),
      * @OA\Property(property="accessToken", type="string", example="1|aBcDeFgHiJkLmNoPqRsTuVwXyZ123456"),
-     * @OA\Property(property="refreshToken", type="string", example="a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2")
+     * @OA\Property(
+     *property="note",
+     *type="string",
+     *example="The refresh token is stored in an httpOnly cookie named 'refreshToken'."
+     *)
      * )
      * )
      * ),
@@ -81,7 +85,7 @@ class AuthController extends Controller
      * @OA\Response(response=404, description="User not found"),
      * @OA\Response(response=422, description="Validation errors")
      * )
-     */
+    */
 
     public function login (Request $request)
     {
@@ -118,53 +122,67 @@ class AuthController extends Controller
         $content = [
             'user'=> $user,
             'accessToken' => $accessToken,
-            'refreshToken' =>  $refreshToken
+            // 'refreshToken' =>  $refreshToken
         ];
 
-        return $this->successResponse('Login success',new AuthResource($content),200);
+        return $this->successResponse('Login success',new AuthResource($content),200)->withCookie(cookie(
+           'refreshToken',                 // cookie name
+            $refreshToken,                   // cookie value
+            60 * 24 * 15,                    // minutes (15 days)
+            '/',                             // path
+            null,                            // domain
+            app()->isLocal() ? false : true, // secure => local false
+            true,                            // httpOnly
+            false,                           // raw
+            'Strict'                         // SameSite           // SameSite option (Strict / Lax / None)
+        ));
     }
 
-     /**
-     * @OA\Post(
-     * path="/api/v1/auth/refresh",
-     * summary="Refresh the access token",
-     * description="Uses a refresh token to generate a new access token.",
-     * tags={"Authentication"},
-     * @OA\RequestBody(
-     * required=true,
-     * description="Provide the refresh token",
-     * @OA\JsonContent(
-     * required={"refresh_token"},
-     * @OA\Property(property="refresh_token", type="string", example="a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2")
-     * )
-     * ),
-     * @OA\Response(
-     * response=200,
-     * description="Token refreshed successfully",
-     * @OA\JsonContent(
-     * @OA\Property(property="message", type="string", example="successful"),
-     * @OA\Property(
-     * property="data",
-     * type="object",
-     * @OA\Property(
-     * property="user",
-     * type="object",
-     * @OA\Property(property="id", type="integer", example=1),
-     * @OA\Property(property="name", type="string", example="John Doe"),
-     * @OA\Property(property="email", type="string", format="email", example="johndoe@gmail.com")
-     * ),
-     * @OA\Property(property="accessToken", type="string", example="2|zYxWvUtSrQpOnMlKjIhGfEdCbA123456")
-     * )
-     * )
-     * ),
-     * @OA\Response(response=401, description="Unauthorized - Invalid or expired refresh token"),
-     * @OA\Response(response=422, description="Validation error - refresh_token is required")
-     * )
-     */
+ /**
+ * @OA\Post(
+ *     path="/api/v1/auth/refresh",
+ *     summary="Refresh the access token",
+ *     description="Uses a refresh token stored in an httpOnly cookie to generate a new access token.",
+ *     tags={"Authentication"},
+ *     @OA\Parameter(
+ *         name="refreshToken",
+ *         in="cookie",
+ *         required=true,
+ *         description="Refresh token cookie",
+ *         @OA\Schema(type="string")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Token refreshed successfully",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string", example="successful"),
+ *             @OA\Property(
+ *                 property="data",
+ *                 type="object",
+ *                 @OA\Property(
+ *                     property="user",
+ *                     type="object",
+ *                     @OA\Property(property="id", type="integer", example=1),
+ *                     @OA\Property(property="name", type="string", example="John Doe"),
+ *                     @OA\Property(property="email", type="string", format="email", example="johndoe@gmail.com")
+ *                 ),
+ *                 @OA\Property(property="accessToken", type="string", example="2|zYxWvUtSrQpOnMlKjIhGfEdCbA123456")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(response=401, description="Unauthorized - Invalid or expired refresh token"),
+ *     @OA\Response(response=422, description="Validation error - refresh_token is required")
+ * )
+ */
 
     public function refresh(Request $request)
     {
-        $refreshToken = $request->input('refreshToken');
+        $refreshToken = $request->cookie('refreshToken');
+
+        if (!$refreshToken) {
+            return $this->errorResponse('Refresh token not found', 401);
+        }
+
         $hashed = hash('sha256', $refreshToken);
 
         $user = User::where('refresh_token', $hashed)
@@ -215,6 +233,8 @@ class AuthController extends Controller
             'refresh_token_expires_at' => null,
         ]);
 
-        return response()->json(['message' => 'Logged out']);
+        $forgetCookie = cookie()->forget('refreshToken');
+
+        return response()->json(['message' => 'Logged out'])->withCookie($forgetCookie);
     }
 }

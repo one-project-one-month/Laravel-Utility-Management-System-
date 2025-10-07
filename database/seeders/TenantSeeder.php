@@ -28,7 +28,7 @@ class TenantSeeder extends Seeder
             $numberOfTenants = $room->max_no_of_people;
 
             for ($i = 0; $i < $numberOfTenants; $i++) {
-                $names[]         = Str::ascii(fake()->name()); // remove single quote from fake name, eg: O'Liver to Oliver
+                $names[]         = Str::remove("'", fake()->name()); // remove single quote from fake name, eg: O'Liver to Oliver
                 $emails[]        = fake()->unique()->safeEmail();
                 $nrcs[]          = '12/PZT(N)' . fake()->unique()->numberBetween(100000, 999999);
                 $phone_nos[]     = '09' . fake()->numerify('#########');

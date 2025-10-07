@@ -10,9 +10,44 @@ use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Database\Query\Builder;
 
+
+/**
+ * @OA\Tag(
+ * name="Client Receipts",
+ * description="Endpoints for tenants to view their receipt information"
+ * )
+ */
 class ReceiptController extends Controller
 {
     use ApiResponse;
+
+
+    /**
+     * @OA\Get(
+     * path="/api/tenants/{id}/receipts/latest",
+     * summary="Get the latest receipt for a tenant",
+     * description="Retrieves the most recent receipt for a specific tenant.",
+     * tags={"Client Receipts"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     * name="id",
+     * in="path",
+     * required=true,
+     * description="The ID of the tenant",
+     * @OA\Schema(type="integer")
+     * ),
+     * @OA\Response(
+     * response=200,
+     * description="Receipt retrieved successfully",
+     * @OA\JsonContent(
+     * @OA\Property(property="message", type="string", example="Receipt retrieved successful"),
+     * @OA\Property(property="data", ref="#/components/schemas/ClientReceiptResource")
+     * )
+     * ),
+     * @OA\Response(response=404, description="Tenant or Receipt not found"),
+     * @OA\Response(response=401, description="Unauthorized")
+     * )
+     */
     public function latest($tenantId)
     {
         $tenant = Tenant::find($tenantId);
@@ -27,11 +62,11 @@ class ReceiptController extends Controller
         }
 
         // get latest receipt
-        $receipt = Receipt::where('invoice_id', function (Builder $query) use ($userId) {
+        $receipt = Receipt::where('invoice_id', function (Builder $query) use ($tenantId) {
             $query->select('id')->from('invoices')
-                ->where('bill_id', function (Builder $query) use ($userId) {
+                ->where('bill_id', function (Builder $query) use ($tenantId) {
                     $query->select('id')->from('bills')
-                        ->where('user_id', $userId)->limit(1);
+                        ->where('tenant_id', $tenantId)->limit(1);
                 });
         })->latest()->first();
 
