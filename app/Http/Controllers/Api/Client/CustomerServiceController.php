@@ -62,6 +62,12 @@ class CustomerServiceController extends Controller
      */
     public function create(Request $request, $tenantId)
     {
+        //authorize 
+        $userId = User::where('tenant_id' , $tenantId)->value('id');
+         if (auth('sanctum')->user()->id != $userId) {
+            return $this->errorResponse('Unathorized', 401);
+        }
+        
         $validated = $request->validate([
             'roomId'        => 'required|uuid|exists:rooms,id',
             'category'      => 'required|in:Complain,Maintenance,Other',
