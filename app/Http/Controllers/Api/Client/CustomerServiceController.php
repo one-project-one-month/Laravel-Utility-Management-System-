@@ -1,11 +1,12 @@
 <?php
 namespace App\Http\Controllers\Api\Client;
 
-use App\Http\Controllers\Controller;
-use App\Models\CustomerService;
+use App\Models\User;
+use App\Models\Tenant;
 use Illuminate\Http\Request;
-
-
+use App\Models\CustomerService;
+use App\Http\Helpers\ApiResponse;
+use App\Http\Controllers\Controller;
 
 /**
  * @OA\Tag(
@@ -15,6 +16,7 @@ use Illuminate\Http\Request;
  */
 class CustomerServiceController extends Controller
 {
+    use ApiResponse;
     /**
      * Create Customer Service Request (POST)
      */
@@ -60,6 +62,12 @@ class CustomerServiceController extends Controller
      */
     public function create(Request $request, $tenantId)
     {
+        //authorize 
+        $userId = User::where('tenant_id' , $tenantId)->value('id');
+         if (auth('sanctum')->user()->id != $userId) {
+            return $this->errorResponse('Unathorized', 401);
+        }
+        
         $validated = $request->validate([
             'roomId'        => 'required|uuid|exists:rooms,id',
             'category'      => 'required|in:Complain,Maintenance,Other',
@@ -123,9 +131,16 @@ class CustomerServiceController extends Controller
      * @OA\Response(response=401, description="Unauthenticated")
      * )
      */
-    public function history($id, $status = null)
+    public function history($tenantId, $status = null)
     {
-        $query = CustomerService::where('room_id', $id);
+        
+        //authorize 
+        $userId = User::where('tenant_id' , $tenantId)->value('id');
+         if (auth('sanctum')->user()->id != $userId) {
+            return $this->errorResponse('Unathorized', 401);
+        }
+        $tenant = Tenant::find($tenantId);
+        $query = CustomerService::where('room_id', $tenant->room_id);
 
         if ($status) {
             $status = trim($status);
