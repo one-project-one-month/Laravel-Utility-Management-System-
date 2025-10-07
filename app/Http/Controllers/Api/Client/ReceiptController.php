@@ -8,7 +8,7 @@ use App\Http\Resources\Api\Client\ReceiptResource;
 use App\Models\Receipt;
 use App\Models\Tenant;
 use App\Models\User;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 
 /**
@@ -62,13 +62,10 @@ class ReceiptController extends Controller
         }
 
         // get latest receipt
-        $receipt = Receipt::where('invoice_id', function (Builder $query) use ($tenantId) {
-            $query->select('id')->from('invoices')
-                ->where('bill_id', function (Builder $query) use ($tenantId) {
-                    $query->select('id')->from('bills')
-                        ->where('tenant_id', $tenantId)->limit(1);
-                });
-        })->latest()->first();
+        $receipt = Receipt::with('invoice.bill')
+            ->whereHas('invoice.bill', function (Builder $query) use ($tenantId) {
+                $query->where('tenant_id', $tenantId);
+            })->latest()->first();
 
         return $this->successResponse(
             'Receipt retrieved successful',
