@@ -93,16 +93,17 @@ class BillController extends Controller
      * @OA\Response(response=401, description="Unauthorized")
      * )
      */
-    public function billHistory($userId)
+    public function billHistory($tenantId)
     {
         //authorize
-        if(Auth::user()->id != $userId) {
+         $userId = User::where('tenant_id', $tenantId)->pluck('id')->first();
+        if (auth('sanctum')->user()->id != $userId) {
             return $this->errorResponse('Unathorized', 401);
         }
 
         $year = date('Y');
 
-        $billHistory = Bill::where('user_id', $userId)->whereYear('created_at', $year)->get();
+        $billHistory = Bill::where('tenant_id', $tenantId)->whereYear('created_at', $year)->get();
 
         if ($billHistory->isEmpty()) {
             return $this->successResponse("Bill history is empty",BillResource::collection($billHistory), 200);

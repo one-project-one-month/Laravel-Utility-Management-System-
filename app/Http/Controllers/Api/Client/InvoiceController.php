@@ -115,6 +115,12 @@ class InvoiceController extends Controller
      */
     public function history(Request $request, $tenant_id)
     {
+        //authorize
+         $userId = User::where('tenant_id', $tenant_id)->value('id');
+        if (auth('sanctum')->user()->id != $userId) {
+            return $this->errorResponse('Unathorized', 401);
+        }
+        
         $tenant =Tenant::find($tenant_id);
 
         if(!$tenant){
