@@ -17,6 +17,7 @@ return new class extends Migration
             $table->uuid('room_id');
             $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
             $table->foreignId('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
+            $table->date('created_date');
             $table->date('expiry_date');
             $table->timestamps();
         });

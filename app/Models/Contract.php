@@ -16,6 +16,7 @@ class Contract extends Model
             'room_id',
             'contract_type_id',
             'tenant_id',
+            'created_date',
             'expiry_date'
     ];
 
@@ -30,8 +31,11 @@ class Contract extends Model
         });
     }
 
-    public function contractTypes() {
+    public function contractType() {
         return $this->belongsTo(ContractType::class);
+    }
+    public function tenant(){
+        return $this->belongsTo(Tenant::class);
     }
 
     public function room() {

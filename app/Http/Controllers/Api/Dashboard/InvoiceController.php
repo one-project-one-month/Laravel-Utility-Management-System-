@@ -5,31 +5,95 @@ namespace App\Http\Controllers\Api\Dashboard;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Invoice;
-use App\Models\Tenant;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Resources\Api\Dashboard\InvoiceResource;
 
+
+/**
+ * @OA\Tag(
+ * name="Invoices",
+ * description="API Endpoints for managing invoices"
+ * )
+ */
 class InvoiceController extends Controller
 {
     use ApiResponse;
 
+
+    /**
+     * @OA\Get(
+     * path="/api/v1/invoices",
+     * summary="Get a list of invoices",
+     * description="Returns a paginated list of all invoices.",
+     * tags={"Invoices"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Response(
+     * response=200,
+     * description="Successful operation",
+     * @OA\JsonContent(
+     * type="object",
+     * @OA\Property(property="message", type="string", example="Invoices retrieved successfully"),
+     * @OA\Property(property="data", type="object",
+     * @OA\Property(property="items", type="array", @OA\Items(ref="#/components/schemas/InvoiceResource")),
+     * @OA\Property(property="pagination", type="object",
+     * @OA\Property(property="total", type="integer", example=50),
+     * @OA\Property(property="per_page", type="integer", example=15),
+     * @OA\Property(property="current_page", type="integer", example=1),
+     * @OA\Property(property="last_page", type="integer", example=4)
+     * )
+     * )
+     * )
+     * ),
+     * @OA\Response(response=404, description="Invoices not found"),
+     * @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
     // Display a listing of invoice
     public function index()
     {
-        $invoices= Invoice::with(['bill'])->paginate(10);
+        $invoices= Invoice::with(['bill'])
+            ->orderBy('invoices.created_at', 'desc')
+            ->orderBy('invoices.id', 'desc')
+            ->paginate(config('pagination.perPage'));
+
+        if ($invoices->isEmpty()) {
+            return $this->errorResponse('Invoices not found', 404);
+        }
 
         return $this->successResponse(
             'Invoices retrieved successfully',
-            InvoiceResource::collection($invoices),
-            200
+            $this->buildPaginatedResourceResponse(InvoiceResource::class, $invoices)
         );
     }
 
+
+     /**
+     * @OA\Get(
+     * path="/api/v1/invoices/{id}",
+     * summary="Get a single invoice",
+     * description="Returns the details of a specific invoice by its ID.",
+     * tags={"Invoices"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     * name="id",
+     * in="path",
+     * required=true,
+     * description="ID of the invoice",
+     * @OA\Schema(type="integer")
+     * ),
+     * @OA\Response(
+     * response=200,
+     * description="Invoice retrieved successfully",
+     * @OA\JsonContent(ref="#/components/schemas/InvoiceResource")
+     * ),
+     * @OA\Response(response=404, description="Invoice not found"),
+     * @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
     // Display a specific invoice
     public function show(String $id)
     {
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::with(['bill'])->find($id);
 
         if (!$invoice) {
             return $this->errorResponse(
@@ -40,49 +104,82 @@ class InvoiceController extends Controller
 
         return $this->successResponse(
             'Invoice retrieved successfully',
-            new InvoiceResource($invoice),
-            200
+            new InvoiceResource($invoice)
         );
     }
 
+
+
+
+     /**
+     * @OA\Put(
+     * path="/api/v1/invoices/{id}",
+     * summary="Update an existing invoice",
+     * description="Updates the status or bill ID of an existing invoice.",
+     * tags={"Invoices"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     * name="id",
+     * in="path",
+     * required=true,
+     * description="ID of the invoice to update",
+     * @OA\Schema(type="integer")
+     * ),
+     * @OA\RequestBody(
+     * required=true,
+     * @OA\JsonContent(
+     * @OA\Property(property="billId", type="integer", description="ID of the associated bill", example=1),
+     * @OA\Property(property="status", type="string", enum={"Pending", "Paid", "Overdue"}, example="Paid")
+     * )
+     * ),
+     * @OA\Response(
+     * response=200,
+     * description="Invoice updated successfully",
+     * @OA\JsonContent(ref="#/components/schemas/InvoiceResource")
+     * ),
+     * @OA\Response(response=422, description="Validation error"),
+     * @OA\Response(response=404, description="Invoice not found"),
+     * @OA\Response(response=500, description="Internal Server Error"),
+     * @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
     // Update invoice
     public function update(Request $request, int $id)
     {
         try{
-            $invoice = Invoice::findOrFail($id);
+            $invoice = Invoice::find($id);
 
-        if (!$invoice) {
-            return $this->errorResponse('Invoice not found', 404);
-        }
+            if (!$invoice) {
+                return $this->errorResponse('Invoice not found', 404);
+            }
 
-        $validated = $request->validate([
-            'bill_id' => 'sometimes|exists:bills,id',
-            'status' => 'sometimes|string|in:Pending,Paid,Overdue',
-        ]);
+            $validated = $request->validate([
+                'billId' => 'sometimes|exists:bills,id',
+                'status' => 'sometimes|string|in:Pending,Paid,Overdue',
+            ]);
 
-        $invoice->update($validated);
+            $invoice->update($validated);
 
-        return $this->successResponse(
-            'Invoice updated successfully',
-            new InvoiceResource($invoice),
-            200
-        );
-        }catch (Exception $e) {
-        return $this->errorResponse('Internel Server Error '.$e->getMessage(), 500);
+            return $this->successResponse(
+                'Invoice updated successfully',
+                new InvoiceResource($invoice)
+            );
+        }catch (\Exception $e) {
+            return $this->errorResponse('Internal Server Error '.$e->getMessage(), 500);
         }
     }
 
     // Delete invoice
-    public function destroy(int $id)
-    {
-        $invoice = Invoice::find($id);
+    // public function destroy(int $id)
+    // {
+    //     $invoice = Invoice::find($id);
 
-        if (!$invoice) {
-            return $this->errorResponse('Invoice not found', 404);
-        }
+    //     if (!$invoice) {
+    //         return $this->errorResponse('Invoice not found', 404);
+    //     }
 
-        $invoice->delete();
+    //     $invoice->delete();
 
-        return $this->successResponse('Invoice deleted successfully', null, 200);
-    }
+    //     return $this->successResponse('Invoice deleted successfully', null, 200);
+    // }
 }

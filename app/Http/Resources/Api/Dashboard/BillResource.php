@@ -5,6 +5,27 @@ namespace App\Http\Resources\Api\Dashboard;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+
+
+/**
+ * @OA\Schema(
+ * schema="BillResource",
+ * title="Bill Resource",
+ * description="Bill model representation",
+ * @OA\Property(property="id", type="integer", description="Bill's unique identifier"),
+ * @OA\Property(property="roomId", type="string", format="uuid", description="Associated room's UUID"),
+ * @OA\Property(property="rentalFee", type="number", format="float", description="Monthly rental fee"),
+ * @OA\Property(property="electricityFee", type="number", format="float", description="Electricity consumption fee"),
+ * @OA\Property(property="waterFee", type="number", format="float", description="Water consumption fee"),
+ * @OA\Property(property="fineFee", type="number", format="float", nullable=true, description="Any applicable late fees or fines"),
+ * @OA\Property(property="serviceFee", type="number", format="float", description="General service charges"),
+ * @OA\Property(property="groundFee", type="number", format="float", description="Ground maintenance fees"),
+ * @OA\Property(property="carParkingFee", type="number", format="float", nullable=true, description="Car parking charges"),
+ * @OA\Property(property="wifiFee", type="number", format="float", nullable=true, description="Wi-Fi service charges"),
+ * @OA\Property(property="totalAmount", type="number", format="float", description="The total bill amount"),
+ * @OA\Property(property="dueDate", type="string", format="date", description="Payment due date")
+ * )
+ */
 class BillResource extends JsonResource
 {
     /**
@@ -28,8 +49,8 @@ class BillResource extends JsonResource
             'wifiFee' => $this->wifi_fee,
             'totalAmount' => $this->total_amount,
             'dueDate' => $this->due_date,
-            'totalUnit' => $this->totalUnit,
-            'invoice' => $this->invoice,
+            // 'totalUnit' => $this->totalUnit,
+            // 'invoice' => $this->invoice,
         ];
     }
 }
