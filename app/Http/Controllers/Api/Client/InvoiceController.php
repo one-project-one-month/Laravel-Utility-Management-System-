@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Api\Client;
 
 use Carbon\Carbon;
-use App\Models\User;
+//use App\Models\User;
 use App\Models\Tenant;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\Client\InvoiceResource;
-use Illuminate\Container\Attributes\Auth;
 
 
 /**
@@ -52,11 +51,11 @@ class InvoiceController extends Controller
      */
         public function latest($id)
     {
-        //authorize 
-        $userId = User::where('tenant_id', $id)->value('id');
-        if (auth('sanctum')->user()->id != $userId) {
-            return $this->errorResponse('Unathorized', 401);
-        }
+        //authorize
+//        $userId = User::where('tenant_id', $id)->value('id');
+//        if (auth('sanctum')->user()->id != $userId) {
+//            return $this->errorResponse('Unathorized', 401);
+//        }
 
         $tenant = Tenant::find($id);
         if (!$tenant) {
@@ -65,24 +64,24 @@ class InvoiceController extends Controller
             );
         }
 
-            $invoice = Invoice::with('bill')
-                ->whereHas('bill', function ($query) use ($tenant) {
-                    $query->where('room_id', $tenant->room_id);
-                })->latest()->first();
+        $invoice = Invoice::with('bill')
+            ->whereHas('bill', function ($query) use ($tenant) {
+                $query->where('room_id', $tenant->room_id);
+            })->latest()->first();
 
-            if (! $invoice) {
-                return $this->successResponse(
-                    'Invoice not found for this tenant',
-                    [], 404
-                );
-            }
-
+        if (! $invoice) {
             return $this->successResponse(
-                'Latest invoice retrieved successfully',
-                new InvoiceResource($invoice), 200
+                'Invoice not found for this tenant',
+                [], 404
             );
-
         }
+
+        return $this->successResponse(
+            'Latest invoice retrieved successfully',
+            new InvoiceResource($invoice), 200
+        );
+
+    }
 
 
 
@@ -116,11 +115,11 @@ class InvoiceController extends Controller
     public function history(Request $request, $tenant_id)
     {
         //authorize
-         $userId = User::where('tenant_id', $tenant_id)->value('id');
-        if (auth('sanctum')->user()->id != $userId) {
-            return $this->errorResponse('Unathorized', 401);
-        }
-        
+//        $userId = User::where('tenant_id', $tenant_id)->value('id');
+//        if (auth('sanctum')->user()->id != $userId) {
+//            return $this->errorResponse('Unathorized', 401);
+//        }
+
         $tenant =Tenant::find($tenant_id);
 
         if(!$tenant){

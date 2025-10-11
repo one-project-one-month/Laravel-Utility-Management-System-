@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers\Api\Client;
 
-use Carbon\Carbon;
-use App\Models\User;
+//use App\Models\User;
 use App\Models\Tenant;
 use App\Models\Receipt;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Query\Builder;
 use App\Http\Resources\Api\Client\ReceiptResource;
-
 
 /**
  * @OA\Tag(
@@ -58,10 +55,10 @@ class ReceiptController extends Controller
         }
 
         // Authorize
-        $userId = User::where('tenant_id', $tenantId)->pluck('id')->first();
-        if (auth('sanctum')->user()->id != $userId) {
-            return $this->errorResponse('Unathorized', 401);
-        }
+//        $userId = User::where('tenant_id', $tenantId)->pluck('id')->first();
+//        if (auth('sanctum')->user()->id != $userId) {
+//            return $this->errorResponse('Unathorized', 401);
+//        }
 
         // get latest receipt
         $receipt = Receipt::with('invoice.bill')
@@ -90,12 +87,12 @@ class ReceiptController extends Controller
         }
 
         // create user id array with same tenant id
-        $userId = User::where('tenant_id', $tenantId)->pluck('id');
+//        $userId = User::where('tenant_id', $tenantId)->pluck('id');
 
         // return error response if no auth user id in array
-        if(!$userId->contains(Auth::user()->id)){
-            return $this->errorResponse('Unathorized', 401);
-        }
+//        if(!$userId->contains(Auth::user()->id)){
+//            return $this->errorResponse('Unathorized', 401);
+//        }
 
         try{
 
@@ -126,6 +123,5 @@ class ReceiptController extends Controller
                500
            );
        }
-
     }
 }
