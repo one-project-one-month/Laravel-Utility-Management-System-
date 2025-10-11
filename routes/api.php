@@ -59,7 +59,7 @@ Route::prefix('v1/')->group(function () {
     });
 
 
-    Route::middleware(['auth:sanctum', "Role.check:Tenant"])->group(function () {
+    Route::middleware(['auth:sanctum', "Role.check:Tenant", "ValidateLoggedInTenantUserId"])->group(function () {
 
         // Tenant Customer Services
 

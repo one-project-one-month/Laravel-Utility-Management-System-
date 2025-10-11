@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\Api\Client;
 
 use App\Models\Bill;
-use App\Models\User;
-use App\Models\Tenant;
-use Illuminate\Http\Request;
+//use App\Models\User;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Api\Dashboard\BillResource;
 
 
@@ -53,10 +50,10 @@ class BillController extends Controller
     public function latestBill($tenantId)
     {
          // Authorize
-        $userId = User::where('tenant_id', $tenantId)->pluck('id')->first();
-        if (auth('sanctum')->user()->id != $userId) {
-            return $this->errorResponse('Unathorized', 401);
-        }
+//        $userId = User::where('tenant_id', $tenantId)->pluck('id')->first();
+//        if (auth('sanctum')->user()->id != $userId) {
+//            return $this->errorResponse('Unathorized', 401);
+//        }
 
         $latestBill = Bill::where('tenant_id', $tenantId)
                         ->orderBy('created_at', 'desc')
@@ -96,10 +93,10 @@ class BillController extends Controller
     public function billHistory($tenantId)
     {
         //authorize
-         $userId = User::where('tenant_id', $tenantId)->pluck('id')->first();
-        if (auth('sanctum')->user()->id != $userId) {
-            return $this->errorResponse('Unathorized', 401);
-        }
+//        $userId = User::where('tenant_id', $tenantId)->pluck('id')->first();
+//        if (auth('sanctum')->user()->id != $userId) {
+//            return $this->errorResponse('Unathorized', 401);
+//        }
 
         $year = date('Y');
 
