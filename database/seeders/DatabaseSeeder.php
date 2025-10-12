@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Database\Seeders\InvoiceSeeder;
 use Database\Seeders\ReceiptSeeder;
+use Database\Seeders\OccupantSeeder;
 use Database\Seeders\TotalUnitSeeder;
 
 
@@ -18,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoomSeeder::class,
             TenantSeeder::class,
+            OccupantSeeder::class,
             UserSeeder::class,
             CustomerServiceSeeder::class,
             ContractTypeSeeder::class,
