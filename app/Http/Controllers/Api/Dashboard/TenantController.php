@@ -9,8 +9,7 @@ use App\Http\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Api\Dashboard\TenantResource;
-
-
+use App\Models\Occupant;
 
 /**
  * @OA\Tag(
@@ -123,6 +122,20 @@ class TenantController extends Controller
 
         try {
             $tenant = Tenant::create($tenantData);
+
+            if($request->has('occupants')) {
+                $occupants = $request->input('occupants', []);
+                foreach($occupants as $occupant) {
+                    Occupant::create([
+                        'name' => $occupant['name'],
+                        'nrc'  => $occupant['nrc'],
+                        'relationship_to_tenant' => $occupant['relationshipToTenant'],
+                        'tenant_id' => $tenant->id
+                    ]);
+                }
+            }
+
+            $tenant->load('occupants');
 
             return $this->successResponse(
                 'Tenant created successfully',

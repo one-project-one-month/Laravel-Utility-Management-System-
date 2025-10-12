@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('occupants', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('nrc');
+            $table->string('nrc')->nullable();
+            $table->enum('relationship_to_tenant',["Spouse","Child","Parent","Sibling","Relative","Friend","Other"]);
             $table->foreignId('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
             $table->timestamps();
         });
