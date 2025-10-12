@@ -10,6 +10,7 @@ class Occupant extends Model
     protected $fillable = [
         'name',
         'nrc',
+        'relationship_to_tenant',
         'tenant_id'
     ];
 
