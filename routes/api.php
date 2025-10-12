@@ -17,8 +17,7 @@ use App\Http\Controllers\Api\Client\ContractController as ClientContractControll
 use App\Http\Controllers\Api\Client\InvoiceController as ClientInvoiceController;
 use App\Http\Controllers\Api\Client\CustomerServiceController as ClientCustomerServiceController;
 use App\Http\Controllers\Api\Client\BillController as ClientBillController;
-
-
+use App\Http\Controllers\Api\Dashboard\OccupantController;
 
 Route::post('/v1/auth/login', [AuthController::class, 'login']);
 Route::post('/v1/auth/refresh', [AuthController::class, 'refresh']);
@@ -38,6 +37,9 @@ Route::prefix('v1/')->group(function () {
 
         // Tenant
         Route::resource('tenants', TenantController::class, ['only' => ['index', 'store', 'update', 'show']]);
+
+        // Occupant
+        Route::resource('occupants',OccupantController::class,['only'=> ['index']]);
 
         // Receipt
         Route::resource('receipts', ReceiptController::class, ['only' => ['index', 'update', 'show']]);

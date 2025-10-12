@@ -2,9 +2,10 @@
 namespace App\Http\Resources\Api\Dashboard;
 
 
-use App\Http\Helpers\PostgresHelper;
 use Illuminate\Http\Request;
+use App\Http\Helpers\PostgresHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Api\Dashboard\OccupantResource;
 
 
 
@@ -62,11 +63,12 @@ class TenantResource extends JsonResource
             [
                 'id'            => $this->id,
                 'roomId'        => $this->room_id,
-                'name'          => $this->pgArrayStringToNativeArray($this->names),
-                'nrc'           => $this->pgArrayStringToNativeArray($this->nrcs),
-                'email'         => $this->pgArrayStringToNativeArray($this->emails),
-                'phNumber'      => $this->pgArrayStringToNativeArray($this->phone_nos),
-                'emergencyNo'   => $this->pgArrayStringToNativeArray($this->emergency_nos),
+                'name'          => $this->name,
+                'nrc'           => $this->nrc,
+                'email'         => $this->email,
+                'phNumber'      => $this->phone_no,
+                'emergencyNo'   => $this->emergency_no,
+                'occupants'     => OccupantResource::collection($this->whenLoaded('occupants'))
             ];
     }
 }

@@ -53,8 +53,7 @@ class TenantController extends Controller
      */
     public function index()
     {
-        $tenants = Tenant::orderBy('created_at', 'desc')
-            ->orderBy('id', 'desc')
+        $tenants = Tenant::with('occupants')
             ->paginate(config('pagination.perPage'));
 
         if ($tenants->isEmpty()) {
@@ -115,11 +114,11 @@ class TenantController extends Controller
         $validatedData = $validator->validated();
         $tenantData = [
             'room_id'       => $validatedData['roomId'],
-            'names'         => $this->nativeStringToPgArrayString($validatedData['name']),
-            'nrcs'          => $this->nativeStringToPgArrayString($validatedData['nrc']),
-            'emails'        => $this->nativeStringToPgArrayString($validatedData['email']),
-            'phone_nos'     => $this->nativeStringToPgArrayString($validatedData['phNumber']),
-            'emergency_nos' => $this->nativeStringToPgArrayString($validatedData['emergencyNo']),
+            'name'          => $validatedData['name'],
+            'nrc'           => $validatedData['nrc'],
+            'email'         => $validatedData['email'],
+            'phone_no'      => $validatedData['phNumber'],
+            'emergency_no'  => $validatedData['emergencyNo'],
         ];
 
         try {
@@ -173,6 +172,7 @@ class TenantController extends Controller
                 'Tenant did not find', 404
             );
         }
+
         return $this->successResponse(
             'Tenent find successful',
             new TenantResource($tenant),200
@@ -232,10 +232,8 @@ class TenantController extends Controller
             return $this->errorResponse($validator->errors(), 422);
         }
 
-
         try{
             $tenant = Tenant::find($id);
-
 
             if(!$tenant) {
                 return $this->errorResponse('Tenant not find', 404);
@@ -245,13 +243,12 @@ class TenantController extends Controller
 
             $tenantData = [
                 'room_id'       => $validatedData['roomId'],
-                'names'         => $this->nativeStringToPgArrayString($validatedData['name']),
-                'nrcs'          => $this->nativeStringToPgArrayString($validatedData['nrc']),
-                'emails'        => $this->nativeStringToPgArrayString($validatedData['email']),
-                'phone_nos'     => $this->nativeStringToPgArrayString($validatedData['phNumber']),
-                'emergency_nos' => $this->nativeStringToPgArrayString($validatedData['emergencyNo']),
+                'name'         => $validatedData['name'],
+                'nrc'          => $validatedData['nrc'],
+                'email'        => $validatedData['email'],
+                'phone_no'     => $validatedData['phNumber'],
+                'emergency_no' => $validatedData['emergencyNo'],
             ];
-
 
             $tenant->update($tenantData);
 
