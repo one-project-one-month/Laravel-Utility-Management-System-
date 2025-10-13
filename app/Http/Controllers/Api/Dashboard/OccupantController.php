@@ -6,7 +6,9 @@ use Exception;
 use App\Models\Occupant;
 use Illuminate\Http\Request;
 use App\Http\Helpers\ApiResponse;
+use App\Enums\RelationshipToTenant;
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\Rules\Enum;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Api\Dashboard\OccupantResource;
 
@@ -27,7 +29,7 @@ class OccupantController extends Controller
             $validator = Validator::make($request->all(),[
                 'name' => 'required',
                 'nrc'  => 'nullable',
-                'relationshipToTenant' => 'required'
+                'relationshipToTenant' => ['required', new Enum(RelationshipToTenant::class)]
             ]);
 
             if($validator->fails()) {
