@@ -42,7 +42,7 @@ Route::prefix('v1/')->group(function () {
         Route::resource('occupants',OccupantController::class,['only'=> ['index','update','show']]);
 
         // Receipt
-        Route::resource('receipts', ReceiptController::class, ['only' => ['index', 'update', 'show']]);
+        Route::resource('receipts', ReceiptController::class, ['only' => ['index','store','update','show']]);
 
         // Invoices
         Route::apiResource('invoices', InvoiceController::class)->only(['index', 'show', 'update']);
