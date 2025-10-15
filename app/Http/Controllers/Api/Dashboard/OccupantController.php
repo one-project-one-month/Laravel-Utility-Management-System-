@@ -16,12 +16,49 @@ class OccupantController extends Controller
 {
     use  ApiResponse ;
 
-    public function index() {
+    public function index()
+    {
         $occupants = Occupant::get();
+
         return $this->successResponse('Occupants retrieved successfully',OccupantResource::collection($occupants));
     }
 
-    public function update(Request $request,$id) {
+    public function store(Request $request)
+    {
+
+        $validator = Validator::make($request->all(),[
+            'name' => 'required',
+            'nrc'  => 'nullable',
+            'relationshipToTenant' => ['required', new Enum(RelationshipToTenant::class)],
+            'tenantId' => 'required|exists:tenants,id'
+        ]);
+
+        if($validator->fails())
+        {
+            return $this->errorResponse($validator->errors(),422);
+        }
+
+        $validatedData = $validator->validated();
+
+        try
+        {
+            $data  = Occupant::create(
+                [
+                'name'  =>  $validatedData['name'],
+                'nrc'   =>  $validatedData['nrc'],
+                'relationship_to_tenant' => $validatedData['relationshipToTenant'],
+                'tenant_id'      => $validatedData['tenantId'],
+                ]
+            );
+
+            return $this->successResponse('Occupant created successfully!',new OccupantResource($data),201);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(),500);
+        }
+    }
+
+    public function update(Request $request,$id)
+    {
         try
         {
             $occupant = Occupant::findOrFail($id);
@@ -32,7 +69,8 @@ class OccupantController extends Controller
                 'relationshipToTenant' => ['required', new Enum(RelationshipToTenant::class)]
             ]);
 
-            if($validator->fails()) {
+            if($validator->fails())
+            {
                 return $this->errorResponse($validator->errors(),422);
             }
 
@@ -52,10 +90,12 @@ class OccupantController extends Controller
         }
     }
 
-    public function show($id) {
+    public function show($id)
+    {
         $occupant = Occupant::find($id);
 
-        if(!$occupant) {
+        if(!$occupant)
+        {
             return $this->errorResponse('Occupant not found!',404);
         }
 

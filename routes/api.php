@@ -39,7 +39,7 @@ Route::prefix('v1/')->group(function () {
         Route::resource('tenants', TenantController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
         // Occupant
-        Route::resource('occupants',OccupantController::class,['only'=> ['index','update','show']]);
+        Route::resource('occupants',OccupantController::class,['only'=> ['index','store','update','show']]);
 
         // Receipt
         Route::resource('receipts', ReceiptController::class, ['only' => ['index','store','update','show']]);
