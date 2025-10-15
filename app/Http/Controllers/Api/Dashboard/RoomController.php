@@ -195,7 +195,7 @@ class RoomController extends Controller
     /**
      * Create a new room
      */
-    public function create(Request $request){
+    public function store(Request $request){
 
         // check validation room data input
         $validator = Validator::make($request->all(), [

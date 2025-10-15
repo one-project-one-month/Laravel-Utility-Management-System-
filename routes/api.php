@@ -54,7 +54,7 @@ Route::prefix('v1/')->group(function () {
         Route::resource('total-units', TotalUnitController::class, ['only' => ['index', 'show']]);
 
         // Rooms Route
-        Route::resource('rooms', RoomController::class, ['only' => ['index', 'update', 'show']]);
+        Route::resource('rooms', RoomController::class, ['only' => ['index','store','update','show']]);
 
         // Bills
         Route::resource('bills', BillController::class, ['only' => ['index', 'store', 'show']]);
