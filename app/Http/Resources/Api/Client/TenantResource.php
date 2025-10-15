@@ -3,12 +3,10 @@
 namespace App\Http\Resources\Api\Client;
 
 use Illuminate\Http\Request;
-use App\Http\Helpers\PostgresHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TenantResource extends JsonResource
 {
-    use PostgresHelper;
     /**
      * Transform the resource into an array.
      *
