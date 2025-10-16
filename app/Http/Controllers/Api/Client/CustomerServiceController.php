@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\CustomerService;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\Dashboard\CustomerServiceResource;
 
 /**
  * @OA\Tag(
@@ -88,7 +89,7 @@ class CustomerServiceController extends Controller
 
         $customerService = CustomerService::create($data);
 
-        return $this->successResponse('Customer Service created successfully', $customerService, 201);
+        return $this->successResponse('Customer Service created successfully', new CustomerServiceResource($customerService), 201);
     }
 
     /**
@@ -146,7 +147,7 @@ class CustomerServiceController extends Controller
 
         $services = $query->orderBy('issued_date', 'desc')->get();
 
-        return $this->successResponse('Customer Service History', $services);
+        return $this->successResponse('Customer Service History', CustomerServiceResource::collection($services));
     }
 
 }
