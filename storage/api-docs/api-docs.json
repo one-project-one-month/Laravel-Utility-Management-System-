@@ -1823,6 +1823,77 @@
                 ]
             }
         },
+        "/api/v1/occupants": {
+            "get": {
+                "tags": [
+                    "Occupants"
+                ],
+                "summary": "Get a list of occupants",
+                "description": "Returns a paginated list of all Occupants.",
+                "operationId": "2aba4067f5960e4bf677d07facf8f6d7",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Occupants retrieved successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/OccupantResource"
+                                                    }
+                                                },
+                                                "pagination": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 50
+                                                        },
+                                                        "per_page": {
+                                                            "type": "integer",
+                                                            "example": 15
+                                                        },
+                                                        "current_page": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "last_page": {
+                                                            "type": "integer",
+                                                            "example": 4
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Occupants not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/receipts": {
             "get": {
                 "tags": [
@@ -3356,6 +3427,33 @@
                 },
                 "type": "object"
             },
+            "OccupantResource": {
+                "title": "Occupant Resource",
+                "description": "Occupant model representation",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "nrc": {
+                        "type": "string",
+                        "example": "12/ABC(N)123456"
+                    },
+                    "relationshipToTenant": {
+                        "type": "string",
+                        "example": "Child"
+                    },
+                    "tenantId": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
             "ReceiptResource": {
                 "title": "Receipt Resource",
                 "description": "Receipt model representation",
@@ -3518,6 +3616,12 @@
                             "09111222333",
                             "09444555666"
                         ]
+                    },
+                    "occupants": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OccupantResource"
+                        }
                     }
                 },
                 "type": "object"
@@ -3545,6 +3649,16 @@
                         "description": "Total water units consumed",
                         "type": "integer",
                         "example": 50
+                    },
+                    "tenantName": {
+                        "description": "Tenant name",
+                        "type": "string",
+                        "example": "Aung Aung"
+                    },
+                    "roomNo": {
+                        "description": "Room number",
+                        "type": "string",
+                        "example": "101"
                     }
                 },
                 "type": "object"
@@ -3678,6 +3792,10 @@
         {
             "name": "Authentication",
             "description": "Authentication"
+        },
+        {
+            "name": "Occupants",
+            "description": "Occupants"
         }
     ]
 }
