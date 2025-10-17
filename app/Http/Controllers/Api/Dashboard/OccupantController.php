@@ -16,6 +16,35 @@ class OccupantController extends Controller
 {
     use  ApiResponse ;
 
+
+      /**
+     * @OA\Get(
+     * path="/api/v1/occupants",
+     * summary="Get a list of occupants",
+     * description="Returns a paginated list of all Occupants.",
+     * tags={"Occupants"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Response(
+     * response=200,
+     * description="Successful operation",
+     * @OA\JsonContent(
+     * type="object",
+     * @OA\Property(property="message", type="string", example="Occupants retrieved successfully"),
+     * @OA\Property(property="data", type="object",
+     * @OA\Property(property="items", type="array", @OA\Items(ref="#/components/schemas/OccupantResource")),
+     * @OA\Property(property="pagination", type="object",
+     * @OA\Property(property="total", type="integer", example=50),
+     * @OA\Property(property="per_page", type="integer", example=15),
+     * @OA\Property(property="current_page", type="integer", example=1),
+     * @OA\Property(property="last_page", type="integer", example=4)
+     * )
+     * )
+     * )
+     * ),
+     * @OA\Response(response=404, description="Occupants not found"),
+     * @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
     public function index()
     {
         $occupants = Occupant::get();

@@ -53,8 +53,7 @@ class RoomController extends Controller
     public function index(){
 
         // retrieve a list of rooms with pagination
-        $roomData = Room::orderBy('created_at', 'desc')
-            ->paginate(config('pagination.perPage'));
+        $roomData = Room::paginate(config('pagination.perPage'));
 
         if ($roomData->isEmpty()) {
             return $this->errorResponse('Rooms not found', 404);
