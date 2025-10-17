@@ -26,38 +26,38 @@ Route::post('/v1/auth/logout', [AuthController::class, 'logout'])->middleware('a
 Route::prefix('v1/')->group(function () {
 
     Route::middleware(['auth:sanctum', 'Role.check:Admin'])->group(function () {
-        // Users Route
+        // Users Route 110
         Route::resource('users', UserController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
-        // Contracts Route
-        Route::resource('contracts', ContractController::class, ['only' => ['index', 'store', 'update', 'show']]);
-
-        // Contract Types
-        Route::resource('contract-types', ContractTypeController::class, ['only' => ['index', 'store', 'update', 'show']]);
-
-        // Tenant
+        // Tenant 109
         Route::resource('tenants', TenantController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
-        // Occupant
+        // Occupant 108
         Route::resource('occupants',OccupantController::class,['only'=> ['index','store','update','show']]);
 
-        // Receipt
-        Route::resource('receipts', ReceiptController::class, ['only' => ['index','store','update','show']]);
-
-        // Invoices
-        Route::apiResource('invoices', InvoiceController::class)->only(['index', 'show', 'update']);
-
-        // Customer services
-        Route::resource('customer-services', CustomerServiceController::class, ['only' => ['index', 'update', 'show']]);
-
-        // Total Units
-        Route::resource('total-units', TotalUnitController::class, ['only' => ['index', 'show']]);
-
-        // Rooms Route
+        // Rooms Route 107
         Route::resource('rooms', RoomController::class, ['only' => ['index','store','update','show']]);
 
-        // Bills
+        // Contracts Route 106
+        Route::resource('contracts', ContractController::class, ['only' => ['index', 'store', 'update', 'show']]);
+
+        // Contract Types 105
+        Route::resource('contract-types', ContractTypeController::class, ['only' => ['index', 'store', 'update', 'show']]);
+
+        // Bills 104
         Route::resource('bills', BillController::class, ['only' => ['index', 'store', 'show']]);
+
+        // Total Units 103
+        Route::resource('total-units', TotalUnitController::class, ['only' => ['index', 'show']]);
+
+        // Invoices 102
+        Route::apiResource('invoices', InvoiceController::class)->only(['index', 'show', 'update']);
+
+        // Customer services 101
+        Route::resource('customer-services', CustomerServiceController::class, ['only' => ['index', 'update', 'show']]);
+
+        // Receipt 100
+        Route::resource('receipts', ReceiptController::class, ['only' => ['index','store','update','show']]);
     });
 
 
