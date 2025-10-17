@@ -7,7 +7,7 @@ use App\Models\Tenant;
 use App\Models\Receipt;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use App\Http\Resources\Api\Client\ReceiptResource;
 
 /**
