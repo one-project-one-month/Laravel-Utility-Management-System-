@@ -52,8 +52,8 @@ class TotalUnitController extends Controller
     // index
     public function index(){
         $totalunits = TotalUnit::with(['bill.tenant', 'bill.room'])
-            // ->orderBy('created_at','desc')
-            // ->orderBy('id','desc')
+            ->orderBy('created_at','desc')
+            ->orderBy('id','desc')
             ->paginate(config('pagination.perPage'));
 
         if ($totalunits->isEmpty()) {
