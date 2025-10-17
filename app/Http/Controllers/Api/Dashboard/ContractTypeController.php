@@ -161,7 +161,7 @@ class ContractTypeController extends Controller
 
         // format facilities field to appropriate format for storing into postgres text array field
         $validated = $validator->validated();
-        $validated['facilities'] = $this->nativeStringToPgArrayString($validated['facilities']);
+        $validated['facilities'] = $this->nativeArrayToPgArrayString($validated['facilities']);
 
         // create new contract-type
         try {
@@ -236,7 +236,7 @@ class ContractTypeController extends Controller
 
         // format facilities field to appropriate format for storing into postgres text array field
         $validated = $validator->validated();
-        $validated['facilities'] = $this->nativeStringToPgArrayString($validated['facilities']);
+        $validated['facilities'] = $this->nativeArrayToPgArrayString($validated['facilities']);
 
         // update the contract-type
         try {
