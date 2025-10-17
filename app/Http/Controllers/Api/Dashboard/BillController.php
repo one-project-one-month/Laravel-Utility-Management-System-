@@ -57,9 +57,16 @@ class BillController extends Controller
      * @OA\Response(response=401, description="Unauthenticated")
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
-        $bills = Bill::with('totalUnit', 'invoice')
+        $query = Bill::query();
+        if ($request->has('status')) {
+            $query->whereHas('invoice', function ($invoiceQuery) use($request){
+                return $invoiceQuery->where('status', $request->input('status'));
+            });
+        }
+        $bills = $query
+            ->with('totalUnit', 'invoice')
             ->orderBy('bills.created_at','desc')
             ->orderBy('bills.id','desc')
             ->paginate(config('pagination.perPage'));
