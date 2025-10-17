@@ -30,7 +30,9 @@ class TotalUnitResource extends JsonResource
             'id'               => $this->id,
             'billId'           => $this->bill_id,
             'electricityUnits' => $this->electricity_units,
-            'waterUnits'       => $this->water_units
+            'waterUnits'       => $this->water_units,
+            'tenantName'       => $this->bill?->tenant?->name,
+            'roomNo'           => $this->bill?->room?->room_no,
         ];
     }
 }
