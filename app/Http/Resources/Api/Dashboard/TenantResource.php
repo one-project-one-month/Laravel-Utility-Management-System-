@@ -5,6 +5,7 @@ namespace App\Http\Resources\Api\Dashboard;
 use Illuminate\Http\Request;
 use App\Http\Helpers\PostgresHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Api\Dashboard\ContractResource;
 use App\Http\Resources\Api\Dashboard\OccupantResource;
 
 
@@ -73,7 +74,8 @@ class TenantResource extends JsonResource
                 'email'         => $this->email,
                 'phNumber'      => $this->phone_no,
                 'emergencyNo'   => $this->emergency_no,
-                'occupants'     => OccupantResource::collection($this->whenLoaded('occupants'))
+                'occupants'     => OccupantResource::collection($this->whenLoaded('occupants')),
+                'contracts'     => ContractResource::collection($this->whenLoaded('contracts'))
             ];
     }
 }
