@@ -163,7 +163,7 @@ class ContractController extends Controller
             'contract_type_id' => $validatedData['contractId'],
             'tenant_id'        => $validatedData['tenantId'],
             'room_id'          => $validatedData['roomNo'],
-            'createdDate'      => $validatedData['createdDate'],
+            'created_date'      => $validatedData['createdDate'],
             'expiry_date'      => $validatedData['expiryDate']
         ];
 

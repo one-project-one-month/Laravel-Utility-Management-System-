@@ -114,10 +114,16 @@ class UserController extends Controller
      * )
      */
     //index users
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with(['tenant'])
-            ->paginate(config('pagination.perPage'));
+        $role = $request->query('role');
+
+        $query = User::with(['tenant']);
+
+        if($role) {
+            $query->where('role', $role);
+        }
+        $users = $query->paginate(config('pagination.perPage'));
 
         return $this->successResponse(
             'Users retrieved successfully',
