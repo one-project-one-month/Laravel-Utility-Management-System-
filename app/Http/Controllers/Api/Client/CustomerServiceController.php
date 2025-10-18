@@ -8,6 +8,7 @@ use App\Models\CustomerService;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\Dashboard\CustomerServiceResource;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * @OA\Tag(
@@ -69,7 +70,7 @@ class CustomerServiceController extends Controller
 //            return $this->errorResponse('Unathorized', 401);
 //        }
 
-        $validated = $request->validate([
+        $validator = Validator::make($request->post(), [
             'roomId'        => 'required|uuid|exists:rooms,id',
             'category'      => 'required|in:Complain,Maintenance,Other',
             'description'   => 'required|string',
@@ -77,6 +78,12 @@ class CustomerServiceController extends Controller
             'priorityLevel' => 'required|in:Low,Medium,High',
             'issuedDate'    => 'required|date',
         ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), 422);
+        }
+
+        $validated = $validator->validated();
 
         $data = [
             'room_id'        => $validated['roomId'],
