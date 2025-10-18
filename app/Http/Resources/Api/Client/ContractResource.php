@@ -29,10 +29,10 @@ class ContractResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'room_id' => $this->room_id,
-            'tenant_id' => $this->tenant_id,
+            'roomId' => $this->room_id,
+            'tenantId' => $this->tenant_id,
             'tenant' => new TenantResource($this->whenLoaded('tenant')),
-            'expiry_date' => $this->expiry_date,
+            'expiryDate' => $this->expiry_date,
             'contractType' => new ContractTypeResource($this->whenLoaded('contractType'))
         ];
     }

@@ -18,8 +18,8 @@ class TenantResource extends JsonResource
             'name'         => $this->name,
             'nrc'          => $this->nrc,
             'email'        => $this->email,
-            'phone_no'     => $this->phone_no,
-            'emergency_no' => $this->emergency_no,
+            'phNumber'     => $this->phone_no,
+            'emergencyNo'  => $this->emergency_no,
         ];
     }
 }
