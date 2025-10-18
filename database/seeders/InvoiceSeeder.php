@@ -16,8 +16,12 @@ class InvoiceSeeder extends Seeder
     {
         $billIds = Bill::pluck('id');
 
+
         foreach($billIds as $billId) {
+            $number =  fake()->randomNumber(8, true);
+            $customInvoice = "INV".'-'.$number;
             Invoice::create([
+                    'invoice_no' => $customInvoice,
                     'bill_id' => $billId
             ]);
         }

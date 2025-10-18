@@ -22,8 +22,10 @@ Class GenerateBillsJob implements ShouldQueue {
         ->where('role', 'Tenant')
         ->chunk(100, function ($users) use ($billingService) {
             foreach ($users as $user) {
+                $number =  fake()->randomNumber(8, true);
+                $customInvoice = "INV".'-'.$number;
                 $freshUser = User::with('tenant')->find($user->id);
-                $billingService->generateBillForRoom($freshUser);
+                $billingService->generateBillForRoom($freshUser,$customInvoice);
             }
         });
      }
