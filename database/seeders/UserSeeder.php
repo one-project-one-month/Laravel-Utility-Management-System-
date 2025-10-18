@@ -15,24 +15,22 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $admins = [
-            [
+        $admin = [
                 "user_name" => "John Doe",
                 "email"     => "johndoe@gmail.com",
                 "password"  => Hash::make("Ks82787294"),
                 "role"      => "Admin"
-            ],
-            [
+            ];
+
+        $staff =  [
                 "user_name" => "Alice Doe",
                 "email"     => "alice244doe@gmail.com",
                 "password"  => Hash::make("Ks82787294"),
-                "role"      => "Admin"
-            ]
+                "role"      => "Staff"
         ];
 
-        foreach ($admins as $admin) {
-            User::create($admin);
-        }
+        User::create($admin);
+        User::create($staff);
 
         $tenants = Tenant::select('name','email','id')->get();
 
