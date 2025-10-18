@@ -17,7 +17,7 @@ class RoomSeeder extends Seeder
     {
         $status = [RoomStatus::Available, RoomStatus::Rented, RoomStatus::Purchased, RoomStatus::InMaintenance];
 
-        for($i = 1; $i <= 10; $i++) {
+        for($i = 1; $i <= 30; $i++) {
             Room::create([
                 'id'               => Str::uuid()->toString(),
                 'room_no'          => 100 + $i,

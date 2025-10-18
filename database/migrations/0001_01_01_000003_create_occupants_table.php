@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invoices', function (Blueprint $table) {
+        Schema::create('occupants', function (Blueprint $table) {
             $table->id();
-            $table->string('invoice_no')->unique();
-            $table->foreignId('bill_id')->references('id')->on('bills')->onDelete('cascade');
-            $table->enum('status',['Pending','Paid','Overdue'])->default('Pending');
+            $table->string('name');
+            $table->string('nrc')->nullable();
+            $table->enum('relationship_to_tenant',["Spouse","Child","Parent","Sibling","Relative","Friend","Other"]);
+            $table->foreignId('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('invoices');
+        Schema::dropIfExists('occupants');
     }
 };

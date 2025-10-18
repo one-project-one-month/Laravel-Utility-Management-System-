@@ -5,18 +5,15 @@ namespace App\Http\Helpers;
 trait PostgresHelper
 {
     /**
-     * Convert php string into postgresql array string
+     * Convert php array into postgresql array string
      *
-     * @param string $string
+     * @param array $array
      *
      * @return string
      */
-    protected function nativeStringToPgArrayString(string $string): string
+    protected function nativeArrayToPgArrayString(array $array): string
     {
-        $textArray = array_map('trim', explode(',', $string));
-
-        // change to text array format
-        return "{" . implode(",", $textArray) . "}";
+        return "{" . implode(",", $array) . "}";
     }
 
     /**

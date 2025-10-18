@@ -3,12 +3,10 @@
 namespace App\Http\Resources\Api\Client;
 
 use Illuminate\Http\Request;
-use App\Http\Helpers\PostgresHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TenantResource extends JsonResource
 {
-    use PostgresHelper;
     /**
      * Transform the resource into an array.
      *
@@ -17,11 +15,11 @@ class TenantResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'names' => $this->pgArrayStringToNativeArray($this->names),
-            'nrcs' => $this->pgArrayStringToNativeArray($this->nrcs),
-            'emails' => $this->pgArrayStringToNativeArray($this->emails),
-            'phone_nos' => $this->pgArrayStringToNativeArray($this->phone_nos),
-            'emergency_nos' => $this->pgArrayStringToNativeArray($this->emergency_nos),
+            'name'         => $this->name,
+            'nrc'          => $this->nrc,
+            'email'        => $this->email,
+            'phone_no'     => $this->phone_no,
+            'emergency_no' => $this->emergency_no,
         ];
     }
 }

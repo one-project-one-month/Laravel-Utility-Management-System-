@@ -16,14 +16,13 @@ return new class extends Migration
             $table->id();
             $table->uuid('room_id');
             $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
+            $table->string('name');
+            $table->string('nrc');
+            $table->string('email');
+            $table->string('phone_no');
+            $table->string('emergency_no');
             $table->timestamps();
         });
-        // Text Array
-        DB::statement('ALTER TABLE tenants ADD COLUMN names text[]');
-        DB::statement('ALTER TABLE tenants ADD COLUMN nrcs text[]');
-        DB::statement('ALTER TABLE tenants ADD COLUMN emails text[]');
-        DB::statement('ALTER TABLE tenants ADD COLUMN phone_nos text[]');
-        DB::statement('ALTER TABLE tenants ADD COLUMN emergency_nos text[]');
     }
 
     /**

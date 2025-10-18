@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ValidateLoggedInTenantUserIdMiddleware;
 use App\Http\Middleware\RoleCheckMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -14,7 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'Role.check' => RoleCheckMiddleware::class
+            'Role.check' => RoleCheckMiddleware::class,
+            'ValidateLoggedInTenantUserId' => ValidateLoggedInTenantUserIdMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -53,8 +53,7 @@ class RoomController extends Controller
     public function index(){
 
         // retrieve a list of rooms with pagination
-        $roomData = Room::orderBy('created_at', 'desc')
-            ->paginate(config('pagination.perPage'));
+        $roomData = Room::paginate(config('pagination.perPage'));
 
         if ($roomData->isEmpty()) {
             return $this->errorResponse('Rooms not found', 404);
@@ -190,5 +189,52 @@ class RoomController extends Controller
             //error response
             return $this->errorResponse('Room update fails: '.$error->getMessage(), 500);
         }
+    }
+
+    /**
+     * Create a new room
+     */
+    public function store(Request $request){
+
+        // check validation room data input
+        $validator = Validator::make($request->all(), [
+            'roomNo' => 'required|integerunique:rooms,room_no',
+            'floor' => 'required|integer|min:1|max:10',
+            'dimension' => 'required|string|max:255',
+            'noOfBedRoom' => 'required|integer|min:1|max:4',
+            'status' => 'required|in:Available,Rented,Purchased,In Maintenance',
+            'sellingPrice' => 'required|numeric|regex:/^\d{1,18}(\.\d{1,2})?$/',
+            'maxNoOfPeople' => 'required|integer|min:1|max:6',
+            'description' => 'string|max:255'
+        ]);
+
+        // return error if validation fails
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(),422);
+        }
+
+        // error handling state
+        try {
+
+            // create new room
+            $roomData = Room::create([
+                'room_no' => $request->roomNo,
+                'floor' => $request->floor,
+                'dimension' => $request->dimension,
+                'no_of_bed_room' => $request->noOfBedRoom,
+                'status' => $request->status,
+                'selling_price' => $request->sellingPrice,
+                'max_no_of_people' => $request->maxNoOfPeople,
+                'description' => $request->description
+            ]);
+
+            // success response
+            return $this->successResponse('New room created successfully',new RoomResource($roomData),200);
+
+        } catch(\Exception $error) {
+            // error response
+            return $this->errorResponse('New room creation fails: ' . $error->getMessage(), 500);
+        }
+
     }
 }
