@@ -19,29 +19,13 @@ class TenantSeeder extends Seeder
         $rooms = Room::whereIn('status', [RoomStatus::Rented->value, RoomStatus::Purchased->value])->get();
 
         foreach ($rooms as $room) {
-            $names         = [];
-            $emails        = [];
-            $nrcs          = [];
-            $phone_nos     = [];
-            $emergency_nos = [];
-
-            $numberOfTenants = $room->max_no_of_people;
-
-            for ($i = 0; $i < $numberOfTenants; $i++) {
-                $names[]         = Str::remove("'", fake()->name()); // remove single quote from fake name, eg: O'Liver to Oliver
-                $emails[]        = fake()->unique()->safeEmail();
-                $nrcs[]          = '12/PZT(N)' . fake()->unique()->numberBetween(100000, 999999);
-                $phone_nos[]     = '09' . fake()->numerify('#########');
-                $emergency_nos[] = '09' . fake()->numerify('#########');
-            }
-
             Tenant::create([
                 'room_id'       => $room->id,
-                'names'         => $this->wrapWithArrayDataType($names),
-                'emails'        => $this->wrapWithArrayDataType($emails),
-                'nrcs'          => $this->wrapWithArrayDataType($nrcs),
-                'phone_nos'     => $this->wrapWithArrayDataType($phone_nos),
-                'emergency_nos' => $this->wrapWithArrayDataType($emergency_nos),
+                'name'         => fake()->name(),
+                'email'        => fake()->unique()->safeEmail(),
+                'nrc'          => '12/PZT(N)' . fake()->unique()->numberBetween(100000, 999999),
+                'phone_no'     => '09' . fake()->numerify('#########'),
+                'emergency_no' => '09' . fake()->numerify('#########'),
             ]);
         }
     }

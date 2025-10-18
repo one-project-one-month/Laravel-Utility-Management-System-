@@ -17,8 +17,7 @@ use App\Http\Controllers\Api\Client\ContractController as ClientContractControll
 use App\Http\Controllers\Api\Client\InvoiceController as ClientInvoiceController;
 use App\Http\Controllers\Api\Client\CustomerServiceController as ClientCustomerServiceController;
 use App\Http\Controllers\Api\Client\BillController as ClientBillController;
-
-
+use App\Http\Controllers\Api\Dashboard\OccupantController;
 
 Route::post('/v1/auth/login', [AuthController::class, 'login']);
 Route::post('/v1/auth/refresh', [AuthController::class, 'refresh']);
@@ -26,46 +25,62 @@ Route::post('/v1/auth/logout', [AuthController::class, 'logout'])->middleware('a
 
 Route::prefix('v1/')->group(function () {
 
-    Route::middleware(['auth:sanctum', 'Role.check:Admin'])->group(function () {
-        // Users Route
+    Route::middleware(['auth:sanctum', 'Role.check:Admin'])->group(function ()
+    {
         Route::resource('users', UserController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
-        // Contracts Route
-        Route::resource('contracts', ContractController::class, ['only' => ['index', 'store', 'update', 'show']]);
-
-        // Contract Types
-        Route::resource('contract-types', ContractTypeController::class, ['only' => ['index', 'store', 'update', 'show']]);
-
-        // Tenant
         Route::resource('tenants', TenantController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
-        // Receipt
-        Route::resource('receipts', ReceiptController::class, ['only' => ['index', 'update', 'show']]);
+        Route::resource('occupants',OccupantController::class,['only'=> ['index','store','update','show']]);
 
-        // Invoices
-        Route::apiResource('invoices', InvoiceController::class)->only(['index', 'show', 'update']);
+        Route::resource('rooms', RoomController::class, ['only' => ['index','store','update','show']]);
 
-        // Customer services
-        Route::resource('customer-services', CustomerServiceController::class, ['only' => ['index', 'update', 'show']]);
+        Route::resource('contracts', ContractController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
-        // Total Units
+        Route::resource('contract-types', ContractTypeController::class, ['only' => ['index', 'store', 'update', 'show']]);
+
+        Route::resource('bills', BillController::class, ['only' => ['index', 'store', 'show']]);
+
         Route::resource('total-units', TotalUnitController::class, ['only' => ['index', 'show']]);
 
-        // Rooms Route
-        Route::resource('rooms', RoomController::class, ['only' => ['index', 'update', 'show']]);
+        Route::apiResource('invoices', InvoiceController::class)->only(['index', 'show', 'update']);
 
-        // Bills
+        Route::resource('customer-services', CustomerServiceController::class, ['only' => ['index', 'update', 'show']]);
+
+        Route::resource('receipts', ReceiptController::class, ['only' => ['index','store','update','show']]);
+    });
+
+    Route::middleware(['auth:sanctum', 'Role.check:Staff'])->group(function ()
+    {
+        Route::resource('users', UserController::class, ['only' => ['index', 'store', 'update', 'show']]);
+
+        Route::resource('tenants', TenantController::class, ['only' => ['index', 'store', 'update', 'show']]);
+
+        Route::resource('occupants',OccupantController::class,['only'=> ['index','store','update','show']]);
+
+        Route::resource('rooms', RoomController::class, ['only' => ['index','store','update','show']]);
+
+        Route::resource('contracts', ContractController::class, ['only' => ['index', 'store', 'update', 'show']]);
+
+        Route::resource('contract-types', ContractTypeController::class, ['only' => ['index', 'store', 'update', 'show']]);
+
         Route::resource('bills', BillController::class, ['only' => ['index', 'store', 'show']]);
+
+        Route::resource('total-units', TotalUnitController::class, ['only' => ['index', 'show']]);
+
+        Route::apiResource('invoices', InvoiceController::class)->only(['index', 'show', 'update']);
+
+        Route::resource('customer-services', CustomerServiceController::class, ['only' => ['index', 'update', 'show']]);
+
+        Route::resource('receipts', ReceiptController::class, ['only' => ['index','store','update','show']]);
     });
 
 
-    Route::middleware(['auth:sanctum', "Role.check:Tenant"])->group(function () {
-
+    Route::middleware(['auth:sanctum', "Role.check:Tenant", "ValidateLoggedInTenantUserId"])->group(function ()
+    {
         // Tenant Customer Services
-
         Route::post('tenants/{id}/customer-services/create', [ClientCustomerServiceController::class, 'create']);
         Route::get('tenants/{id}/customer-services/history/{status?}', [ClientCustomerServiceController::class, 'history']);
-
 
         // Receipt latest
         Route::get('/tenants/{id}/receipts/latest', action: [ClientReceiptController::class, 'latest']);

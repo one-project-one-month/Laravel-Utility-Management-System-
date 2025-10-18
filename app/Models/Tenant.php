@@ -4,21 +4,26 @@ namespace App\Models;
 
 use App\Models\Room;
 use App\Models\User;
+use App\Models\Occupant;
 use Illuminate\Database\Eloquent\Model;
 
 class Tenant extends Model
 {
     protected $fillable = [
         'room_id',
-        'names',
-        'emails',
-        'nrcs',
-        'phone_nos',
-        'emergency_nos',
+        'name',
+        'email',
+        'nrc',
+        'phone_no',
+        'emergency_no',
     ];
 
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    public function occupants() {
+        return $this->hasMany(Occupant::class);
     }
 
     public function room() {

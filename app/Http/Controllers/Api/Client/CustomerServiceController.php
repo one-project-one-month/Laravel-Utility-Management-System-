@@ -1,12 +1,13 @@
 <?php
 namespace App\Http\Controllers\Api\Client;
 
-use App\Models\User;
+//use App\Models\User;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
 use App\Models\CustomerService;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\Dashboard\CustomerServiceResource;
 
 /**
  * @OA\Tag(
@@ -62,12 +63,12 @@ class CustomerServiceController extends Controller
      */
     public function create(Request $request, $tenantId)
     {
-        //authorize 
-        $userId = User::where('tenant_id' , $tenantId)->value('id');
-         if (auth('sanctum')->user()->id != $userId) {
-            return $this->errorResponse('Unathorized', 401);
-        }
-        
+        //authorize
+//        $userId = User::where('tenant_id' , $tenantId)->value('id');
+//         if (auth('sanctum')->user()->id != $userId) {
+//            return $this->errorResponse('Unathorized', 401);
+//        }
+
         $validated = $request->validate([
             'roomId'        => 'required|uuid|exists:rooms,id',
             'category'      => 'required|in:Complain,Maintenance,Other',
@@ -88,10 +89,7 @@ class CustomerServiceController extends Controller
 
         $customerService = CustomerService::create($data);
 
-        return response()->json([
-            'message' => 'Customer Service created successfully',
-            'data'    => $customerService,
-        ], 201);
+        return $this->successResponse('Customer Service created successfully', new CustomerServiceResource($customerService), 201);
     }
 
     /**
@@ -133,12 +131,12 @@ class CustomerServiceController extends Controller
      */
     public function history($tenantId, $status = null)
     {
-        
-        //authorize 
-        $userId = User::where('tenant_id' , $tenantId)->value('id');
-         if (auth('sanctum')->user()->id != $userId) {
-            return $this->errorResponse('Unathorized', 401);
-        }
+
+        //authorize
+//        $userId = User::where('tenant_id' , $tenantId)->value('id');
+//         if (auth('sanctum')->user()->id != $userId) {
+//            return $this->errorResponse('Unathorized', 401);
+//        }
         $tenant = Tenant::find($tenantId);
         $query = CustomerService::where('room_id', $tenant->room_id);
 
@@ -149,10 +147,7 @@ class CustomerServiceController extends Controller
 
         $services = $query->orderBy('issued_date', 'desc')->get();
 
-        return response()->json([
-            'message' => 'Customer Service History',
-            'data'    => $services,
-        ], 200);
+        return $this->successResponse('Customer Service History', CustomerServiceResource::collection($services));
     }
 
 }
