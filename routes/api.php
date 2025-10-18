@@ -25,7 +25,7 @@ Route::post('/v1/auth/logout', [AuthController::class, 'logout'])->middleware('a
 
 Route::prefix('v1/')->group(function () {
 
-    Route::middleware(['auth:sanctum', 'Role.check:Admin,Staff'])->group(function ()
+    Route::middleware(['auth:sanctum', 'Role.check:Admin'])->group(function ()
     {
         Route::resource('users', UserController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
@@ -43,7 +43,32 @@ Route::prefix('v1/')->group(function () {
 
         Route::resource('total-units', TotalUnitController::class, ['only' => ['index', 'show']]);
 
-        Route::apiResource('invoices', InvoiceController::class)->only(['index','store', 'show', 'update']);
+        Route::apiResource('invoices', InvoiceController::class)->only(['index', 'show', 'update']);
+
+        Route::resource('customer-services', CustomerServiceController::class, ['only' => ['index', 'update', 'show']]);
+
+        Route::resource('receipts', ReceiptController::class, ['only' => ['index','store','update','show']]);
+    });
+
+    Route::middleware(['auth:sanctum', 'Role.check:Staff'])->group(function ()
+    {
+        Route::resource('users', UserController::class, ['only' => ['index', 'store', 'update', 'show']]);
+
+        Route::resource('tenants', TenantController::class, ['only' => ['index', 'store', 'update', 'show']]);
+
+        Route::resource('occupants',OccupantController::class,['only'=> ['index','store','update','show']]);
+
+        Route::resource('rooms', RoomController::class, ['only' => ['index','store','update','show']]);
+
+        Route::resource('contracts', ContractController::class, ['only' => ['index', 'store', 'update', 'show']]);
+
+        Route::resource('contract-types', ContractTypeController::class, ['only' => ['index', 'store', 'update', 'show']]);
+
+        Route::resource('bills', BillController::class, ['only' => ['index', 'store', 'show']]);
+
+        Route::resource('total-units', TotalUnitController::class, ['only' => ['index', 'show']]);
+
+        Route::apiResource('invoices', InvoiceController::class)->only(['index', 'show', 'update']);
 
         Route::resource('customer-services', CustomerServiceController::class, ['only' => ['index', 'update', 'show']]);
 

@@ -26,11 +26,12 @@ class UserSeeder extends Seeder
                 "user_name" => "Alice Doe",
                 "email"     => "alice244doe@gmail.com",
                 "password"  => Hash::make("Ks82787294"),
-                "role"      => "Staff"
+                "role"      => "Admin"
         ];
 
-        User::create($admin);
-        User::create($staff);
+        foreach ($admins as $admin) {
+            User::create($admin);
+        }
 
         $tenants = Tenant::select('name','email','id')->get();
 

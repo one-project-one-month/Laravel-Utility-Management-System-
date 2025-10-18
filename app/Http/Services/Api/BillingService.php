@@ -30,6 +30,10 @@ Class BillingService {
             'bill_id' => $bill->id
         ]);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> ecb06bf (contract-add)
         $this->mailService->send(
             [
                 'username'    => $user->name,
