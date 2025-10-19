@@ -30,6 +30,10 @@ Class BillingService {
             'bill_id' => $bill->id
         ]);
 
+        $receipt = Receipt::create([
+            "invoice_id" => $invoice->id,
+        ]);
+
         $this->mailService->send(
             [
                 'username'    => $user->name,
