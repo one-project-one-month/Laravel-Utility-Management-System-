@@ -206,6 +206,7 @@ class ReceiptController extends Controller
             'paid_date'      => $validatedData['paidDate'],
         ]);
 
+
         return $this->successResponse(
             'Receipt updated successfully!',
             new ReceiptResource($receipt)

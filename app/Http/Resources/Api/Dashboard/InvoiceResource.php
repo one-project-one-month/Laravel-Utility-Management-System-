@@ -52,6 +52,7 @@ class InvoiceResource extends JsonResource
             'invoiceNo' => $this->invoice_no,
             'billId' => $this->bill_id,
             'status' => $this->status,
+            'receiptSent' => $this->receipt_sent,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
 

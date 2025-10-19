@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('invoice_no')->unique();
             $table->foreignId('bill_id')->references('id')->on('bills')->onDelete('cascade');
             $table->enum('status',['Pending','Paid','Overdue'])->default('Pending');
+            $table->boolean('receipt_sent')->default(0);
             $table->timestamps();
         });
     }
