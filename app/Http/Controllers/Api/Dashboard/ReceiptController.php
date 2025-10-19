@@ -206,6 +206,10 @@ class ReceiptController extends Controller
             'paid_date'      => $validatedData['paidDate'],
         ]);
 
+        $invoice = Invoice::find($validatedData['invoiceId']);
+        $invoice->update([
+            'status'    => 'Paid'
+        ]);
 
         return $this->successResponse(
             'Receipt updated successfully!',
