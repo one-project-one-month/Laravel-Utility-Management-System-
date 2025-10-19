@@ -212,8 +212,7 @@ class InvoiceController extends Controller
     // }
 
     private function customInvoiceGenerator() {
-            $number =  fake()->randomNumber(8, true);
-            $customInvoice = "INV".'-'.$number;
+        $customInvoice = "INV".'-'.fake()->randomNumber(8, true);
         return  $customInvoice;
     }
 }
