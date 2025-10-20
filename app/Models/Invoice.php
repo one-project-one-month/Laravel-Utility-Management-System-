@@ -11,7 +11,8 @@ class Invoice extends Model
     protected $fillable = [
         'invoice_no',
         'bill_id',
-        'status'
+        'status',
+        'receipt_sent'
     ];
 
     public function bill() {

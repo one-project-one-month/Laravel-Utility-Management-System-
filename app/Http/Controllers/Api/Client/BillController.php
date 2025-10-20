@@ -8,42 +8,50 @@ use App\Http\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\Dashboard\BillResource;
 
-
-/**
- * @OA\Tag(
- * name="Client Bills",
- * description="Endpoints for tenants to view their billing information"
- * )
- */
 class BillController extends Controller
 {
     use ApiResponse;
 
-
      /**
      * @OA\Get(
-     * path="/api/tenants/{id}/bills/latest",
-     * summary="Get the latest bill for a tenant",
-     * description="Retrieves the most recent bill for a specific tenant based on the user ID.",
-     * tags={"Client Bills"},
-     * security={{"bearerAuth":{}}},
-     * @OA\Parameter(
-     * name="id",
-     * in="path",
-     * required=true,
-     * description="The User UUID of the tenant",
-     * @OA\Schema(type="string")
-     * ),
-     * @OA\Response(
-     * response=200,
-     * description="Successful operation",
-     * @OA\JsonContent(
-     * @OA\Property(property="message", type="string", example="latestBill Success"),
-     * @OA\Property(property="data", ref="#/components/schemas/BillResource")
-     * )
-     * ),
-     * @OA\Response(response=404, description="Bill not found"),
-     * @OA\Response(response=401, description="Unauthenticated")
+     *    path="/api/v1/tenants/{id}/bills/latest",
+     *    summary="Get the latest bill for a tenant",
+     *    description="Retrieves the most recent bill for a specific tenant based on the user ID.",
+     *    tags={"Client"},
+     *    security={{"bearerAuth":{}}},
+     *    @OA\Parameter(
+     *        name="id",
+     *        in="path",
+     *        required=true,
+     *        description="The User ID of the tenant",
+     *        @OA\Schema(type="string")
+     *    ),
+     *    @OA\Response(
+     *        response=200,
+     *        description="Successful operation",
+     *        @OA\JsonContent(
+     *            @OA\Property(property="success", type="boolean", example="true"),
+     *            @OA\Property(property="message", type="string", example="latestBill Success"),
+     *            @OA\Property(property="content", ref="#/components/schemas/BillResource"),
+     *            @OA\Property(property="status", type="integer", example="200")
+     *        )
+     *    ),
+     *    @OA\Response(
+     *        response=401,
+     *        description="Unauthenticated",
+     *        @OA\JsonContent(
+     *            @OA\Property(property="message", type="string", example="Unauthenticated")
+     *        )
+     *    ),
+     *    @OA\Response(
+     *        response=404,
+     *        description="Bill not found",
+     *        @OA\JsonContent(
+     *            @OA\Property(property="success", type="boolean", example="false"),
+     *            @OA\Property(property="message", type="string", example="Bill not found"),
+     *            @OA\Property(property="status", type="integer", example="404")
+     *        )
+     *    )
      * )
      */
   //bill_latest
@@ -66,28 +74,36 @@ class BillController extends Controller
 
      /**
      * @OA\Get(
-     * path="/api/tenants/{id}/bills/history",
-     * summary="Get the bill history for a tenant",
-     * description="Retrieves the bill history for the current year for a specific tenant.",
-     * tags={"Client Bills"},
-     * security={{"bearerAuth":{}}},
-     * @OA\Parameter(
-     * name="id",
-     * in="path",
-     * required=true,
-     * description="The User UUID of the tenant",
-     * @OA\Schema(type="string")
-     * ),
-     * @OA\Response(
-     * response=200,
-     * description="Successful operation",
-     * @OA\JsonContent(
-     * type="object",
-     * @OA\Property(property="message", type="string", example="billHistory Success"),
-     * @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/BillResource"))
-     * )
-     * ),
-     * @OA\Response(response=401, description="Unauthorized")
+     *     path="/api/v1/tenants/{id}/bills/history",
+     *     summary="Get the bill history for a tenant",
+     *     description="Retrieves the bill history for the current year for a specific tenant.",
+     *     tags={"Client"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="The User ID of the tenant",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example="true"),
+     *             @OA\Property(property="message", type="string", example="billHistory Success"),
+     *             @OA\Property(property="content", type="array", @OA\Items(ref="#/components/schemas/BillResource")),
+     *             @OA\Property(property="status", type="integer", example=200)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated")
+     *         )
+     *     ),
      * )
      */
     public function billHistory($tenantId)
