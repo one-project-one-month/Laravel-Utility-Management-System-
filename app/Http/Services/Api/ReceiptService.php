@@ -35,5 +35,15 @@ Class ReceiptService {
             "Utility Receipt - " . \Carbon\Carbon::now()->format('F'),
             "receipt-report"
         );
+
+        $invoice =     $receipt->invoice;
+        $invoice->receipt_sent = 1;
+        $invoice->save();
+
+    }
+
+    private function statusChange($receipt) {
+        $receipt->invoice->receipt_sent = true;
     }
 }
+
