@@ -195,7 +195,7 @@ class UserController extends Controller
             'user_name' => $request->userName,
             'email' => $request->email,
             'role' => $request->role,
-            'tenant_id' => $request->tenantId,
+            'tenant_id' => $request->tenantId??null,
             'is_active' => $request->isActive
         ];
 
