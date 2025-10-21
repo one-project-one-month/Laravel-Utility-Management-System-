@@ -37,13 +37,13 @@ Class ReceiptService {
         );
 
         $invoice =     $receipt->invoice;
-        $invoice->receipt_sent = 1;
-        $invoice->save();
+        $this->statusChange($invoice);
 
     }
 
-    private function statusChange($receipt) {
-        $receipt->invoice->receipt_sent = true;
+    private function statusChange($invoice) {
+         $invoice->receipt_sent = 1;
+         $invoice->save();
     }
 }
 
