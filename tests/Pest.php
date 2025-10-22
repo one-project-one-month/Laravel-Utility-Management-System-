@@ -55,7 +55,7 @@ function something()
 function adminCreate() {
     $user = User::create([
         "user_name" => "John Doe",
-        "email"     => "johndoe@gmail.com",
+        "email"     => "johndoe1@gmail.com",
         "password"  => Hash::make("Ks82787294"),
         "role"      => "Admin"
     ]);
