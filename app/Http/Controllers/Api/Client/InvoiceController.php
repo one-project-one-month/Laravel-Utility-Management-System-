@@ -72,8 +72,8 @@ class InvoiceController extends Controller
                 'Tenant not found', 404
             );
         }
-
-        $invoice = Invoice::with('bill')
+        
+        $invoice = Invoice::with('bill.totalUnit')
             ->whereHas('bill', function ($query) use ($tenant) {
                 $query->where('room_id', $tenant->room_id);
             })->latest()->first();
@@ -160,7 +160,7 @@ class InvoiceController extends Controller
         try {
             $startOfMonth = Carbon::now()->startOfMonth();
 
-            $invoices = Invoice::with('bill')
+            $invoices = Invoice::with('bill.totalUnit')
                 ->whereHas('bill', function ($query) use ($tenant, $startOfMonth) {
                     $query->where('room_id', $tenant->room_id);
                 })
