@@ -110,7 +110,8 @@ class AuthController extends Controller
             return $this->errorResponse('Your credential is wrong!',401);
         }
 
-        $accessToken = $user->createToken('access-token', ['*'], now()->addHour())->plainTextToken;
+       try{
+         $accessToken = $user->createToken('access-token', ['*'], now()->addHour())->plainTextToken;
 
         $refreshToken = Str::random(64);
 
@@ -136,6 +137,9 @@ class AuthController extends Controller
             false,                           // raw
             'Strict'                         // SameSite           // SameSite option (Strict / Lax / None)
         ));
+       } catch(\Exception $e) {
+        return $this->errorResponse($e->getMessage(),500);
+       }
     }
 
  /**

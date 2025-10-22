@@ -75,7 +75,7 @@ function staffCreate() {
 function tenantCreate() {
     $user = User::create([
         "user_name" => "John Doe",
-        "email"     => "johndoe@gmail.com",
+        "email"     => "johndoe21@gmail.com",
         "password"  => Hash::make("Ks82787294"),
         "role"      => "Tenant"
     ]);
