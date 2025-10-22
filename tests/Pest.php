@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\User;
+use App\Models\ContractType;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 /*
@@ -81,4 +83,16 @@ function tenantCreate() {
     ]);
 
     return $user;
+}
+
+
+function contractTypeCreate() {
+    $contractType = ContractType::create([
+                'name'       => '6 months',
+                'duration'   => 6,
+                'price'      => 800000.00,
+                'facilities' =>  DB::raw("ARRAY['Smart Tv','Washing Machine','Air-con']"),
+    ]);
+
+    return $contractType;
 }
