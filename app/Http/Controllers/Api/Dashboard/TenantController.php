@@ -52,7 +52,7 @@ class TenantController extends Controller
      */
     public function index()
     {
-        $tenants = Tenant::with(['occupants','contracts'])
+        $tenants = Tenant::with(['occupants','contracts.contractType','user'])
             ->paginate(config('pagination.perPage'));
 
         if ($tenants->isEmpty()) {
@@ -178,7 +178,7 @@ class TenantController extends Controller
 
     public function show(string $id)
     {
-        $tenant =Tenant::with(['occupants','contracts'])->find($id);
+        $tenant =Tenant::with(['occupants','contracts.contractType','user'])->find($id);
 
         if(!$tenant){
             return $this->errorResponse(

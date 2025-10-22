@@ -75,7 +75,9 @@ class TenantResource extends JsonResource
                 'phNumber'      => $this->phone_no,
                 'emergencyNo'   => $this->emergency_no,
                 'occupants'     => OccupantResource::collection($this->whenLoaded('occupants')),
-                'contracts'     => ContractResource::collection($this->whenLoaded('contracts'))
+                'contracts'     => ContractResource::collection($this->whenLoaded('contracts')),
+                'contractType' => new ContractTypeResource($this->whenLoaded('contractType')),
+                'user' => new UserResource($this->whenLoaded('user'))
             ];
     }
 }
