@@ -10,41 +10,50 @@ use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Resources\Api\Client\ReceiptResource;
 
-/**
- * @OA\Tag(
- * name="Client Receipts",
- * description="Endpoints for tenants to view their receipt information"
- * )
- */
 class ReceiptController extends Controller
 {
     use ApiResponse;
 
-
     /**
      * @OA\Get(
-     * path="/api/tenants/{id}/receipts/latest",
-     * summary="Get the latest receipt for a tenant",
-     * description="Retrieves the most recent receipt for a specific tenant.",
-     * tags={"Client Receipts"},
-     * security={{"bearerAuth":{}}},
-     * @OA\Parameter(
-     * name="id",
-     * in="path",
-     * required=true,
-     * description="The ID of the tenant",
-     * @OA\Schema(type="integer")
-     * ),
-     * @OA\Response(
-     * response=200,
-     * description="Receipt retrieved successfully",
-     * @OA\JsonContent(
-     * @OA\Property(property="message", type="string", example="Receipt retrieved successful"),
-     * @OA\Property(property="data", ref="#/components/schemas/ClientReceiptResource")
-     * )
-     * ),
-     * @OA\Response(response=404, description="Tenant or Receipt not found"),
-     * @OA\Response(response=401, description="Unauthorized")
+     *     path="/api/v1/tenants/{id}/receipts/latest",
+     *     summary="Get the latest receipt for a tenant",
+     *     description="Retrieves the most recent receipt for a specific tenant.",
+     *     tags={"Client"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="The ID of the tenant",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Receipt retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example="true"),
+     *             @OA\Property(property="message", type="string", example="Receipt retrieved successful"),
+     *             @OA\Property(property="content", ref="#/components/schemas/ClientReceiptResource"),
+     *             @OA\Property(property="status", type="integer", example=200)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Tenant not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example="false"),
+     *             @OA\Property(property="message", type="string", example="Tenant not found"),
+     *             @OA\Property(property="status", type="integer", example=404)
+     *         )
+     *     )
      * )
      */
     public function latest($tenantId)
@@ -74,7 +83,46 @@ class ReceiptController extends Controller
     }
 
     /**
-     * receipt history
+     * @OA\Get(
+     *     path="/api/v1/tenants/{id}/receipts/history",
+     *     summary="Get the receipt history for a tenant",
+     *     description="Retrieves the bill history for the current year for a specific tenant.",
+     *     tags={"Client"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="The ID of the tenant",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Receipt retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example="true"),
+     *             @OA\Property(property="message", type="string", example="Receipt History retrieved successful"),
+     *             @OA\Property(property="content", type="array", @OA\Items(ref="#/components/schemas/ClientReceiptResource")),
+     *             @OA\Property(property="status", type="integer", example=200)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Tenant not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example="false"),
+     *             @OA\Property(property="message", type="string", example="Tenant not found"),
+     *             @OA\Property(property="status", type="integer", example=404)
+     *         )
+     *     )
+     * )
      */
     public function history($tenantId){
 
@@ -101,7 +149,7 @@ class ReceiptController extends Controller
                 $query->where('tenant_id', $tenantId);
             })
             ->orderBy('receipts.paid_date','desc')
-            ->skip(1)
+            //->skip(1)
             ->get();
 
             if ($receipts->isEmpty()) {
@@ -112,7 +160,7 @@ class ReceiptController extends Controller
             }
 
             return $this->successResponse(
-                'Receipt retrieved successful',
+                'Receipt History retrieved successful',
                 ReceiptResource::collection($receipts),
                 200
             );

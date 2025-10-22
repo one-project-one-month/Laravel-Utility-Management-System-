@@ -3,15 +3,22 @@
 namespace App\Http\Controllers\Api\Dashboard;
 
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\Api\Dashboard\ReceiptResource;
+use App\Models\Invoice;
 use App\Models\Receipt;
 use App\Enums\PaymentMethod;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Helpers\ApiResponse;
-use App\Models\Invoice;
+use App\Http\Controllers\Controller;
+use App\Http\Jobs\SendReceiptEmailJob;
+use App\Http\Services\Api\MailService;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\Api\Dashboard\ReceiptResource;
+use App\Models\Bill;
+use App\Models\User;
+use Illuminate\Support\Facades\Log;
+
+use function Illuminate\Log\log;
 
 /**
  * @OA\Tag(
@@ -22,6 +29,13 @@ use Illuminate\Support\Facades\Validator;
 class ReceiptController extends Controller
 {
     use ApiResponse;
+
+    protected MailService $mailService;
+
+    public function __construct(MailService $mailService)
+    {
+        $this->mailService = $mailService;
+    }
 
 
      /**
@@ -206,6 +220,11 @@ class ReceiptController extends Controller
             'paid_date'      => $validatedData['paidDate'],
         ]);
 
+        $invoice = Invoice::find($validatedData['invoiceId']);
+        $invoice->update([
+            'status'    => 'Paid'
+        ]);
+
         return $this->successResponse(
             'Receipt updated successfully!',
             new ReceiptResource($receipt)
@@ -215,5 +234,15 @@ class ReceiptController extends Controller
                     $e->getMessage(),
                     500);
         }
+    }
+
+
+    public function send($id) {
+
+        SendReceiptEmailJob::dispatch($id);
+
+        return response()->json([
+            'success' => true,
+        ],200);
     }
 }

@@ -1,61 +1,128 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 💡 Utility Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 🔍 စနစ်အ‌ကြောင်း
 
-## About Laravel
+**Utility Management System** သည် လျှပ်စစ်၊ ရေဘီလ်၊ အခန်းငှား၊ ပစ္စည်းအငှား(‌ဥပမာ- ရေခဲသေတ္တာ၊ လေအေးပေးစက်) စသည်တို့ကို စနစ်တကျ စီမံခန့်ခွဲနိုင်အောင် ဖန်တီးထားသော Web Application ဖြစ်ပါသည်။ ဒီစနစ်ကို **Laravel Framework** ဖြင့် တည်ဆောက်ထားပြီး **API သီးသန့်ပိုင်း** ဖြစ်ပါသည်။
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🛠️ အသုံးပြုထားသော Technology များ
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Category       | Technology                   |
+| -------------- | ---------------------------- |
+| Framework      | Laravel 12                   |
+| Language       | PHP 8.3+                     |
+| Database       | PostgreSQL                   |
+| Authentication | Laravel Sanctum(Token-based) |
+| API Format     | RESTful                      |
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🎉 ပါ၀င်သော feature များ
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 👨‍🦱 အသုံးပြုသူ စီမံခန့်ခွဲမှု
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+-   အသုံးပြုသူများ (Admin / Staff / Tenant) ကို စုစည်း စီမံနိုင်ခြင်း။
+-   အသုံးပြုသူ အသစ်များ Create / Update လုပ်နိုင်ခြင်း။
+-   Role နှင့် Permission များ ချမှတ်နိုင်ခြင်း။
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 📊 မီတာအချက်အလက်
 
-### Premium Partners
+-   မီတာအမျိုးအစားများ (Electric / Water / Room / General) များ စီမံနိုင်ခြင်း။
+-   မီတာ Usage ကို System မှ တွက်ချက်ပေးခြင်း။
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## 📜 စာချုပ်စီမံခန့်ခွဲမှု
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+-   Admin / Staff များမှ စာချုပ်များကို Create / Update / Delete စီမံနိုင်ခြင်း။
+-   Tenant မှ စာချုပ်အချက်အလက်များ ကြည့်ရှုနိုင်ခြင်း။
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 📞 Customer Service
 
-## Security Vulnerabilities
+-   Tenant များအတွက် တိုက်ခန်းများ၏ ပြဿနာများကို ပေးပို့ခြင်း။
+-   Admin / Staff များမှ ဖြေရှင်းပြီးသော ပြဿနာများကို ပြန်လည်ပေးပို့ခြင်း။
+-   Tenant များမှ အစီရင်ခံစာ history များ ကြည့်နိုင်ခြင်း။
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 📂 Folder Structure
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```
+app/
+ |--Enums/
+ |--Http/
+ |  |--Controllers/
+ |  |--Helpers/
+ |  |--Jobs/
+ |  |--Middleware/
+ |  |--Services/
+ |--Models/
+ database/
+ |--factories/
+ |--migrations/
+ |--seeders/
+ routes/
+ |--api.php
+
+```
+
+---
+
+## 📦 Installation Guide
+
+```bash
+git clone https://github.com/Laravel-Utility-Management-System-
+```
+```
+cd Laravel-Utility-Management-System-
+```
+```
+composer install
+```
+```
+cp .env.example .env
+```
+```
+php artisan key:generate
+```
+```
+php artisan migrate --seed
+```
+```
+php artisan serve
+```
+
+---
+
+<table>
+ <thead>
+  <tr>
+   <th colspan="12">Contributors</th>
+  </tr>
+ </thead>
+    <tbody>
+        <tr>
+            <td><a href="https://github.com/KaungSettThu1873"><img src="https://github.com/KaungSettThu1873.png" width="60px;"/></a></td>
+            <td><a href="https://github.com/hteinlinaungt4"><img src="https://github.com/hteinlinaungt4.png" width="60px;"/></a></td>
+           <td><a href="https://github.com/404j361"><img src="https://github.com/404j361.png" width="60px;"/></a></td>
+          <td><a href="https://github.com/naingaunglwin-dev"><img src="https://github.com/naingaunglwin-dev.png" width="60px;"/></a></td>
+            <td><a href="https://github.com/winminthantdev"><img src="https://github.com/winminthantdev.png" width="60px;"/></a></td>
+            <td><a href="https://github.com/AungMinKo-tech"><img src="https://github.com/AungMinKo-tech.png" width="60px;"/></a></td>
+           <td><a href="https://github.com/Nyan-MinHtet"><img src="https://github.com/Nyan-MinHtet.png" width="60px;"/></a></td>
+           <td><a href="https://github.com/AKThu"><img src="https://github.com/AKThu.png" width="60px;"/></a></td>
+           <td><a href="https://github.com/MgKhai"><img src="https://github.com/MgKhai.png" width="60px;"/></a></td>
+           <td><a href="https://github.com/Moehtet-hlaing"><img src="https://github.com/Moehtet-hlaing.png" width="60px;"/></a></td>
+           <td><a href="https://github.com/crankygrey"><img src="https://github.com/crankygrey.png" width="60px;"/></a></td>
+           <td><a href="https://github.com/TueTu"><img src="https://github.com/TueTu.png" width="60px;"/></a></td>
+           <td><a href="https://github.com/MadThura"><img src="https://github.com/MadThura.png" width="60px;"/></a></td>
+           <td><a href="https://github.com/PhonePyaeKo"><img src="https://github.com/PhonePyaeKo.png" width="60px;"/></a></td>
+           <td><a href="https://github.com/PhyoHtetKyaw-Dev"><img src="https://github.com/PhyoHtetKyaw-Dev.png" width="60px;"/></a></td>
+           <td><a href="https://github.com/MyatThinzar1259"><img src="https://github.com/MyatThinzar1259.png" width="60px;"/></a></td>
+        </tr>
+    </tbody>
+</table>

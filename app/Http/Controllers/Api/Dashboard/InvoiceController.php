@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api\Dashboard;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Invoice;
+use Nette\Utils\Random;
+use Illuminate\Http\Request;
 use App\Http\Helpers\ApiResponse;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\Api\Dashboard\InvoiceResource;
-
 
 /**
  * @OA\Tag(
@@ -64,6 +65,33 @@ class InvoiceController extends Controller
             'Invoices retrieved successfully',
             $this->buildPaginatedResourceResponse(InvoiceResource::class, $invoices)
         );
+    }
+
+    public function store(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'billId'   => 'required',
+            'status'   => 'required'
+        ]);
+
+        if($validator->fails()) {
+            return $this->errorResponse($validator->errors(),422);
+        }
+
+        try
+        {
+            $validatedData = $validator->validated();
+
+            $data = Invoice::create([
+                'invoice_no' =>  $this->customInvoiceGenerator(),
+                'bill_id'    => $validatedData['billId'],
+                'status'     => $validatedData['status']
+            ]);
+
+            return $this->successResponse('Invoice created successfully!',new InvoiceResource($data),201);
+        } catch (\Exception $e)
+        {
+            return $this->errorResponse($e->getMessage(),500);
+        }
     }
 
 
@@ -182,4 +210,9 @@ class InvoiceController extends Controller
 
     //     return $this->successResponse('Invoice deleted successfully', null, 200);
     // }
+
+    private function customInvoiceGenerator() {
+        $customInvoice = "INV".'-'.fake()->randomNumber(8, true);
+        return  $customInvoice;
+    }
 }

@@ -19,16 +19,20 @@ Class BillingService {
         $this->mailService = $mailService;
     }
 
-    public function generateBillForRoom($user) {
+    public function generateBillForRoom($user,$customInvoice) {
 
         $bill = Bill::create($this->createBill($user));
 
         $this->totalUnitsCreate($bill->id, $bill->electricity_fee, $bill->water_fee);
 
        $invoice = Invoice::create([
-            'bill_id' => $bill->id,
+            'invoice_no' => $customInvoice,
+            'bill_id' => $bill->id
         ]);
 
+        $receipt = Receipt::create([
+            "invoice_id" => $invoice->id,
+        ]);
 
         $this->mailService->send(
             [
@@ -47,8 +51,6 @@ Class BillingService {
             );
 
     // $this->mailService->sendQueued([...], $user->email, "Utility Alert - " . \Carbon\Carbon::now()->format('F'), "billing-report");
-
-
 
     }
 

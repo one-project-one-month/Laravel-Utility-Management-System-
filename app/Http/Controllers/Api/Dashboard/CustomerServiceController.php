@@ -50,9 +50,26 @@ class CustomerServiceController extends Controller
      * @OA\Response(response=401, description="Unauthenticated")
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
-        $services = CustomerService::orderBy('created_at', 'desc')
+        $query = CustomerService::query();
+
+        // filter by category
+        if ($request->filled('filterCategory')) {
+            $query->where('category', $request->filterCategory);
+        }
+
+        // filter by status
+        if ($request->filled('filterStatus') && $request->filterStatus !== 'All') {
+            $query->where('status', $request->filterStatus);
+        }
+
+        // filter by priority
+        if ($request->filled('filterPriorityLevel')) {
+            $query->where('priority_level', $request->filterPriorityLevel);
+        }
+
+        $services = $query->orderBy('created_at', 'desc')
             ->orderBy('id', 'desc')
             ->paginate(config('pagination.perPage'));
 

@@ -1,5 +1,10 @@
 <?php
 
+use App\Models\User;
+use App\Models\ContractType;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -12,7 +17,7 @@
 */
 
 pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
 
 /*
@@ -44,4 +49,50 @@ expect()->extend('toBeOne', function () {
 function something()
 {
     // ..
+}
+
+
+function adminCreate() {
+    $user = User::create([
+        "user_name" => "John Doe",
+        "email"     => "johndoe@gmail.com",
+        "password"  => Hash::make("Ks82787294"),
+        "role"      => "Admin"
+    ]);
+
+    return $user;
+}
+
+function staffCreate() {
+    $user = User::create([
+        "user_name" => "John Staff",
+        "email"     => "johnstaff@gmail.com",
+        "password"  => Hash::make("Ks82787294"),
+        "role"      => "Staff"
+    ]);
+
+    return $user;
+}
+
+function tenantCreate() {
+    $user = User::create([
+        "user_name" => "John Doe",
+        "email"     => "johndoe21@gmail.com",
+        "password"  => Hash::make("Ks82787294"),
+        "role"      => "Tenant"
+    ]);
+
+    return $user;
+}
+
+
+function contractTypeCreate() {
+    $contractType = ContractType::create([
+                'name'       => '6 months',
+                'duration'   => 6,
+                'price'      => 800000.00,
+                'facilities' =>  DB::raw("ARRAY['Smart Tv','Washing Machine','Air-con']"),
+    ]);
+
+    return $contractType;
 }
