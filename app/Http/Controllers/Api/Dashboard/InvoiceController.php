@@ -52,7 +52,7 @@ class InvoiceController extends Controller
     // Display a listing of invoice
     public function index()
     {
-        $invoices= Invoice::with(['bill'])
+        $invoices= Invoice::with('bill.tenant')
             ->orderBy('invoices.created_at', 'desc')
             ->orderBy('invoices.id', 'desc')
             ->paginate(config('pagination.perPage'));
