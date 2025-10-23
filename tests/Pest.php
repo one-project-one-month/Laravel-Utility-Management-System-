@@ -1,6 +1,10 @@
 <?php
 
+use App\Models\Room;
 use App\Models\User;
+use App\Models\Tenant;
+use App\Models\Contract;
+use Illuminate\Support\Str;
 use App\Models\ContractType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -85,6 +89,34 @@ function tenantCreate() {
     return $user;
 }
 
+function tenant1Create($room) {
+    $tenant = Tenant::create([
+                'room_id'       => $room->id,
+                'name'         => fake()->name(),
+                'email'        => fake()->unique()->safeEmail(),
+                'nrc'          => '12/PZT(N)' . fake()->unique()->numberBetween(100000, 999999),
+                'phone_no'     => '09' . fake()->numerify('#########'),
+                'emergency_no' => '09' . fake()->numerify('#########'),
+    ]);
+
+    return $tenant;
+}
+
+function roomCreate() {
+    $room =      Room::create([
+                'id'               => Str::uuid()->toString(),
+                'room_no'          => 100,
+                'floor'            => 1,
+                'dimension'        => rand(200, 500) . ' sqft',
+                'no_of_bed_room'   => rand(1, 4),
+                'status'           => "Available",
+                'selling_price'    => rand(5000000, 20000000),
+                'max_no_of_people' => rand(1, 6),
+                'description'      => 'This is a description for Room ' . 100
+            ]);
+    return $room;
+}
+
 
 function contractTypeCreate() {
     $contractType = ContractType::create([
@@ -96,3 +128,17 @@ function contractTypeCreate() {
 
     return $contractType;
 }
+
+
+function contractCreate($contractType,$tenant) {
+    $contract = Contract::create([
+        'contract_type_id' => $contractType->id,
+        'room_id'   => $tenant->room_id,
+        'tenant_id' => $tenant->id,
+        'created_date' => '2020-01-01',
+        'expiry_date' => '2022-01-01'
+    ]);
+
+    return $contract;
+}
+
