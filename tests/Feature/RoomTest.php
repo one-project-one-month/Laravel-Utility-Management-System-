@@ -9,7 +9,7 @@ describe('Dashboard', function ()
 {
     test('get_room_lists',function()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
         roomCreate();
 
         $this->actingAs($admin,'sanctum')
@@ -29,7 +29,7 @@ describe('Dashboard', function ()
 
     test('update_room_information',function()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
         $room  = roomCreate();
 
         $this->actingAs($admin,'sanctum')
@@ -55,7 +55,7 @@ describe('Dashboard', function ()
 
     test('update_room_information_validation_error',function()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
         $room  = roomCreate();
 
         $this->actingAs($admin,'sanctum')
@@ -80,7 +80,7 @@ describe('Dashboard', function ()
 
     test('show_room_information',function()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
         $room  = roomCreate();
 
         $this->actingAs($admin,'sanctum')
@@ -97,7 +97,7 @@ describe('Dashboard', function ()
 
     test('returns_404_if_room_not_found',function()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
 
         $this->actingAs($admin,'sanctum')
             ->getJson($this->api.fake()->uuid())
@@ -123,7 +123,7 @@ describe('Dashboard', function ()
 
     test('non_tenant_cannot_access_rooms_api', function ()
     {
-        $tenant = tenantCreate();
+        $tenant = tenantUserCreate();
 
         $this->actingAs($tenant, 'sanctum')
             ->getJson($this->api)

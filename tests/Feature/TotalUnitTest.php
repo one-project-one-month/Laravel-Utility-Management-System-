@@ -19,7 +19,7 @@ describe('Dashboard', function () {
     });
 
     test('api cannot access by non admin user', function () {
-        $this->actingAs(tenantCreate(), 'sanctum')
+        $this->actingAs(tenantUserCreate(), 'sanctum')
             ->getJson(getApi())
             ->assertStatus(403)
             ->assertJsonStructure([
@@ -30,7 +30,7 @@ describe('Dashboard', function () {
     });
 
     test('get total units', function () {
-        $this->actingAs(adminCreate(), 'sanctum')
+        $this->actingAs(adminUserCreate(), 'sanctum')
             ->getJson(getApi())
             ->assertStatus(200)
             ->assertJsonStructure([
@@ -62,7 +62,7 @@ describe('Dashboard', function () {
     test('get specific total unit with id', function () {
         $max_id = TotalUnit::max('id');
 
-        $this->actingAs(adminCreate(), 'sanctum')
+        $this->actingAs(adminUserCreate(), 'sanctum')
             ->getJson(getApi($max_id))
             ->assertStatus(200)
             ->assertJsonStructure([
@@ -85,7 +85,7 @@ describe('Dashboard', function () {
         $max_id = TotalUnit::max('id');
         $nonExistingId = $max_id + 1;
 
-        $this->actingAs(adminCreate(), 'sanctum')
+        $this->actingAs(adminUserCreate(), 'sanctum')
             ->getJson(getApi($nonExistingId))
             ->assertStatus(404)
             ->assertJsonStructure([
