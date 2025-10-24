@@ -6,6 +6,7 @@ use App\Models\Tenant;
 use App\Models\Contract;
 use Illuminate\Support\Str;
 use App\Models\ContractType;
+use App\Models\Occupant;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -140,5 +141,16 @@ function contractCreate($contractType,$tenant) {
     ]);
 
     return $contract;
+}
+
+function occupantCreate($tenant) {
+    $occupant = Occupant::create([
+        'name' => "maung maung",
+        'nrc'   => '12/PZT(N)' . fake()->unique()->numberBetween(100000, 999999),
+        'relationship_to_tenant' => 'Child',
+        'tenant_id' => $tenant->id
+    ]);
+
+    return $occupant;
 }
 
