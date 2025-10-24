@@ -57,7 +57,7 @@ function something()
 }
 
 
-function adminCreate() {
+function adminUserCreate() {
     $user = User::create([
         "user_name" => "John Doe",
         "email"     => "johndoe1@gmail.com",
@@ -68,7 +68,7 @@ function adminCreate() {
     return $user;
 }
 
-function staffCreate() {
+function staffUserCreate() {
     $user = User::create([
         "user_name" => "John Staff",
         "email"     => "johnstaff@gmail.com",
@@ -79,7 +79,7 @@ function staffCreate() {
     return $user;
 }
 
-function tenantCreate() {
+function tenantUserCreate() {
     $user = User::create([
         "user_name" => "John Doe",
         "email"     => "johndoe21@gmail.com",
@@ -90,7 +90,7 @@ function tenantCreate() {
     return $user;
 }
 
-function tenant1Create($room) {
+function tenantCreate($room) {
     $tenant = Tenant::create([
                 'room_id'       => $room->id,
                 'name'         => fake()->name(),

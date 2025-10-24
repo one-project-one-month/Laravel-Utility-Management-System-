@@ -5,9 +5,9 @@ describe('Dashboard', function ()
 {
     test('get_contract_lists',function()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
         $room = roomCreate();
-        $tenant = tenant1Create($room);
+        $tenant = tenantCreate($room);
         $contractType = contractTypeCreate();
         contractCreate($contractType,$tenant);
 
@@ -28,9 +28,9 @@ describe('Dashboard', function ()
 
     test('store_new_contract',function()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
         $room = roomCreate();
-        $tenant = tenant1Create($room);
+        $tenant = tenantCreate($room);
         $contractType = contractTypeCreate();
 
         $this->actingAs($admin,'sanctum')
@@ -52,9 +52,9 @@ describe('Dashboard', function ()
 
     test('store_new_contract_validation_error',function()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
         $room = roomCreate();
-        $tenant = tenant1Create($room);
+        $tenant = tenantCreate($room);
         $contractType = contractTypeCreate();
 
         $this->actingAs($admin,'sanctum')
@@ -76,9 +76,9 @@ describe('Dashboard', function ()
 
     test('update_contract_information',function()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
         $room = roomCreate();
-        $tenant = tenant1Create($room);
+        $tenant = tenantCreate($room);
         $contractType = contractTypeCreate();
         $contract = contractCreate($contractType,$tenant);
 
@@ -101,9 +101,9 @@ describe('Dashboard', function ()
 
     test('update_contract_information_validation_error',function()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
         $room = roomCreate();
-        $tenant = tenant1Create($room);
+        $tenant = tenantCreate($room);
         $contractType = contractTypeCreate();
         $contract = contractCreate($contractType,$tenant);
 
@@ -125,9 +125,9 @@ describe('Dashboard', function ()
 
     test('show_contract_information',function ()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
         $room = roomCreate();
-        $tenant = tenant1Create($room);
+        $tenant = tenantCreate($room);
         $contractType = contractTypeCreate();
         $contract = contractCreate($contractType,$tenant);
 
@@ -145,7 +145,7 @@ describe('Dashboard', function ()
 
     test('returns_404_if_contract_not_found',function()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
 
         $this->actingAs($admin,'sanctum')
             ->getJson('/api/v1/contracts/'.fake()->uuid())
@@ -172,7 +172,7 @@ describe('Dashboard', function ()
 
     test('non_tenant_cannot_access_contracts_api', function ()
     {
-        $tenant = tenantCreate();
+        $tenant = tenantUserCreate();
 
         $this->actingAs($tenant, 'sanctum')
             ->getJson('/api/v1/contracts')

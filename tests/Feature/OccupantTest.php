@@ -9,9 +9,9 @@ describe('Dashboard',function()
 {
     test('get_occupants_lists',function ()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
         $room = roomCreate();
-        $tenant = tenant1Create($room);
+        $tenant = tenantCreate($room);
         occupantCreate($tenant);
 
         $this->actingAs($admin,'sanctum')
@@ -31,9 +31,9 @@ describe('Dashboard',function()
 
     test('store_new_occupant',function ()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
         $room = roomCreate();
-        $tenant = tenant1Create($room);
+        $tenant = tenantCreate($room);
 
         $this->actingAs($admin,'sanctum')
              ->postJson($this->api,[
@@ -53,9 +53,9 @@ describe('Dashboard',function()
 
     test('store_new_occupant_validation_error',function ()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
         $room = roomCreate();
-        $tenant = tenant1Create($room);
+        $tenant = tenantCreate($room);
 
         $this->actingAs($admin,'sanctum')
              ->postJson($this->api,[
@@ -74,9 +74,9 @@ describe('Dashboard',function()
 
     test('update_occupant_information',function ()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
         $room = roomCreate();
-        $tenant = tenant1Create($room);
+        $tenant = tenantCreate($room);
         $occupant = occupantCreate($tenant);
 
         $this->actingAs($admin,'sanctum')
@@ -96,9 +96,9 @@ describe('Dashboard',function()
 
     test('update_occupant_information_validation_error',function ()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
         $room = roomCreate();
-        $tenant = tenant1Create($room);
+        $tenant = tenantCreate($room);
         $occupant = occupantCreate($tenant);
 
         $this->actingAs($admin,'sanctum')
@@ -117,9 +117,9 @@ describe('Dashboard',function()
 
     test('show_occupant_information',function ()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
         $room = roomCreate();
-        $tenant = tenant1Create($room);
+        $tenant = tenantCreate($room);
         $occupant = occupantCreate($tenant);
 
         $this->actingAs($admin,'sanctum')
@@ -135,9 +135,9 @@ describe('Dashboard',function()
 
     test('returns_404_if_occupant_not_found',function ()
     {
-        $admin = adminCreate();
+        $admin = adminUserCreate();
         $room = roomCreate();
-        $tenant = tenant1Create($room);
+        $tenant = tenantCreate($room);
         $occupant = occupantCreate($tenant);
 
         $this->actingAs($admin,'sanctum')
@@ -162,7 +162,7 @@ describe('Dashboard',function()
 
     test('non_tenant_cannot_access_occupants_api', function ()
     {
-        $tenant = tenantCreate();
+        $tenant = tenantUserCreate();
 
         $this->actingAs($tenant, 'sanctum')
             ->getJson($this->api)
