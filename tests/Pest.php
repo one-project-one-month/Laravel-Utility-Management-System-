@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Bill;
 use App\Models\Room;
 use App\Models\User;
 use App\Models\Tenant;
@@ -7,6 +8,7 @@ use App\Models\Contract;
 use Illuminate\Support\Str;
 use App\Models\ContractType;
 use App\Models\Occupant;
+use App\Models\TotalUnit;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -154,3 +156,41 @@ function occupantCreate($tenant) {
     return $occupant;
 }
 
+function billCreate($room,$tenant) {
+    $rental_fee = rand(5000000, 20000000);
+    $electricity_fee = rand(5000, 100000);
+     $water_fee =  rand(5000, 50000);
+    $fine_fee  =  rand(0, 10000);
+    $service_fee = 10000;
+    $ground_fee = 5000;
+    $car_parking_fee = rand(5000, 100000);
+    $wifi_fee =  rand(30000, 200000);
+
+    $totalAmount =  $rental_fee + $electricity_fee + $water_fee + $fine_fee + $service_fee + $ground_fee + $car_parking_fee + $wifi_fee ;
+    $bill = Bill::create([
+                    'room_id' => $room->id,
+                    'tenant_id' =>  $tenant->id,
+                    'rental_fee' => $rental_fee,
+                    'electricity_fee' =>  $electricity_fee,
+                    'water_fee' =>   $water_fee,
+                    'fine_fee' =>  $fine_fee,
+                    'service_fee' => $service_fee ,
+                    'ground_fee'  => $ground_fee,
+                    'car_parking_fee' =>   $car_parking_fee,
+                    'wifi_fee' =>   $wifi_fee,
+                    'total_amount' =>  $totalAmount,
+                    'due_date' => fake()->dateTimeBetween('2020-01-01', 'now'),
+    ]);
+
+    return $bill;
+}
+
+function totalUnitCreate($bill) {
+    $totalUnit = TotalUnit::create([
+              'bill_id'           => $bill->id,
+              'electricity_units' => $bill->electricity_fee / config('units.electric'),
+              'water_units' =>  $bill->water_fee / config('units.water')
+    ]);
+
+    return $totalUnit;
+}
