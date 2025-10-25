@@ -39,6 +39,7 @@ class BillResource extends JsonResource
         return [
             'id' => $this->id,
             'roomId' => $this->room_id,
+            'userId' => $this->tenant->user->id,
             'rentalFee' => $this->rental_fee,
             'electricityFee' => $this->electricity_fee,
             'waterFee' => $this->water_fee,
@@ -49,7 +50,7 @@ class BillResource extends JsonResource
             'wifiFee' => $this->wifi_fee,
             'totalAmount' => $this->total_amount,
             'dueDate' => $this->due_date,
-            // 'totalUnit' => $this->totalUnit,
+            'totalUnit' => new TotalUnitResource($this->whenLoaded('totalUnit')),
             // 'invoice' => $this->invoice,
         ];
     }
