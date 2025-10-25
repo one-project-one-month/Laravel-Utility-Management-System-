@@ -4,11 +4,12 @@ use App\Models\Bill;
 use App\Models\Room;
 use App\Models\User;
 use App\Models\Tenant;
+use App\Models\Invoice;
 use App\Models\Contract;
-use Illuminate\Support\Str;
-use App\Models\ContractType;
 use App\Models\Occupant;
 use App\Models\TotalUnit;
+use Illuminate\Support\Str;
+use App\Models\ContractType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -193,4 +194,15 @@ function totalUnitCreate($bill) {
     ]);
 
     return $totalUnit;
+}
+
+function invoiceCreate($bill) {
+    $invoice = Invoice::create([
+        'invoice_no' => "INV".'-'.fake()->randomNumber(8, true),
+        'bill_id'    => $bill->id,
+        'status'     => "Pending",
+        'receipt_sent' => 0
+    ]);
+
+    return $invoice;
 }
