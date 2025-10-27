@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Bill;
+use App\Models\Receipt;
 use App\Models\Room;
 use App\Models\User;
 use App\Models\Tenant;
@@ -205,4 +206,14 @@ function invoiceCreate($bill) {
     ]);
 
     return $invoice;
+}
+
+function receiptCreate($invoice) {
+    $receipt = Receipt::create([
+        'invoice_id' => $invoice->id,
+        'payment_method' => 'Cash',
+        'paid_date' => fake()->dateTimeBetween('2020-01-01', now())
+    ]);
+
+    return $receipt;
 }
