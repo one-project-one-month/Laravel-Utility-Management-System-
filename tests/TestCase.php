@@ -11,4 +11,5 @@ abstract class TestCase extends BaseTestCase
      * @var string
      */
     public string $api; 
+    public string $tenantApi; 
 }
