@@ -48,17 +48,42 @@ describe('Tenant', function () {
                 'status',
             ]);
     });
+    test('guest_cannot_store_service_request', function(){
+        $room = roomCreate();
+        $tenant = tenantCreate($room);
+        $this->postJson("$this->tenantApi/$tenant->id/customer-services/create", [
+                "roomId"        =>  $room->id,
+                "category"       => 'Complain',
+                "description"    => 'Distinctio ipsa facilis fuga earum nobis optio commodi.',
+                "status"         => 'Pending',
+                "priorityLevel" => 'Low',
+                "issuedDate"    => '2025-01-01'
+        ])
+        ->assertStatus(401);
+    });
     test('get_customer_services_history', function(){
         $room = roomCreate();
         $tenant = tenantCreate($room);
         $tenantUser = tenantUserCreate($tenant);
+        customerServiceCreate($room);
         $this->actingAs($tenantUser, 'sanctum')
         ->getJson("$this->tenantApi/$tenant->id/customer-services/history")
         ->assertJsonStructure([
             'success',
+            'message',
             'content',
             'status'
         ])
         ->assertStatus(200);
     });
+    test('guest_cannot_get_service_history',function(){
+        $room = roomCreate();
+        $tenant = tenantCreate($room);
+        $this
+        ->getJson("$this->tenantApi/$tenant->id/customer-services/history")
+        ->assertJsonStructure([
+            'message',
+        ])
+        ->assertStatus(401);
+    } );
 });
