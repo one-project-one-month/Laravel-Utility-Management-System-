@@ -112,7 +112,7 @@ function tenantCreate($room) {
 function roomCreate() {
     $room =      Room::create([
                 'id'               => Str::uuid()->toString(),
-                'room_no'          => 100,
+                'room_no'          => rand(000, 500),
                 'floor'            => 1,
                 'dimension'        => rand(200, 500) . ' sqft',
                 'no_of_bed_room'   => rand(1, 4),
