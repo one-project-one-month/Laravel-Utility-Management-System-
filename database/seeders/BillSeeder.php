@@ -19,6 +19,8 @@ class BillSeeder extends Seeder
             $users = User::with(['tenant'])->where('role','Tenant')->get();
 
             foreach($users as $user) {
+                for ($i = 0; $i < 24; $i++) {
+
                 $rental_fee = rand(5000000, 20000000);
                 $electricity_fee = rand(5000, 100000);
                 $water_fee =  rand(5000, 50000);
@@ -29,6 +31,10 @@ class BillSeeder extends Seeder
                 $wifi_fee =  rand(30000, 200000);
 
                 $totalAmount =  $rental_fee + $electricity_fee + $water_fee + $fine_fee + $service_fee + $ground_fee + $car_parking_fee + $wifi_fee ;
+
+                $createdAt = now()->subMonths(24 - $i);
+                $updatedAt = (clone $createdAt)->addDays(rand(1, 5));
+
                 Bill::create([
                     'room_id' => $user->tenant->room_id,
                     'tenant_id' =>  $user->tenant_id,
@@ -41,8 +47,11 @@ class BillSeeder extends Seeder
                     'car_parking_fee' =>   $car_parking_fee,
                     'wifi_fee' =>   $wifi_fee,
                     'total_amount' =>  $totalAmount,
-                    'due_date' => fake()->dateTimeBetween('2020-01-01', 'now')
+                    'due_date' => $createdAt->copy()->addDays(10),
+                    'created_at' => $createdAt,
+                    'updated_at' => $updatedAt
                 ]);
+            }
             }
 }
 }

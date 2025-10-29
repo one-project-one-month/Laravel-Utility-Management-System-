@@ -41,7 +41,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rooms');
+
 
         // Rollback: remove the constraint
         DB::statement('ALTER TABLE rooms DROP CONSTRAINT IF EXISTS rooms_status_check');
@@ -53,6 +53,6 @@ ADD CONSTRAINT rooms_status_check
 CHECK (status IN ('Available', 'Rented', 'Purchased', 'In Maintenance'))
         ");
 
-
+  Schema::dropIfExists('rooms');
     }
 };

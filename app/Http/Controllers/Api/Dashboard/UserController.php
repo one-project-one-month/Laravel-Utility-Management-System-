@@ -195,7 +195,7 @@ class UserController extends Controller
             'user_name' => $request->userName,
             'email' => $request->email,
             'role' => $request->role,
-            'tenant_id' => $request->tenantId,
+            'tenant_id' => $request->tenantId??null,
             'is_active' => $request->isActive
         ];
 
@@ -236,11 +236,12 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-        $user->load('tenant');
 
         if (!$user) {
             return $this->errorResponse('User not found.', 404);
         }
+
+        $user->load('tenant');
 
         return $this->successResponse('User Fetched Successfully', new UserResource($user));
     }

@@ -139,7 +139,7 @@ class ContractController extends Controller
 
         $validator = Validator::make($request->all(), [
             'roomNo'      => 'required|uuid|exists:rooms,id',
-            'contractId'  => 'required|exists:contract_types,id',
+            'contractTypeId'  => 'required|exists:contract_types,id',
             'tenantId'    => 'required|exists:tenants,id',
             'createdDate' => 'required|date',
             'expiryDate'  => 'required|date',
@@ -160,7 +160,7 @@ class ContractController extends Controller
         };
 
         $data = [
-            'contract_type_id' => $validatedData['contractId'],
+            'contract_type_id' => $validatedData['contractTypeId'],
             'tenant_id'        => $validatedData['tenantId'],
             'room_id'          => $validatedData['roomNo'],
             'created_date'      => $validatedData['createdDate'],
@@ -215,7 +215,7 @@ class ContractController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'roomNo'      => 'required|uuid|exists:rooms,id',
-            'contractId'  => 'required|exists:contract_types,id',
+            'contractTypeId'  => 'required|exists:contract_types,id',
             'tenantId'    => 'required|exists:tenants,id',
             'createdDate' => 'required|date',
             'expiryDate'  => 'required|date',
@@ -236,7 +236,7 @@ class ContractController extends Controller
         if ($room->status === RoomStatus::Available->value || $contract->room_id === $validatedData['roomNo']) {
 
             $data = [
-                'contract_type_id' => $validatedData['contractId'],
+                'contract_type_id' => $validatedData['contractTypeId'],
                 'tenant_id'        => $validatedData['tenantId'],
                 'room_id'          => $validatedData['roomNo'],
                 'created_date'     => $validatedData['createdDate'],
@@ -246,7 +246,7 @@ class ContractController extends Controller
             $contract->update($data);
             $contract->refresh();
 
-            return $this->successResponse('Contract updated successfully', new ContractResource($contract));
+            return $this->successResponse('Contract updated successfully', new ContractResource($contract),200);
         }
 
         return $this->errorResponse('Room is not Available', 409);

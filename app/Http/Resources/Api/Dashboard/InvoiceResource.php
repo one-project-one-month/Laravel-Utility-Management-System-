@@ -4,6 +4,7 @@ namespace App\Http\Resources\Api\Dashboard;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Api\Dashboard\BillResource;
 
 
 
@@ -52,35 +53,12 @@ class InvoiceResource extends JsonResource
             'invoiceNo' => $this->invoice_no,
             'billId' => $this->bill_id,
             'status' => $this->status,
+            'receiptSent' => $this->receipt_sent,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
-
-        //Bill info
-        'bill' => $this->whenLoaded('bill', function () {
-            return [
-                'id'              => $this->bill->id,
-                'roomId'         => $this->bill->room_id,
-                'userId'         => $this->bill->user_id,
-                'rentalFee'      => $this->bill->rental_fee,
-                'electricityFee' => $this->bill->electricity_fee,
-                'waterFee'       => $this->bill->water_fee,
-                'fineFee'        => $this->bill->fine_fee,
-                'serviceFee'     => $this->bill->service_fee,
-                'groundFee'      => $this->bill->ground_fee,
-                'carParkingFee' => $this->bill->car_parking_fee,
-                'wifiFee'        => $this->bill->wifi_fee,
-                'totalAmount'    => $this->bill->total_amount,
-                'dueDate'        => $this->bill->due_date,
-                'createdAt'       => $this->bill->created_at,
-                'updatedAt'       => $this->bill->updated_at,
-            ];
-        }),
+            'bill' => new BillResource($this->whenLoaded('bill')),
         ];
     }
 }
-
-
-
-
 
 ?>

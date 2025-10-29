@@ -47,9 +47,9 @@ class OccupantController extends Controller
      */
     public function index()
     {
-        $occupants = Occupant::get();
+        $occupants = Occupant::paginate(config('pagination.perPage'));;
 
-        return $this->successResponse('Occupants retrieved successfully',OccupantResource::collection($occupants));
+        return $this->successResponse('Occupants retrieved successfully',$this->buildPaginatedResourceResponse(OccupantResource::class,$occupants));
     }
 
     public function store(Request $request)

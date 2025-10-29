@@ -1,5 +1,20 @@
 <?php
 
+use App\Models\Bill;
+use App\Models\Receipt;
+use App\Models\Room;
+use App\Models\User;
+use App\Models\Tenant;
+use App\Models\Invoice;
+use App\Models\Contract;
+use App\Models\Occupant;
+use App\Models\TotalUnit;
+use Illuminate\Support\Str;
+use App\Models\ContractType;
+use App\Models\CustomerService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -12,7 +27,7 @@
 */
 
 pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
 
 /*
@@ -44,4 +59,176 @@ expect()->extend('toBeOne', function () {
 function something()
 {
     // ..
+}
+
+
+function adminUserCreate() {
+    $user = User::create([
+        "user_name" => "John Doe",
+        "email"     => "johndoe1@gmail.com",
+        "password"  => Hash::make("Ks82787294"),
+        "role"      => "Admin"
+    ]);
+
+    return $user;
+}
+
+function staffUserCreate() {
+    $user = User::create([
+        "user_name" => "John Staff",
+        "email"     => "johnstaff@gmail.com",
+        "password"  => Hash::make("Ks82787294"),
+        "role"      => "Staff"
+    ]);
+
+    return $user;
+}
+
+function tenantUserCreate($tenant = null) {
+    $user = User::create([
+        "user_name" => "John Doe",
+        "email"     => "johndoe21@gmail.com",
+        "password"  => Hash::make("Ks82787294"),
+        "role"      => "Tenant",
+        "tenant_id" => $tenant->id?? null,
+    ]);
+
+    return $user;
+}
+
+function tenantCreate($room) {
+    $tenant = Tenant::create([
+                'room_id'       => $room->id,
+                'name'         => fake()->name(),
+                'email'        => fake()->unique()->safeEmail(),
+                'nrc'          => '12/PZT(N)' . fake()->unique()->numberBetween(100000, 999999),
+                'phone_no'     => '09' . fake()->numerify('#########'),
+                'emergency_no' => '09' . fake()->numerify('#########'),
+    ]);
+
+    return $tenant;
+}
+
+function roomCreate() {
+    $room =      Room::create([
+                'id'               => Str::uuid()->toString(),
+                'room_no'          => rand(000, 500),
+                'floor'            => 1,
+                'dimension'        => rand(200, 500) . ' sqft',
+                'no_of_bed_room'   => rand(1, 4),
+                'status'           => "Available",
+                'selling_price'    => rand(5000000, 20000000),
+                'max_no_of_people' => rand(1, 6),
+                'description'      => 'This is a description for Room ' . 100
+            ]);
+    return $room;
+}
+
+
+function contractTypeCreate() {
+    $contractType = ContractType::create([
+                'name'       => '6 months',
+                'duration'   => 6,
+                'price'      => 800000.00,
+                'facilities' =>  DB::raw("ARRAY['Smart Tv','Washing Machine','Air-con']"),
+    ]);
+
+    return $contractType;
+}
+
+
+function contractCreate($contractType,$tenant) {
+    $contract = Contract::create([
+        'contract_type_id' => $contractType->id,
+        'room_id'   => $tenant->room_id,
+        'tenant_id' => $tenant->id,
+        'created_date' => '2020-01-01',
+        'expiry_date' => '2022-01-01'
+    ]);
+
+    return $contract;
+}
+function occupantCreate($tenant) {
+    $occupant = Occupant::create([
+        'name' => "maung maung",
+        'nrc'   => '12/PZT(N)' . fake()->unique()->numberBetween(100000, 999999),
+        'relationship_to_tenant' => 'Child',
+        'tenant_id' => $tenant->id
+    ]);
+
+    return $occupant;
+}
+
+function billCreate($room,$tenant) {
+    $rental_fee = rand(5000000, 20000000);
+    $electricity_fee = rand(5000, 100000);
+     $water_fee =  rand(5000, 50000);
+    $fine_fee  =  rand(0, 10000);
+    $service_fee = 10000;
+    $ground_fee = 5000;
+    $car_parking_fee = rand(5000, 100000);
+    $wifi_fee =  rand(30000, 200000);
+
+    $totalAmount =  $rental_fee + $electricity_fee + $water_fee + $fine_fee + $service_fee + $ground_fee + $car_parking_fee + $wifi_fee ;
+    $bill = Bill::create([
+                    'room_id' => $room->id,
+                    'tenant_id' =>  $tenant->id,
+                    'rental_fee' => $rental_fee,
+                    'electricity_fee' =>  $electricity_fee,
+                    'water_fee' =>   $water_fee,
+                    'fine_fee' =>  $fine_fee,
+                    'service_fee' => $service_fee ,
+                    'ground_fee'  => $ground_fee,
+                    'car_parking_fee' =>   $car_parking_fee,
+                    'wifi_fee' =>   $wifi_fee,
+                    'total_amount' =>  $totalAmount,
+                    'due_date' => fake()->dateTimeBetween('2020-01-01', 'now'),
+    ]);
+
+    return $bill;
+}
+
+function totalUnitCreate($bill) {
+    $totalUnit = TotalUnit::create([
+              'bill_id'           => $bill->id,
+              'electricity_units' => $bill->electricity_fee / config('units.electric'),
+              'water_units' =>  $bill->water_fee / config('units.water')
+    ]);
+
+    return $totalUnit;
+}
+
+function invoiceCreate($bill) {
+    $invoice = Invoice::create([
+        'invoice_no' => "INV".'-'.fake()->randomNumber(8, true),
+        'bill_id'    => $bill->id,
+        'status'     => "Pending",
+        'receipt_sent' => 0
+    ]);
+
+    return $invoice;
+}
+
+function receiptCreate($invoice) {
+    $receipt = Receipt::create([
+        'invoice_id' => $invoice->id,
+        'payment_method' => 'Cash',
+        'paid_date' => fake()->dateTimeBetween('2020-01-01', now())
+    ]);
+
+    return $receipt;
+}
+
+function customerServiceCreate($room){
+    $customer_service = CustomerService::create(
+                [
+                    "room_id"        => $room->id,
+                    "category"       => fake()->randomElement(['Complain','Maintenance','Other']),
+                    "description"    => fake()->sentence(),
+                    "status"         => fake()->randomElement(['Pending','Ongoing','Resolved']),
+                    "priority_level" => fake()->randomElement(['Low', 'Medium', 'High']),
+                    "issued_date"    => fake()->dateTimeBetween('2020-01-01')
+                ]
+            );
+            return $customer_service;
 }

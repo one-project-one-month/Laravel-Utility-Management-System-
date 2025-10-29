@@ -181,16 +181,29 @@ class InvoiceController extends Controller
                 return $this->errorResponse('Invoice not found', 404);
             }
 
-            $validated = $request->validate([
+            $validator = Validator::make($request->all(),[
                 'billId' => 'sometimes|exists:bills,id',
                 'status' => 'sometimes|string|in:Pending,Paid,Overdue',
             ]);
+
+            if($validator->fails()) {
+                return $this->errorResponse($validator->errors(),422);
+            }
+
+            $validatedData = $validator->validated();
+
+            $validated = [
+                'bill_id' => $validatedData['billId'],
+                'status'  => $validatedData['status']
+            ];
+
 
             $invoice->update($validated);
 
             return $this->successResponse(
                 'Invoice updated successfully',
-                new InvoiceResource($invoice)
+                new InvoiceResource($invoice),
+                200
             );
         }catch (\Exception $e) {
             return $this->errorResponse('Internal Server Error '.$e->getMessage(), 500);
@@ -212,8 +225,7 @@ class InvoiceController extends Controller
     // }
 
     private function customInvoiceGenerator() {
-            $number =  fake()->randomNumber(8, true);
-            $customInvoice = "INV".'-'.$number;
+        $customInvoice = "INV".'-'.fake()->randomNumber(8, true);
         return  $customInvoice;
     }
 }
