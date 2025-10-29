@@ -15,7 +15,7 @@ class CustomerServiceSeeder extends Seeder
     {
         $roomIds = Room::pluck('id');
 
-        for($i = 1; $i <= 20; $i++) {
+        for($i = 1; $i <= 100; $i++) {
             CustomerService::create(
                 [
                     "room_id"        => $roomIds->random(),
