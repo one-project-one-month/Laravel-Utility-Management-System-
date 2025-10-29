@@ -71,10 +71,15 @@ describe('Tenant', function () {
         ->assertJsonStructure([
             'success',
             'message',
-            'content',
+            'content'=> [
+                    'data',
+                    'meta',
+                    'links'
+                ],
             'status'
         ])
-        ->assertStatus(200);
+        ->assertStatus(200)
+        ->assertJsonCount(1, 'content.data');
     });
     test('guest_cannot_get_service_history',function(){
         $room = roomCreate();
