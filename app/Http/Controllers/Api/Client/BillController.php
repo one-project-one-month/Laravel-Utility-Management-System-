@@ -116,12 +116,16 @@ class BillController extends Controller
 
         $year = date('Y');
 
-        $billHistory = Bill::where('tenant_id', $tenantId)->whereYear('created_at', $year)->get();
+        $billHistory = Bill::where('tenant_id', $tenantId)
+                            ->whereYear('created_at', $year)
+                            ->paginate(config('pagination.perPage'));
 
         if ($billHistory->isEmpty()) {
             return $this->successResponse("Bill history is empty",BillResource::collection($billHistory), 200);
         }
 
-        return $this->successResponse("billHistory Success",BillResource::collection($billHistory), 200);
+        return $this->successResponse(
+            "billHistory Success",
+            $this->buildPaginatedResourceResponse(BillResource::class, $billHistory));
     }
 }

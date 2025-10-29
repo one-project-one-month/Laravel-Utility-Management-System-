@@ -45,10 +45,14 @@ describe('Tenant', function(){
         ->assertJsonStructure([
             'success',
             'message',
-            'content',
+            'content'=> [
+                    'data',
+                    'meta',
+                    'links'
+                ],
             'status'
         ])
-        ->assertJsonCount(1, 'content');
+        ->assertJsonCount(1, 'content.data');
         Carbon::setTestNow();
 
     });
@@ -69,12 +73,16 @@ describe('Tenant', function(){
         ->assertStatus(200)
         ->assertJsonStructure([
             'success',
-            'content',
+            'content'=> [
+                    'data',
+                    'meta',
+                    'links'
+                ],
             'message',
             'status'
         ])
-        ->assertJsonCount(1, 'content')
-        ->assertJsonPath('content.0.id' , $pastInvoice->id);
+        ->assertJsonCount(1, 'content.data')
+        ->assertJsonPath('content.data.0.id' , $pastInvoice->id);
         Carbon::setTestNow();
 
     });

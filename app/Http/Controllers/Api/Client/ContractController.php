@@ -60,11 +60,12 @@ class ContractController extends Controller
 //            return $this->errorResponse('Unathorized', 401);
 //        }
 
-        $contract = Contract::with(['contractType', 'tenant'])->where('tenant_id' , $tenantId)->get();
+        $contract = Contract::with(['contractType', 'tenant'])
+                    ->where('tenant_id' , $tenantId)
+                    ->paginate(config('pagination.perPage'));
         if (!$contract) {
             return $this->errorResponse('Contract not found.', 404);
         }
-
-        return $this->successResponse('Contract retrieved successfully.',ContractResource::collection($contract), 200);
+        return $this->successResponse('Contract retrieved successfully.',$this->buildPaginatedResourceResponse(ContractResource::class, $contract));
     }
 }

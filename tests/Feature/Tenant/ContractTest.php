@@ -17,11 +17,15 @@ describe('Tenant', function(){
         ->getJson($this->tenantApi)
         ->assertJsonStructure([
             'success',
-            'content',
+            'content'=> [
+                    'data',
+                    'meta',
+                    'links'
+                ],
             'status'
         ])
         ->assertStatus(200)
-        ->assertJsonCount(3,'content');
+        ->assertJsonCount(3,'content.data');
     });
     test('test_unauthenticated_user_cannot_get_contracts', function(){
         

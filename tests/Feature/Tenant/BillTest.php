@@ -34,7 +34,11 @@ describe('Tenant', function(){
         ->assertJsonStructure([
             'success',
             'message',
-            'content',
+            'content'=> [
+                    'data',
+                    'meta',
+                    'links'
+                ],
             'status'
         ])
         ->assertStatus(200);
