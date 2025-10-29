@@ -19,10 +19,13 @@ class ReceiptSeeder extends Seeder
         $invoices = Invoice::with(['bill'])->get();
 
         foreach ($invoices as $invoice) {
+            $paidDate = fake()->dateTimeBetween( $invoice->created_at, $invoice->created_at->copy()->addDays(10));
             Receipt::create([
                 'invoice_id' => $invoice->id,
                 'payment_method' => Arr::random(['Cash','Mobile Banking']),
-                'paid_date' => fake()->dateTimeBetween(Carbon::now()->subDay(),now())
+                'paid_date' =>  $paidDate ,
+                'created_at' => $invoice->created_at,
+                'updated_at' =>  $paidDate
             ]);
         }
     }
