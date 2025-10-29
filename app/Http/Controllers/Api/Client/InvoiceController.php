@@ -164,7 +164,7 @@ class InvoiceController extends Controller
                 ->whereHas('bill', function ($query) use ($tenant, $startOfMonth) {
                     $query->where('room_id', $tenant->room_id);
                 })
-                ->where('created_at', '<', $startOfMonth)
+                ->orderBy('created_at', 'desc')
                 ->paginate(config('pagination.perPage'));
 
             if ($invoices->isEmpty()) {

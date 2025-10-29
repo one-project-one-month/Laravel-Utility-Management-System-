@@ -63,6 +63,7 @@ class InvoiceResource extends JsonResource
                 'wifiFee'           => $this->bill->wifi_fee,
                 'totalAmount'       => $this->bill->total_amount,
                 'dueDate'           => $this->bill->due_date,
+                'createdAt'         => $this->created_at,
                 'totalUnit'         => [
                     'electricityUnits'  => $this->bill->totalUnit->electricity_units,
                     'waterUnits'       => $this->bill->totalUnit->water_units,

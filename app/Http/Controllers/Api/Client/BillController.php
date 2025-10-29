@@ -117,7 +117,7 @@ class BillController extends Controller
         $year = date('Y');
 
         $billHistory = Bill::where('tenant_id', $tenantId)
-                            ->whereYear('created_at', $year)
+                            ->orderBy('created_at', 'desc')
                             ->paginate(config('pagination.perPage'));
 
         if ($billHistory->isEmpty()) {
