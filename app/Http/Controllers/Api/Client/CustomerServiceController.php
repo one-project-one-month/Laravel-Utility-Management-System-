@@ -172,7 +172,7 @@ class CustomerServiceController extends Controller
             $query->where('status', 'ILIKE', $status);
         }
 
-        $services = $query->orderBy('issued_date', 'desc')
+        $services = $query->orderBy('created_at', 'desc')
                           ->paginate(config('pagination.perPage'));
 
         return $this->successResponse(
