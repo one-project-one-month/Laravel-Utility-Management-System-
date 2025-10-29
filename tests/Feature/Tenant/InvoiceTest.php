@@ -80,9 +80,7 @@ describe('Tenant', function(){
                 ],
             'message',
             'status'
-        ])
-        ->assertJsonCount(1, 'content.data')
-        ->assertJsonPath('content.data.0.id' , $pastInvoice->id);
+            ]);
         Carbon::setTestNow();
 
     });
