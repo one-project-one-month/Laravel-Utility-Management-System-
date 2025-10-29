@@ -110,7 +110,7 @@
             font-size: 14px;
             color: #999;
             text-align: center;
-            border-top: 1px solid #eaeaea;
+            border-top: 1px solid #eaeae3;
             padding-top: 20px;
         }
 
