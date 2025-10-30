@@ -7,6 +7,7 @@ use App\Models\Bill;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\Dashboard\BillResource;
+use App\Models\TotalUnit;
 
 class BillController extends Controller
 {
@@ -116,7 +117,8 @@ class BillController extends Controller
 
         $year = date('Y');
 
-        $billHistory = Bill::where('tenant_id', $tenantId)
+        $billHistory = Bill::with(['totalUnit','invoice','tenant','room'])
+                            ->where('tenant_id', $tenantId)
                             ->orderBy('created_at', 'desc')
                             ->paginate(config('pagination.perPage'));
 
