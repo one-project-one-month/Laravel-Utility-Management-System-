@@ -60,7 +60,7 @@ class ContractController extends Controller
 //            return $this->errorResponse('Unathorized', 401);
 //        }
 
-        $contract = Contract::with(['contractType', 'tenant'])
+        $contract = Contract::with(['contractType', 'tenant', 'room'])
                     ->where('tenant_id' , $tenantId)
                     ->paginate(config('pagination.perPage'));
         if (!$contract) {
