@@ -57,6 +57,7 @@ class InvoiceResource extends JsonResource
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
             'bill' => new BillResource($this->whenLoaded('bill')),
+            'receipt' => new ReceiptResource($this->whenLoaded('receipt'))
         ];
     }
 }

@@ -6,7 +6,7 @@ use App\Models\Bill;
 //use App\Models\User;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Api\Dashboard\BillResource;
+use App\Http\Resources\Api\Client\BillResource;
 use App\Models\TotalUnit;
 
 class BillController extends Controller
@@ -115,9 +115,7 @@ class BillController extends Controller
 //            return $this->errorResponse('Unathorized', 401);
 //        }
 
-        $year = date('Y');
-
-        $billHistory = Bill::with(['totalUnit','invoice','tenant','room'])
+        $billHistory = Bill::with(['totalUnit','invoice.receipt','tenant','room'])
                             ->where('tenant_id', $tenantId)
                             ->orderBy('created_at', 'desc')
                             ->paginate(config('pagination.perPage'));
