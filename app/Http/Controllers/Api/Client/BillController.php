@@ -64,7 +64,8 @@ class BillController extends Controller
 //            return $this->errorResponse('Unathorized', 401);
 //        }
 
-        $latestBill = Bill::where('tenant_id', $tenantId)
+        $latestBill = Bill::with('totalUnit')
+                        ->where('tenant_id', $tenantId)
                         ->orderBy('created_at', 'desc')
                         ->first();
 
@@ -117,7 +118,7 @@ class BillController extends Controller
 
         $year = date('Y');
 
-        $billHistory = Bill::with(['totalUnit','invoice','tenant','room'])
+        $billHistory = Bill::with(['totalUnit'])
                             ->where('tenant_id', $tenantId)
                             ->orderBy('created_at', 'desc')
                             ->paginate(config('pagination.perPage'));
