@@ -37,7 +37,9 @@ class BillResource extends JsonResource
             'room'  => new RoomResource($this->whenLoaded('room')),
             'invoice' => [
                 'id'        => $this->invoice->id,
+                'invoiceNo' => $this->invoice->invoice_no,
                 'status'    => $this->invoice->status,
+                'createdAt' => $this->invoice->created_at
             ],
             'receipt' => [
                 'id'        => $this->invoice->receipt->id,
