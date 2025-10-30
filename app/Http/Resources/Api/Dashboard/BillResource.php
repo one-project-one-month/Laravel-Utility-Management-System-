@@ -56,7 +56,7 @@ class BillResource extends JsonResource
             'totalUnit' => new TotalUnitResource($this->whenLoaded('totalUnit')),
             'invoice'  => new InvoiceResource($this->whenLoaded('invoice')),
             'tenant' => new TenantResource($this->whenLoaded('tenant')),
-            'room'  => new RoomResource($this->whenLoaded('room'))
+            'room'  => new RoomResource($this->whenLoaded('room')),
         ];
     }
 }

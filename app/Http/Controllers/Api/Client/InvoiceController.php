@@ -160,7 +160,7 @@ class InvoiceController extends Controller
         try {
             $startOfMonth = Carbon::now()->startOfMonth();
 
-            $invoices = Invoice::with('bill')
+            $invoices = Invoice::with('bill','receipt')
                 ->whereHas('bill', function ($query) use ($tenant, $startOfMonth) {
                     $query->where('room_id', $tenant->room_id);
                 })

@@ -20,6 +20,6 @@ class Invoice extends Model
     }
 
     public function receipt() {
-        return $this->belongsTo(Receipt::class);
+        return $this->hasOne(Receipt::class);
     }
 }
