@@ -51,6 +51,10 @@ Route::prefix('v1/')->group(function () {
         Route::post('receipts/{id}/send', [ReceiptController::class, 'send'])->name('receipts.send');
     });
 
+    Route::middleware(['auth:sanctum'])->group(function() {
+         Route::resource('tenants', TenantController::class, ['only' => ['show']]);
+    });
+
     Route::middleware(['auth:sanctum', "Role.check:Tenant", "ValidateLoggedInTenantUserId"])->group(function ()
     {
         // Tenant Customer Services
