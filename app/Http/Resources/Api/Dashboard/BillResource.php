@@ -2,8 +2,10 @@
 
 namespace App\Http\Resources\Api\Dashboard;
 
+use App\Models\TotalUnit;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Api\Dashboard\TotalUnitResource;
 
 
 
@@ -51,6 +53,10 @@ class BillResource extends JsonResource
             'dueDate' => $this->due_date,
             // 'totalUnit' => $this->totalUnit,
             // 'invoice' => $this->invoice,
+            'totalUnit' => new TotalUnitResource($this->whenLoaded('totalUnit')),
+            'invoice'  => new InvoiceResource($this->whenLoaded('invoice')),
+            'tenant' => new TenantResource($this->whenLoaded('tenant')),
+            'room'  => new RoomResource($this->whenLoaded('room'))
         ];
     }
 }
