@@ -172,9 +172,13 @@ class CustomerServiceController extends Controller
             $query->where('status', 'ILIKE', $status);
         }
 
-        $services = $query->orderBy('issued_date', 'desc')->get();
+        $services = $query->orderBy('created_at', 'desc')
+                          ->paginate(config('pagination.perPage'));
 
-        return $this->successResponse('Customer Service History', CustomerServiceResource::collection($services));
+        return $this->successResponse(
+            'Customer Service History',
+             $this->buildPaginatedResourceResponse(CustomerServiceResource::class,
+              $services));
     }
 
 }

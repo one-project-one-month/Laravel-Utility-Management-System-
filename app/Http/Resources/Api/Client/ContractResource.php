@@ -31,8 +31,10 @@ class ContractResource extends JsonResource
         return [
             'id' => $this->id,
             'roomId' => $this->room_id,
+            'room' => new RoomResource($this->whenLoaded('room')),
             'tenantId' => $this->tenant_id,
             'tenant' => new TenantResource($this->whenLoaded('tenant')),
+            'createdDate' => $this->created_date,
             'expiryDate' => $this->expiry_date,
             'contractType' => new ContractTypeResource($this->whenLoaded('contractType'))
         ];

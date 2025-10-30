@@ -150,7 +150,7 @@ class ReceiptController extends Controller
             })
             ->orderBy('receipts.paid_date','desc')
             //->skip(1)
-            ->get();
+            ->paginate(config('pagination.perPage'));
 
             if ($receipts->isEmpty()) {
                 return $this->successResponse(
@@ -161,7 +161,7 @@ class ReceiptController extends Controller
 
             return $this->successResponse(
                 'Receipt History retrieved successful',
-                ReceiptResource::collection($receipts),
+                $this->buildPaginatedResourceResponse(ReceiptResource::class, $receipts),
                 200
             );
 

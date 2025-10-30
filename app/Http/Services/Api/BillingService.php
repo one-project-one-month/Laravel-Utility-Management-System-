@@ -23,10 +23,11 @@ Class BillingService {
 
         $bill = Bill::create($this->createBill($user));
 
-        $this->totalUnitsCreate($bill->id, $bill->electricity_fee, $bill->water_fee);
+       $this->totalUnitsCreate($bill->id, $bill->electricity_fee, $bill->water_fee);
 
        $invoice = Invoice::create([
             'invoice_no' => $customInvoice,
+            'status' => "Pending",
             'bill_id' => $bill->id
         ]);
 
@@ -44,6 +45,7 @@ Class BillingService {
                 'other'       => $bill->fine_fee + $bill->service_fee + $bill->ground_fee + $bill->car_parking_fee,
                 'total'       => $bill->total_amount,
                 'due_date'    => $bill->due_date,
+                'invoice_no'  => $invoice->invoice_no,
             ],
             $user->email,
             "Utility Alert - " . \Carbon\Carbon::now()->format('F'),

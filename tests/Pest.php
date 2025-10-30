@@ -11,6 +11,7 @@ use App\Models\Occupant;
 use App\Models\TotalUnit;
 use Illuminate\Support\Str;
 use App\Models\ContractType;
+use App\Models\CustomerService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -83,12 +84,13 @@ function staffUserCreate() {
     return $user;
 }
 
-function tenantUserCreate() {
+function tenantUserCreate($tenant = null) {
     $user = User::create([
         "user_name" => "John Doe",
         "email"     => "johndoe21@gmail.com",
         "password"  => Hash::make("Ks82787294"),
-        "role"      => "Tenant"
+        "role"      => "Tenant",
+        "tenant_id" => $tenant->id?? null,
     ]);
 
     return $user;
@@ -110,7 +112,7 @@ function tenantCreate($room) {
 function roomCreate() {
     $room =      Room::create([
                 'id'               => Str::uuid()->toString(),
-                'room_no'          => 100,
+                'room_no'          => rand(000, 500),
                 'floor'            => 1,
                 'dimension'        => rand(200, 500) . ' sqft',
                 'no_of_bed_room'   => rand(1, 4),
@@ -146,7 +148,6 @@ function contractCreate($contractType,$tenant) {
 
     return $contract;
 }
-
 function occupantCreate($tenant) {
     $occupant = Occupant::create([
         'name' => "maung maung",
@@ -216,4 +217,18 @@ function receiptCreate($invoice) {
     ]);
 
     return $receipt;
+}
+
+function customerServiceCreate($room){
+    $customer_service = CustomerService::create(
+                [
+                    "room_id"        => $room->id,
+                    "category"       => fake()->randomElement(['Complain','Maintenance','Other']),
+                    "description"    => fake()->sentence(),
+                    "status"         => fake()->randomElement(['Pending','Ongoing','Resolved']),
+                    "priority_level" => fake()->randomElement(['Low', 'Medium', 'High']),
+                    "issued_date"    => fake()->dateTimeBetween('2020-01-01')
+                ]
+            );
+            return $customer_service;
 }

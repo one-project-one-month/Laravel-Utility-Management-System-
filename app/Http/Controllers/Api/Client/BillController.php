@@ -7,6 +7,7 @@ use App\Models\Bill;
 use App\Http\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\Dashboard\BillResource;
+use App\Models\TotalUnit;
 
 class BillController extends Controller
 {
@@ -116,12 +117,17 @@ class BillController extends Controller
 
         $year = date('Y');
 
-        $billHistory = Bill::where('tenant_id', $tenantId)->whereYear('created_at', $year)->get();
+        $billHistory = Bill::with(['totalUnit','invoice','tenant','room'])
+                            ->where('tenant_id', $tenantId)
+                            ->orderBy('created_at', 'desc')
+                            ->paginate(config('pagination.perPage'));
 
         if ($billHistory->isEmpty()) {
             return $this->successResponse("Bill history is empty",BillResource::collection($billHistory), 200);
         }
 
-        return $this->successResponse("billHistory Success",BillResource::collection($billHistory), 200);
+        return $this->successResponse(
+            "billHistory Success",
+            $this->buildPaginatedResourceResponse(BillResource::class, $billHistory));
     }
 }

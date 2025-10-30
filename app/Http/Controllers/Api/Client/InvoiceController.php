@@ -164,8 +164,8 @@ class InvoiceController extends Controller
                 ->whereHas('bill', function ($query) use ($tenant, $startOfMonth) {
                     $query->where('room_id', $tenant->room_id);
                 })
-                ->where('created_at', '<', $startOfMonth)
-                ->get();
+                ->orderBy('created_at', 'desc')
+                ->paginate(config('pagination.perPage'));
 
             if ($invoices->isEmpty()) {
                 return $this->successResponse(
@@ -176,7 +176,8 @@ class InvoiceController extends Controller
 
             return $this->successResponse(
                 'Invoice history retrieved successfully',
-                InvoiceResource::collection($invoices), 200
+                $this->buildPaginatedResourceResponse(InvoiceResource::class, $invoices)
+                , 200
             );
         } catch (\Exception $e) {
              return $this->errorResponse(

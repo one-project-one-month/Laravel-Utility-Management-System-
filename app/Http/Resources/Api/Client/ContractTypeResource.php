@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Api\Client;
 
 use Illuminate\Http\Request;
+use App\Http\Helpers\PostgresHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -18,6 +19,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  */
 class ContractTypeResource extends JsonResource
 {
+    use PostgresHelper;
     /**
      * Transform the resource into an array.
      *
@@ -30,6 +32,7 @@ class ContractTypeResource extends JsonResource
             'name' => $this->name,
             'duration' => $this->duration,
             'price' => $this->price,
+            'facilities' => $this->pgArrayStringToNativeArray($this->facilities)
         ];
     }
 }

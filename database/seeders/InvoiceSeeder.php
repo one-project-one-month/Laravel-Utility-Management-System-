@@ -14,15 +14,19 @@ class InvoiceSeeder extends Seeder
      */
     public function run(): void
     {
-        $billIds = Bill::pluck('id');
+        $bills = Bill::select('id','created_at','updated_at')->get();
 
 
-        foreach($billIds as $billId) {
+        foreach($bills as $bill) {
             $number =  fake()->randomNumber(8, true);
             $customInvoice = "INV".'-'.$number;
             Invoice::create([
                     'invoice_no' => $customInvoice,
-                    'bill_id' => $billId
+                    'bill_id' => $bill->id,
+                    'status'    => "Paid",
+                    'receipt_sent' => 1,
+                    'created_at' => $bill->created_at,
+                    'updated_at' => $bill->updated_at
             ]);
         }
     }
