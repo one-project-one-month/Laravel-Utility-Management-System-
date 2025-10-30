@@ -68,7 +68,8 @@ class InvoiceResource extends JsonResource
                     'electricityUnits'  => $this->bill->totalUnit->electricity_units,
                     'waterUnits'       => $this->bill->totalUnit->water_units,
                 ]
-            ]
+                ],
+
         ];
     }
 }
