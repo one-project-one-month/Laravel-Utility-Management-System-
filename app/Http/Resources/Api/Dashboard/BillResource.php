@@ -51,6 +51,7 @@ class BillResource extends JsonResource
             'wifiFee' => $this->wifi_fee,
             'totalAmount' => $this->total_amount,
             'dueDate' => $this->due_date,
+            'created_at' => $this->created_at,
             // 'totalUnit' => $this->totalUnit,
             // 'invoice' => $this->invoice,
             'totalUnit' => new TotalUnitResource($this->whenLoaded('totalUnit')),
