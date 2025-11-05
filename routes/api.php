@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\Client\InvoiceController as ClientInvoiceController
 use App\Http\Controllers\Api\Client\CustomerServiceController as ClientCustomerServiceController;
 use App\Http\Controllers\Api\Client\BillController as ClientBillController;
 use App\Http\Controllers\Api\Dashboard\OccupantController;
+use App\Http\Controllers\Api\Client\PasswordController as ClientPasswordController;
 
 Route::post('/v1/auth/login', [AuthController::class, 'login']);
 Route::post('/v1/auth/refresh', [AuthController::class, 'refresh']);
@@ -25,15 +26,14 @@ Route::post('/v1/auth/logout', [AuthController::class, 'logout'])->middleware('a
 
 Route::prefix('v1/')->group(function () {
 
-    Route::middleware(['auth:sanctum', 'Role.check:Admin,Staff'])->group(function ()
-    {
+    Route::middleware(['auth:sanctum', 'Role.check:Admin,Staff'])->group(function () {
         Route::resource('users', UserController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
         Route::resource('tenants', TenantController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
-        Route::resource('occupants',OccupantController::class,['only'=> ['index','store','update','show']]);
+        Route::resource('occupants', OccupantController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
-        Route::resource('rooms', RoomController::class, ['only' => ['index','store','update','show']]);
+        Route::resource('rooms', RoomController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
         Route::resource('contracts', ContractController::class, ['only' => ['index', 'store', 'update', 'show']]);
 
@@ -43,23 +43,26 @@ Route::prefix('v1/')->group(function () {
 
         Route::resource('total-units', TotalUnitController::class, ['only' => ['index', 'show']]);
 
-        Route::apiResource('invoices', InvoiceController::class)->only(['index','store', 'show', 'update']);
+        Route::apiResource('invoices', InvoiceController::class)->only(['index', 'store', 'show', 'update']);
 
         Route::resource('customer-services', CustomerServiceController::class, ['only' => ['index', 'update', 'show']]);
 
-        Route::resource('receipts', ReceiptController::class, ['only' => ['index','store','update','show']]);
+        Route::resource('receipts', ReceiptController::class, ['only' => ['index', 'store', 'update', 'show']]);
         Route::post('receipts/{id}/send', [ReceiptController::class, 'send'])->name('receipts.send');
     });
 
-    Route::middleware(['auth:sanctum', "Role.check:Tenant", "ValidateLoggedInTenantUserId"])->group(function ()
-    {
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::resource('tenants', TenantController::class, ['only' => ['show']]);
+    });
+
+    Route::middleware(['auth:sanctum', "Role.check:Tenant", "ValidateLoggedInTenantUserId"])->group(function () {
         // Tenant Customer Services
         Route::post('tenants/{id}/customer-services/create', [ClientCustomerServiceController::class, 'create']);
         Route::get('tenants/{id}/customer-services/history/{status?}', [ClientCustomerServiceController::class, 'history']);
 
         // Receipt latest
         Route::get('/tenants/{id}/receipts/latest', action: [ClientReceiptController::class, 'latest']);
-        Route::get('/tenants/{id}/receipts/history',[ClientReceiptController::class,'history']);
+        Route::get('/tenants/{id}/receipts/history', [ClientReceiptController::class, 'history']);
 
         Route::get('/tenants/{id}/contracts', [ClientContractController::class, 'index']);
 
@@ -67,8 +70,12 @@ Route::prefix('v1/')->group(function () {
         Route::get('/tenants/{id}/invoices/history', [ClientInvoiceController::class, 'history']);
 
         //Bill Latest
-        Route::get('/tenants/{id}/bills/latest', [ClientBillController::class,'latestBill']);
-        Route::get('/tenants/{id}/bills/history', [ClientBillController::class,'billHistory']);
-     });
+        Route::get('/tenants/{id}/bills/latest', [ClientBillController::class, 'latestBill']);
+        Route::get('/tenants/{id}/bills/history', [ClientBillController::class, 'billHistory']);
+
+        //Password update
+        Route::post('/tenants/{id}/password-update', [ClientPasswordController::class, 'update']);
 
     });
+
+});

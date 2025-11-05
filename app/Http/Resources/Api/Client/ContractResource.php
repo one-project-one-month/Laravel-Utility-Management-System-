@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api\Client;
 
+use App\Http\Resources\Api\Dashboard\RoomResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -33,9 +34,14 @@ class ContractResource extends JsonResource
             'roomId' => $this->room_id,
             'room' => new RoomResource($this->whenLoaded('room')),
             'tenantId' => $this->tenant_id,
+<<<<<<< HEAD
             'tenant' => new TenantResource($this->whenLoaded('tenant')),
+=======
+>>>>>>> b6eb6e8e32b52fd27f918feb26e4068c51399c02
             'createdDate' => $this->created_date,
             'expiryDate' => $this->expiry_date,
+            'room' => new RoomResource($this->whenLoaded('room')),
+            'tenant' => new TenantResource($this->whenLoaded('tenant')),
             'contractType' => new ContractTypeResource($this->whenLoaded('contractType'))
         ];
     }

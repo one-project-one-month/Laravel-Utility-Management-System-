@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\Client;
 
 //use App\Models\User;
@@ -81,10 +82,10 @@ class CustomerServiceController extends Controller
     public function create(Request $request, $tenantId)
     {
         //authorize
-//        $userId = User::where('tenant_id' , $tenantId)->value('id');
-//         if (auth('sanctum')->user()->id != $userId) {
-//            return $this->errorResponse('Unathorized', 401);
-//        }
+        //        $userId = User::where('tenant_id' , $tenantId)->value('id');
+        //         if (auth('sanctum')->user()->id != $userId) {
+        //            return $this->errorResponse('Unathorized', 401);
+        //        }
 
         $validator = Validator::make($request->post(), [
             'roomId'        => 'required|uuid|exists:rooms,id',
@@ -156,29 +157,29 @@ class CustomerServiceController extends Controller
      *     ),
      * )
      */
-    public function history($tenantId, $status = null)
+    public function history($tenantId, Request $request)
     {
-
-        //authorize
-//        $userId = User::where('tenant_id' , $tenantId)->value('id');
-//         if (auth('sanctum')->user()->id != $userId) {
-//            return $this->errorResponse('Unathorized', 401);
-//        }
         $tenant = Tenant::find($tenantId);
-        $query = CustomerService::where('room_id', $tenant->room_id);
+        if (!$tenant) return $this->errorResponse('Tenant not found', 404);
 
-        if ($status) {
-            $status = trim($status);
-            $query->where('status', 'ILIKE', $status);
+        $query = CustomerService::query()->where('room_id', $tenant->room_id);
+        if ($request->has('status')) {
+            $query->where('status', $request->input('status'));
         }
 
-        $services = $query->orderBy('created_at', 'desc')
-                          ->paginate(config('pagination.perPage'));
+        $services = $query
+            ->orderBy('created_at', 'desc')
+            ->paginate(config('pagination.perPage'));
 
+        if ($services->isEmpty()) {
+            return $this->successResponse('No customer service requests found.', [], 200);
+        }
         return $this->successResponse(
             'Customer Service History',
-             $this->buildPaginatedResourceResponse(CustomerServiceResource::class,
-              $services));
+            $this->buildPaginatedResourceResponse(
+                CustomerServiceResource::class,
+                $services
+            )
+        );
     }
-
 }

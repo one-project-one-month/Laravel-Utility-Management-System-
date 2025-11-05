@@ -50,6 +50,7 @@ class InvoiceResource extends JsonResource
         return [
             'id'        => $this->id,
             'status'    => $this->status,
+<<<<<<< HEAD
             'bill'      => [
                 'id'                => $this->bill->id,
                 'roomId'            => $this->bill->room_id,
@@ -69,6 +70,9 @@ class InvoiceResource extends JsonResource
                     'waterUnits'       => $this->bill->totalUnit->water_units,
                 ]
             ]
+=======
+            'bill'      => new BillResource($this->whenLoaded('bill')),
+>>>>>>> b6eb6e8e32b52fd27f918feb26e4068c51399c02
         ];
     }
 }

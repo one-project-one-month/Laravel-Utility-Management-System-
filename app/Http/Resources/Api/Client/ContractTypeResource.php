@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api\Client;
 
+use App\Http\Helpers\PostgresHelper;
 use Illuminate\Http\Request;
 use App\Http\Helpers\PostgresHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
