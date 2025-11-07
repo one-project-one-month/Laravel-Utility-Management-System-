@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\Client\CustomerServiceController as ClientCustomerS
 use App\Http\Controllers\Api\Client\BillController as ClientBillController;
 use App\Http\Controllers\Api\Dashboard\OccupantController;
 use App\Http\Controllers\Api\Client\PasswordController as ClientPasswordController;
+use App\Http\Controllers\Api\Client\TenantController as ClientTenantController;
 
 Route::post('/v1/auth/login', [AuthController::class, 'login']);
 Route::post('/v1/auth/refresh', [AuthController::class, 'refresh']);
@@ -77,6 +78,8 @@ Route::prefix('v1/')->group(function () {
 
         Route::post('/tenants/{id}/password-update', [ClientPasswordController::class, 'update']);
 
+        //Tenant
+        Route::put('/tenants/{id}/update',[ClientTenantController::class,'update']);
      });
 
     });
