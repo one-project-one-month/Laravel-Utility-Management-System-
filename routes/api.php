@@ -77,7 +77,8 @@ Route::prefix('v1/')->group(function () {
         Route::get('/tenants/{id}/bills/latest', [ClientBillController::class,'latestBill']);
         Route::get('/tenants/{id}/bills/history', [ClientBillController::class,'billHistory']);
 
-        Route::post('/tenants/{id}/password-update', [ClientPasswordController::class, 'update']);
+        Route::put('/tenants/{id}/password-update', [ClientPasswordController::class, 'update']);
+
         //Tenant
         Route::put('/tenants/{id}/update',[ClientTenantController::class,'update']);
 
