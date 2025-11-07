@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\Client\BillController as ClientBillController;
 use App\Http\Controllers\Api\Dashboard\OccupantController;
 use App\Http\Controllers\Api\Client\PasswordController as ClientPasswordController;
 use App\Http\Controllers\Api\Client\TenantController as ClientTenantController;
+use App\Http\Controllers\Api\Client\RoomController as ClientRoomController;
 
 Route::post('/v1/auth/login', [AuthController::class, 'login']);
 Route::post('/v1/auth/refresh', [AuthController::class, 'refresh']);
@@ -76,10 +77,13 @@ Route::prefix('v1/')->group(function () {
         Route::get('/tenants/{id}/bills/latest', [ClientBillController::class,'latestBill']);
         Route::get('/tenants/{id}/bills/history', [ClientBillController::class,'billHistory']);
 
-        Route::post('/tenants/{id}/password-update', [ClientPasswordController::class, 'update']);
+        Route::put('/tenants/{id}/password-update', [ClientPasswordController::class, 'update']);
 
         //Tenant
         Route::put('/tenants/{id}/update',[ClientTenantController::class,'update']);
+
+        //Room
+        Route::get('tenants/{id}/room', [ClientRoomController::class , 'show'] );
      });
 
     });
