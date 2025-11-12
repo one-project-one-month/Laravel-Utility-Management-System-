@@ -30,7 +30,7 @@ Class BillingService {
             'status' => "Pending",
             'bill_id' => $bill->id
         ]);
-
+        
         $receipt = Receipt::create([
             "invoice_id" => $invoice->id,
         ]);
