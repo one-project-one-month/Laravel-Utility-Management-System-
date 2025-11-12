@@ -1,0 +1,43 @@
+name: Laravel CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Run tests
+        run: php artisan test
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: laravel-utility-management-system.aperturecampaign.com
+          username: root
+          key: ${{ secrets.ONEPJONEM }}
+          script: |
+            echo "Deploying to PRODUCTION server..."
+            cd /var/www/Laravel-Utility-Management-System-
+            git pull origin main
+            composer install --no-interaction --prefer-dist --optimize-autoloader
+            php artisan optimize
