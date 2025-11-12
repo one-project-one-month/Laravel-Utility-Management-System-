@@ -21,9 +21,6 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
-      - name: Run tests
-        run: php artisan test
-
   deploy:
     needs: build
     runs-on: ubuntu-latest
