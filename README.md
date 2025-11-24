@@ -126,3 +126,6 @@ php artisan serve
         </tr>
     </tbody>
 </table>
+
+
+<!-- Security scan triggered at 2025-11-24 23:29:29 -->
